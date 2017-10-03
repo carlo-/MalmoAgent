@@ -1,5 +1,5 @@
 #
-.out
+*.out
 mission_records/
 
 # Eclipse
@@ -33,7 +33,6 @@ out/
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip

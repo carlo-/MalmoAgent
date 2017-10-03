@@ -76,7 +76,6 @@ public class JavaAgent {
         MissionSpec my_mission = new MissionSpec();
         my_mission.forceWorldReset();
         //  my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
-        System.out.println(my_mission.getListOfCommandHandlers(0));
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(320, 160);
         my_mission.observeGrid(900, -1, 1000, 1000, -1, 1000, "CellObs");

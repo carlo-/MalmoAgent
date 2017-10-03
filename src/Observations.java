@@ -1,9 +1,12 @@
-
-import javax.xml.bind.annotation.XmlRootElement;
-
-/**
- * Created by Mart on 27.09.2017.
- */
-@XmlRootElement
+import java.util.List;
+//All fields are case sensitive in relation to their json counterparts
 public class Observations {
+    public int TimeAlive;
+    public float XPos;
+    public float YPos;
+    public float ZPos;
+    public float Yaw;
+    public float Pitch;
+    public boolean IsAlive;
+    public List<String> CellObs;
 }

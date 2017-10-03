@@ -24,7 +24,10 @@
 // To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:JavaAgent.jar -Djava.library.path=. JavaAgent (on Linux)
 //                                               java -cp MalmoJavaJar.jar;JavaAgent.jar -Djava.library.path=. JavaAgent (on Windows)
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
+import com.oracle.webservices.internal.api.databinding.Databinding;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,6 +40,7 @@ public class JavaAgent {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
     }
 
+    private static GsonBuilder builder = new GsonBuilder();
 
     public static void main(String argv[]) {
         AgentHost agent_host = createAgentHost(argv);
@@ -125,53 +129,18 @@ public class JavaAgent {
 
     private static WorldState doStuff(AgentHost agent_host) {
         WorldState world_state;
-
-        try {
-            agent_host.sendCommand("pitch 0");
-            agent_host.sendCommand("move 0.5");
-            agent_host.sendCommand("turn 1");
-            Thread.sleep(1000);
-            agent_host.sendCommand("move 0");
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            System.err.println("User interrupted while mission was running.");
-            return null;
-        }
+        agent_host.sendCommand("move 0.5");
+        agent_host.sendCommand("turn 1");
+        agent_host.sendCommand("pitch 0.05");
         world_state = agent_host.getWorldState();
-        System.out.print("video,observations,rewards received: ");
         TimestampedStringVector observations = world_state.getObservations();
-        Observations marshalled;
-        try {
-           marshalled = jsonToJavaExample(observations.get(0).getText());
-        } catch (JAXBException e) {
-            e.printStackTrace();
+
+        if (observations.size() > 0) {
+            Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
+            System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
         }
-        System.out.println(observations.get(0).getText());
-        System.out.print(world_state.getNumberOfVideoFramesSinceLastState() + ",");
-        System.out.print(world_state.getNumberOfObservationsSinceLastState() + ",");
-        System.out.println(world_state.getNumberOfRewardsSinceLastState());
-        for (int i = 0; i < world_state.getRewards().size(); i++) {
-            TimestampedReward reward = world_state.getRewards().get(i);
-            System.out.println("Summed reward: " + reward.getValue());
-        }
-        for (int i = 0; i < world_state.getErrors().size(); i++) {
-            TimestampedString error = world_state.getErrors().get(i);
-            System.err.println("Error: " + error.getText());
-        }
+
         return world_state;
     }
 
-    private static Observations jsonToJavaExample(String obsString) throws JAXBException {
-        JAXBContext jc = JAXBContext.newInstance(Observations.class);
-        Unmarshaller unmarshaller = jc.createUnmarshaller();
-        StreamSource json = new StreamSource(new StringReader(obsString));
-        return unmarshaller.unmarshal(json, Observations.class).getValue();
-
-   }
 }

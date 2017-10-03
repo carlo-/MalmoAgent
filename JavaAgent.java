@@ -26,6 +26,12 @@
 
 import com.microsoft.msr.malmo.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
+
 public class JavaExamples_run_mission {
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
@@ -46,13 +52,33 @@ public class JavaExamples_run_mission {
         System.out.println("Mission has stopped.");
     }
 
+    private static AgentHost createAgentHost(String[] argv) {
+        AgentHost agent_host = new AgentHost();
+        try {
+            StringVector args = new StringVector();
+            args.add("JavaExamples_run_mission");
+            for (String arg : argv)
+                args.add(arg);
+            agent_host.parse(args);
+        } catch (Exception e) {
+            System.err.println("ERROR: " + e.getMessage());
+            System.err.println(agent_host.getUsage());
+            System.exit(1);
+        }
+        if (agent_host.receivedArgument("help")) {
+            System.out.println(agent_host.getUsage());
+            System.exit(0);
+        }
+        return agent_host;
+    }
+
     private static MissionSpec createMissionSpec(AgentHost agent_host) {
         MissionSpec my_mission = new MissionSpec();
-        my_mission.createDefaultTerrain();
         my_mission.forceWorldReset();
-        my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
+        //  my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
+        System.out.println(my_mission.getListOfCommandHandlers(0));
         my_mission.timeLimitInSeconds(100000000.0f);
-        my_mission.requestVideo(1920, 1080);
+        my_mission.requestVideo(320, 160);
         my_mission.observeGrid(900, -1, 1000, 1000, -1, 1000, "CellObs");
         return my_mission;
     }
@@ -98,26 +124,6 @@ public class JavaExamples_run_mission {
         return world_state;
     }
 
-    private static AgentHost createAgentHost(String[] argv) {
-        AgentHost agent_host = new AgentHost();
-        try {
-            StringVector args = new StringVector();
-            args.add("JavaExamples_run_mission");
-            for (String arg : argv)
-                args.add(arg);
-            agent_host.parse(args);
-        } catch (Exception e) {
-            System.err.println("ERROR: " + e.getMessage());
-            System.err.println(agent_host.getUsage());
-            System.exit(1);
-        }
-        if (agent_host.receivedArgument("help")) {
-            System.out.println(agent_host.getUsage());
-            System.exit(0);
-        }
-        return agent_host;
-    }
-
     private static WorldState doStuff(AgentHost agent_host) {
         WorldState world_state;
 
@@ -131,6 +137,7 @@ public class JavaExamples_run_mission {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         try {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
@@ -140,6 +147,12 @@ public class JavaExamples_run_mission {
         world_state = agent_host.getWorldState();
         System.out.print("video,observations,rewards received: ");
         TimestampedStringVector observations = world_state.getObservations();
+        Observations marshalled;
+        try {
+           marshalled = jsonToJavaExample(observations.get(0).getText());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
         System.out.println(observations.get(0).getText());
         System.out.print(world_state.getNumberOfVideoFramesSinceLastState() + ",");
         System.out.print(world_state.getNumberOfObservationsSinceLastState() + ",");
@@ -155,14 +168,11 @@ public class JavaExamples_run_mission {
         return world_state;
     }
 
-//    private Observations jsonToJavaExample(String obsString) throws JAXBException {
-//        JAXBContext jc = JAXBContext.newInstance(Observations.class);
-//        Unmarshaller unmarshaller = jc.createUnmarshaller();
-//        unmarshaller.setProperty(UnmarshallerProperties.MEDIA_TYPE, "application/json");
-//        unmarshaller.setProperty(UnmarshallerProperties.JSON_INCLUDE_ROOT, true);
-//        StreamSource json = new StreamSource(
-//                new StringReader(obsString));
-//        return unmarshaller.unmarshal(json, Observations.class).getValue();
-//
-//    }
+    private static Observations jsonToJavaExample(String obsString) throws JAXBException {
+        JAXBContext jc = JAXBContext.newInstance(Observations.class);
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+        StreamSource json = new StreamSource(new StringReader(obsString));
+        return unmarshaller.unmarshal(json, Observations.class).getValue();
+
+   }
 }

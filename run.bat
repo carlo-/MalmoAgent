@@ -1,2 +1,2 @@
-javac -cp MalmoJavaJar.jar JavaExamples_run_mission.java
-java -cp MalmoJavaJar.jar;. JavaExamples_run_mission
+javac -cp MalmoJavaJar.jar JavaAgent.java
+java -cp MalmoJavaJar.jar;. JavaAgent

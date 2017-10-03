@@ -17,12 +17,12 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // --------------------------------------------------------------------------------------------------
 
-// To compile:  javac -cp MalmoJavaJar.jar JavaExamples_run_mission.java
-// To run:      java -cp MalmoJavaJar.jar:. JavaExamples_run_mission  (on Linux)
-//              java -cp MalmoJavaJar.jar;. JavaExamples_run_mission  (on Windows)
+// To compile:  javac -cp MalmoJavaJar.jar JavaAgent.java
+// To run:      java -cp MalmoJavaJar.jar:. JavaAgent  (on Linux)
+//              java -cp MalmoJavaJar.jar;. JavaAgent  (on Windows)
 
-// To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:JavaExamples_run_mission.jar -Djava.library.path=. JavaExamples_run_mission (on Linux)
-//                                               java -cp MalmoJavaJar.jar;JavaExamples_run_mission.jar -Djava.library.path=. JavaExamples_run_mission (on Windows)
+// To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:JavaAgent.jar -Djava.library.path=. JavaAgent (on Linux)
+//                                               java -cp MalmoJavaJar.jar;JavaAgent.jar -Djava.library.path=. JavaAgent (on Windows)
 
 import com.microsoft.msr.malmo.*;
 
@@ -32,7 +32,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 
-public class JavaExamples_run_mission {
+public class JavaAgent {
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
     }
@@ -56,7 +56,7 @@ public class JavaExamples_run_mission {
         AgentHost agent_host = new AgentHost();
         try {
             StringVector args = new StringVector();
-            args.add("JavaExamples_run_mission");
+            args.add("JavaAgent");
             for (String arg : argv)
                 args.add(arg);
             agent_host.parse(args);

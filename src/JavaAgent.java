@@ -24,16 +24,10 @@
 // To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:JavaAgent.jar -Djava.library.path=. JavaAgent (on Linux)
 //                                               java -cp MalmoJavaJar.jar;JavaAgent.jar -Djava.library.path=. JavaAgent (on Windows)
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
-import com.oracle.webservices.internal.api.databinding.Databinding;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
+import java.util.function.Predicate;
 
 public class JavaAgent {
     static {
@@ -42,14 +36,27 @@ public class JavaAgent {
 
     private static GsonBuilder builder = new GsonBuilder();
 
-    public static void main(String argv[]) {
+    public static void main(String argv[]) throws InterruptedException {
         AgentHost agent_host = createAgentHost(argv);
         MissionSpec my_mission = createMissionSpec(agent_host);
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
+
+        agent_host.sendCommand("jump 1");
+        Thread.sleep(500);
+        agent_host.sendCommand("jump 0");
         // main loop:
         do {
-            world_state = doStuff(agent_host);
+            world_state = agent_host.getWorldState();
+            TimestampedStringVector observations = world_state.getObservations();
+
+            if (observations.size() > 0) {
+                Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
+                System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
+
+                doStuff(agent_host, unmarshalled);
+                Thread.sleep(50);
+            }
             if (world_state == null) return;
         } while (world_state.getIsMissionRunning());
 
@@ -79,10 +86,12 @@ public class JavaAgent {
     private static MissionSpec createMissionSpec(AgentHost agent_host) {
         MissionSpec my_mission = new MissionSpec();
         my_mission.forceWorldReset();
-        //  my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
+        //my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
         my_mission.timeLimitInSeconds(100000000.0f);
-        my_mission.requestVideo(320, 160);
+        my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(900, -1, 1000, 1000, -1, 1000, "CellObs");
+        my_mission.startAt(100, 230, 100);
+        my_mission.allowAllDiscreteMovementCommands();
         return my_mission;
     }
 
@@ -127,20 +136,80 @@ public class JavaAgent {
         return world_state;
     }
 
-    private static WorldState doStuff(AgentHost agent_host) {
-        WorldState world_state;
-        agent_host.sendCommand("move 0.5");
-        agent_host.sendCommand("turn 1");
-        agent_host.sendCommand("pitch 0.05");
-        world_state = agent_host.getWorldState();
-        TimestampedStringVector observations = world_state.getObservations();
+    private static void doStuff(AgentHost agent_host, Observations observations) throws InterruptedException {
+        Predicate<Observations> isAt = new IsAt(0.0f, observations.YPos, 0.0f);
+        //Just an example of how we can define preconditions which can be used dynamically later, as long as they are all
+        // of the same interface and take in the same type (can be made more generic if we like)
 
-        if (observations.size() > 0) {
-            Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
-            System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
+
+        //Later on, we should be checking if we are currently trying to execute some action. This will look somewhat different
+        //Just an example.
+
+
+        if (!isAt.test(observations)) {
+            moveTo(agent_host, observations, 0, observations.YPos, 0, false);
+        } else {
+            stop(agent_host);
         }
 
-        return world_state;
     }
+    //Can be part of the action definition later, such as a Consumer function.
+    //Look into java.util.function to see possible predefined functional interfaces we can use for lambdas
+    //We can look at these as functions that can be defined as java objects / anonymous classes for dynamic
+    //access and invocation. We can also define our own functional interfaces.
+
+    //This is a simple action that moves from the current location to the specified co-ordinates iteratively.
+    private static void moveTo(AgentHost agent_host, Observations observations, float x, float y, float z, boolean discrete) throws InterruptedException {
+        float xDifference = x - observations.XPos;
+        float yDifference = y - observations.YPos; //Needed later for jumping etc
+        float zDifference = z - observations.ZPos;
+        float targetYaw = (float) Math.toDegrees(Math.atan((double) (zDifference / xDifference)));
+        if (xDifference > 0 && zDifference < 0 ) {
+            targetYaw = 360-targetYaw;
+        }
+        if(xDifference < 0 && zDifference>0){
+            targetYaw = 180+targetYaw;
+        }
+        if(xDifference< 0 && zDifference<0){
+            targetYaw = 180+targetYaw;
+        }
+        float yawDifference = (360-targetYaw) - observations.Yaw;
+
+
+        if (discrete) {
+            if (zDifference > 0) {
+                agent_host.sendCommand("movesouth 1");
+            } else if (zDifference < 0) {
+                agent_host.sendCommand("movenorth 1");
+            }
+
+            if (xDifference > 0) {
+                agent_host.sendCommand("moveeast 1");
+            } else if (xDifference < 0) {
+                agent_host.sendCommand("movewest 1");
+            }
+        } else {
+            if (Math.abs(xDifference) > 1 || Math.abs(zDifference) > 1)
+                agent_host.sendCommand("move 1");
+            else
+                agent_host.sendCommand("move 0");
+
+            if (yawDifference > 3) {
+                agent_host.sendCommand("turn 0.5");
+            } else if (yawDifference < 3) {
+                agent_host.sendCommand("turn -0.5");
+            } else {
+                agent_host.sendCommand("turn 0");
+            }
+        }
+    }
+
+
+    private static void stop(AgentHost agent_host) {
+        agent_host.sendCommand("move 0");
+        agent_host.sendCommand("strafe 0");
+        agent_host.sendCommand("turn 0");
+    }
+
 
 }

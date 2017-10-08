@@ -147,7 +147,7 @@ public class JavaAgent {
     private static void doStuff(AgentHost agent_host, Observations observations) throws InterruptedException {
         MoveTo moveToAction = factory.createMoveToAction(0.0f, observations.YPos, 0.0f);
 
-        if (!moveToAction.getEffects().stream().allMatch(predicate -> predicate.test(observations))) {
+        if (!moveToAction.getEffects().stream().allMatch(fluent -> fluent.test(observations))) {
             moveToAction.accept(observations);
         } else {
             stop(agent_host);

@@ -27,10 +27,7 @@ package main;// ----------------------------------------------------------------
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
-import domain.IsAt;
-import domain.MoveTo;
-
-import java.util.function.Predicate;
+import domain.actions.MoveTo;
 
 public class JavaAgent {
 

@@ -1,6 +1,7 @@
 package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
+import domain.actions.MoveTo;
 
 /**
  * Created by Mart on 8.10.2017.

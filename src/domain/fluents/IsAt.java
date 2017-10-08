@@ -1,5 +1,6 @@
-package domain;
+package domain.fluents;
 
+import domain.AtomicFluent;
 import main.Observations;
 
 /**

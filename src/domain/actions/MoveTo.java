@@ -1,6 +1,9 @@
-package domain;
+package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
+import domain.AbstractAction;
+import domain.AtomicFluent;
+import domain.fluents.IsAt;
 import main.Observations;
 
 import java.util.Arrays;
@@ -9,7 +12,7 @@ import java.util.List;
 /**
  * Created by Mart on 8.10.2017.
  */
-public class MoveTo extends AbstractAction{
+public class MoveTo extends AbstractAction {
 
     private final float z;
     private final float y;

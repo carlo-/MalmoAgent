@@ -27,7 +27,6 @@ package main;// ----------------------------------------------------------------
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
-import domain.actions.MoveTo;
 import domain.fluents.IsAt;
 
 public class JavaAgent {
@@ -39,7 +38,7 @@ public class JavaAgent {
 
     private static GsonBuilder builder = new GsonBuilder();
     private static ActionFactory factory;
-    private static Agent agent;
+    private static Planner planner;
 
 
     public static void main(String argv[]) throws InterruptedException {
@@ -54,7 +53,7 @@ public class JavaAgent {
         agent_host.sendCommand("jump 0");
         Thread.sleep(500);
 
-        agent = createGoalAgent(agent_host);
+        planner = createGoalAgent(agent_host);
 
         do {
             world_state = agent_host.getWorldState();
@@ -63,7 +62,7 @@ public class JavaAgent {
             if (observations.size() > 0) {
                 Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
                 System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
-                agent.execute(unmarshalled);
+                planner.execute(unmarshalled);
                 Thread.sleep(50);
             }
             if (world_state == null) return;
@@ -72,7 +71,7 @@ public class JavaAgent {
         System.out.println("Mission has stopped.");
     }
 
-    private static Agent createGoalAgent(AgentHost agent_host) throws InterruptedException {
+    private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         WorldState world_state;
         world_state = agent_host.getWorldState();
         TimestampedStringVector observations = world_state.getObservations();
@@ -83,7 +82,7 @@ public class JavaAgent {
         }
 
         Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
-        return new Agent(new IsAt(0, unmarshalled.YPos, 0), factory = new ActionFactory(agent_host));
+        return new Planner(new IsAt(0, unmarshalled.YPos, 0), factory = new ActionFactory(agent_host));
     }
 
     private static AgentHost createAgentHost(String[] argv) {

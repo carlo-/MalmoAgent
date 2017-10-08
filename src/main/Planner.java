@@ -12,14 +12,14 @@ import java.util.List;
 /**
  * Created by Mart on 8.10.2017.
  */
-public class Agent {
+public class Planner {
     private final AtomicFluent currentGoal;
     private final ActionFactory factory;
     private Action currentAction;
     private List<Action> plan;
     private Stop stop;
 
-    public Agent(AtomicFluent currentGoal, ActionFactory factory) {
+    public Planner(AtomicFluent currentGoal, ActionFactory factory) {
         this.currentGoal = currentGoal;
         this.factory = factory;
         this.stop = factory.createStop();

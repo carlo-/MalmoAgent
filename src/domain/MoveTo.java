@@ -27,12 +27,12 @@ public class MoveTo extends AbstractAction{
     }
 
     @Override
-    public List<Atomic> getPreconditions() {
+    public List<AtomicFluent> getPreconditions() {
         return preconditions;
     }
 
     @Override
-    public List<Atomic> getEffects() {
+    public List<AtomicFluent> getEffects() {
         return effects;
     }
 

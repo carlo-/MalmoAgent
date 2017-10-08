@@ -5,7 +5,7 @@ import main.Observations;
 /**
  * Created by Mart on 7.10.2017.
  */
-public class IsAt implements Atomic {
+public class IsAt implements AtomicFluent {
 
     private final float x;
     private final float z;

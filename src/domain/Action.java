@@ -10,6 +10,6 @@ import java.util.function.Consumer;
  */
 public interface Action extends Consumer<Observations> {
 
-    List<Atomic> getPreconditions();
-    List<Atomic> getEffects();
+    List<AtomicFluent> getPreconditions();
+    List<AtomicFluent> getEffects();
 }

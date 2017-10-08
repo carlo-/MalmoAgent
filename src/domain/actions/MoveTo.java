@@ -32,18 +32,17 @@ public class MoveTo extends AbstractAction {
         float yDifference = y - observations.YPos; //Needed later for jumping etc
         float zDifference = z - observations.ZPos;
         float targetYaw = (float) Math.toDegrees(Math.atan((double) (zDifference / xDifference)));
-        if (xDifference > 0 && zDifference < 0 ) {
-            targetYaw = 360-targetYaw;
+        if (xDifference > 0 && zDifference < 0) {
+            targetYaw = 360 - targetYaw;
         }
-        if(xDifference < 0 && zDifference>0){
-            targetYaw = 180+targetYaw;
+        if (xDifference < 0 && zDifference > 0) {
+            targetYaw = 180 + targetYaw;
         }
-        if(xDifference< 0 && zDifference<0){
-            targetYaw = 180+targetYaw;
+        if (xDifference < 0 && zDifference < 0) {
+            targetYaw = 180 + targetYaw;
         }
-        float yawDifference = (360-targetYaw) - observations.Yaw;
+        float yawDifference = (360 - targetYaw) - observations.Yaw;
 
-        agentHost.sendCommand("move 1");
         if (discrete) {
             if (zDifference > 0) {
                 agentHost.sendCommand("movesouth 1");

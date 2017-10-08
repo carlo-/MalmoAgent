@@ -113,7 +113,7 @@ public class JavaAgent {
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(3, -1, 3, -3, -1, -3, "CellObs");
-        my_mission.startAt(0, 230, -50);
+        my_mission.startAt(-50.5f, 230.0f, -50.5f);
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllContinuousMovementCommands();

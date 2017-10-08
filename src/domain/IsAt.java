@@ -1,9 +1,11 @@
-import java.util.function.Predicate;
+package domain;
+
+import main.Observations;
 
 /**
  * Created by Mart on 7.10.2017.
  */
-public class IsAt implements Predicate<Observations> {
+public class IsAt implements Atomic {
 
     private final float x;
     private final float z;

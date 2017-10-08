@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------
+package main;// --------------------------------------------------------------------------------------------------
 //  Copyright (c) 2016 Microsoft Corporation
 //  
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -17,24 +17,31 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // --------------------------------------------------------------------------------------------------
 
-// To compile:  javac -cp MalmoJavaJar.jar JavaAgent.java
-// To run:      java -cp MalmoJavaJar.jar:. JavaAgent  (on Linux)
-//              java -cp MalmoJavaJar.jar;. JavaAgent  (on Windows)
+// To compile:  javac -cp MalmoJavaJar.jar main.JavaAgent.java
+// To run:      java -cp MalmoJavaJar.jar:. main.JavaAgent  (on Linux)
+//              java -cp MalmoJavaJar.jar;. main.JavaAgent  (on Windows)
 
-// To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:JavaAgent.jar -Djava.library.path=. JavaAgent (on Linux)
-//                                               java -cp MalmoJavaJar.jar;JavaAgent.jar -Djava.library.path=. JavaAgent (on Windows)
+// To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:main.JavaAgent.jar -Djava.library.path=. main.JavaAgent (on Linux)
+//                                               java -cp MalmoJavaJar.jar;main.JavaAgent.jar -Djava.library.path=. main.JavaAgent (on Windows)
 
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
+import domain.ActionFactory;
+import domain.IsAt;
+import domain.MoveTo;
 
 import java.util.function.Predicate;
 
 public class JavaAgent {
+
+
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
     }
 
     private static GsonBuilder builder = new GsonBuilder();
+    private static ActionFactory factory;
+
 
     public static void main(String argv[]) throws InterruptedException {
         AgentHost agent_host = createAgentHost(argv);
@@ -46,6 +53,7 @@ public class JavaAgent {
         Thread.sleep(500);
         agent_host.sendCommand("jump 0");
         // main loop:
+        factory = new ActionFactory(agent_host);
         do {
             world_state = agent_host.getWorldState();
             TimestampedStringVector observations = world_state.getObservations();
@@ -67,7 +75,7 @@ public class JavaAgent {
         AgentHost agent_host = new AgentHost();
         try {
             StringVector args = new StringVector();
-            args.add("JavaAgent");
+            args.add("main.JavaAgent");
             for (String arg : argv)
                 args.add(arg);
             agent_host.parse(args);
@@ -137,73 +145,14 @@ public class JavaAgent {
     }
 
     private static void doStuff(AgentHost agent_host, Observations observations) throws InterruptedException {
-        Predicate<Observations> isAt = new IsAt(0.0f, observations.YPos, 0.0f);
-        //Just an example of how we can define preconditions which can be used dynamically later, as long as they are all
-        // of the same interface and take in the same type (can be made more generic if we like)
+        MoveTo moveToAction = factory.createMoveToAction(0.0f, observations.YPos, 0.0f);
 
-
-        //Later on, we should be checking if we are currently trying to execute some action. This will look somewhat different
-        //Just an example.
-
-
-        if (!isAt.test(observations)) {
-            moveTo(agent_host, observations, 0, observations.YPos, 0, false);
+        if (!moveToAction.getEffects().stream().allMatch(predicate -> predicate.test(observations))) {
+            moveToAction.accept(observations);
         } else {
             stop(agent_host);
         }
-
     }
-    //Can be part of the action definition later, such as a Consumer function.
-    //Look into java.util.function to see possible predefined functional interfaces we can use for lambdas
-    //We can look at these as functions that can be defined as java objects / anonymous classes for dynamic
-    //access and invocation. We can also define our own functional interfaces.
-
-    //This is a simple action that moves from the current location to the specified co-ordinates iteratively.
-    private static void moveTo(AgentHost agent_host, Observations observations, float x, float y, float z, boolean discrete) throws InterruptedException {
-        float xDifference = x - observations.XPos;
-        float yDifference = y - observations.YPos; //Needed later for jumping etc
-        float zDifference = z - observations.ZPos;
-        float targetYaw = (float) Math.toDegrees(Math.atan((double) (zDifference / xDifference)));
-        if (xDifference > 0 && zDifference < 0 ) {
-            targetYaw = 360-targetYaw;
-        }
-        if(xDifference < 0 && zDifference>0){
-            targetYaw = 180+targetYaw;
-        }
-        if(xDifference< 0 && zDifference<0){
-            targetYaw = 180+targetYaw;
-        }
-        float yawDifference = (360-targetYaw) - observations.Yaw;
-
-
-        if (discrete) {
-            if (zDifference > 0) {
-                agent_host.sendCommand("movesouth 1");
-            } else if (zDifference < 0) {
-                agent_host.sendCommand("movenorth 1");
-            }
-
-            if (xDifference > 0) {
-                agent_host.sendCommand("moveeast 1");
-            } else if (xDifference < 0) {
-                agent_host.sendCommand("movewest 1");
-            }
-        } else {
-            if (Math.abs(xDifference) > 1 || Math.abs(zDifference) > 1)
-                agent_host.sendCommand("move 1");
-            else
-                agent_host.sendCommand("move 0");
-
-            if (yawDifference > 3) {
-                agent_host.sendCommand("turn 0.5");
-            } else if (yawDifference < 3) {
-                agent_host.sendCommand("turn -0.5");
-            } else {
-                agent_host.sendCommand("turn 0");
-            }
-        }
-    }
-
 
     private static void stop(AgentHost agent_host) {
         agent_host.sendCommand("move 0");

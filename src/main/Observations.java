@@ -1,3 +1,5 @@
+package main;
+
 import java.util.List;
 //All fields are case sensitive in relation to their json counterparts
 public class Observations {

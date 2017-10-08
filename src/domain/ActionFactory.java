@@ -2,6 +2,8 @@ package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.MoveTo;
+import domain.actions.Stop;
+import domain.fluents.IsAt;
 
 /**
  * Created by Mart on 8.10.2017.
@@ -14,7 +16,11 @@ public class ActionFactory {
         this.agentHost = agentHost;
     }
 
-    public MoveTo createMoveToAction(float x, float y, float z) {
-        return new MoveTo(agentHost, x, y, z);
+    public MoveTo createMoveToAction(IsAt isAt) {
+        return new MoveTo(agentHost, isAt);
+    }
+
+    public Stop createStop() {
+        return new Stop(agentHost);
     }
 }

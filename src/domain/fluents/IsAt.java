@@ -24,4 +24,16 @@ public class IsAt implements AtomicFluent {
                 && Math.abs(y - observations.YPos) <1
                 && Math.abs(z - observations.ZPos) < 1;
     }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getZ() {
+        return z;
+    }
 }

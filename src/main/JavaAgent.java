@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
 import domain.actions.MoveTo;
+import domain.fluents.IsAt;
 
 public class JavaAgent {
 
@@ -38,6 +39,7 @@ public class JavaAgent {
 
     private static GsonBuilder builder = new GsonBuilder();
     private static ActionFactory factory;
+    private static Agent agent;
 
 
     public static void main(String argv[]) throws InterruptedException {
@@ -46,11 +48,14 @@ public class JavaAgent {
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
 
+        Thread.sleep(500);
         agent_host.sendCommand("jump 1");
         Thread.sleep(500);
         agent_host.sendCommand("jump 0");
-        // main loop:
-        factory = new ActionFactory(agent_host);
+        Thread.sleep(500);
+
+        agent = createGoalAgent(agent_host);
+
         do {
             world_state = agent_host.getWorldState();
             TimestampedStringVector observations = world_state.getObservations();
@@ -58,14 +63,27 @@ public class JavaAgent {
             if (observations.size() > 0) {
                 Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
                 System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
-
-                doStuff(agent_host, unmarshalled);
+                agent.execute(unmarshalled);
                 Thread.sleep(50);
             }
             if (world_state == null) return;
         } while (world_state.getIsMissionRunning());
 
         System.out.println("Mission has stopped.");
+    }
+
+    private static Agent createGoalAgent(AgentHost agent_host) throws InterruptedException {
+        WorldState world_state;
+        world_state = agent_host.getWorldState();
+        TimestampedStringVector observations = world_state.getObservations();
+
+        while (observations.size() < 0) {
+            observations = world_state.getObservations();
+            Thread.sleep(50);
+        }
+
+        Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
+        return new Agent(new IsAt(0, unmarshalled.YPos, 0), factory = new ActionFactory(agent_host));
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -94,9 +112,11 @@ public class JavaAgent {
         //my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
-        my_mission.observeGrid(900, -1, 1000, 1000, -1, 1000, "CellObs");
-        my_mission.startAt(100, 230, 100);
+        my_mission.observeGrid(3, -1, 3, -3, -1, -3, "CellObs");
+        my_mission.startAt(0, 230, -50);
         my_mission.allowAllDiscreteMovementCommands();
+        my_mission.allowAllAbsoluteMovementCommands();
+        my_mission.allowAllContinuousMovementCommands();
         return my_mission;
     }
 
@@ -140,22 +160,5 @@ public class JavaAgent {
         System.out.println("");
         return world_state;
     }
-
-    private static void doStuff(AgentHost agent_host, Observations observations) throws InterruptedException {
-        MoveTo moveToAction = factory.createMoveToAction(0.0f, observations.YPos, 0.0f);
-
-        if (!moveToAction.getEffects().stream().allMatch(fluent -> fluent.test(observations))) {
-            moveToAction.accept(observations);
-        } else {
-            stop(agent_host);
-        }
-    }
-
-    private static void stop(AgentHost agent_host) {
-        agent_host.sendCommand("move 0");
-        agent_host.sendCommand("strafe 0");
-        agent_host.sendCommand("turn 0");
-    }
-
 
 }

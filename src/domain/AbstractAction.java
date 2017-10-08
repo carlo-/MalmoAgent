@@ -1,7 +1,9 @@
 package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
+import domain.fluents.IsAt;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,5 +16,18 @@ public abstract class AbstractAction implements Action {
 
     public AbstractAction(AgentHost agentHost) {
         this.agentHost = agentHost;
+        this.effects = Arrays.asList();
+        this.preconditions = Arrays.asList();
     }
+
+    @Override
+    public List<AtomicFluent> getPreconditions() {
+        return preconditions;
+    }
+
+    @Override
+    public List<AtomicFluent> getEffects() {
+        return effects;
+    }
+
 }

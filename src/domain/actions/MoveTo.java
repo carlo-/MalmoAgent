@@ -2,12 +2,10 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.AtomicFluent;
 import domain.fluents.IsAt;
 import main.Observations;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Mart on 8.10.2017.
@@ -20,23 +18,12 @@ public class MoveTo extends AbstractAction {
 
     private boolean discrete = true;
 
-    public MoveTo(AgentHost agentHost, float x, float y, float z){
+    public MoveTo(AgentHost agentHost, IsAt isAt) {
         super(agentHost);
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.effects = Arrays.asList(new IsAt(x, y, z));
-        this.preconditions = Arrays.asList();
-    }
-
-    @Override
-    public List<AtomicFluent> getPreconditions() {
-        return preconditions;
-    }
-
-    @Override
-    public List<AtomicFluent> getEffects() {
-        return effects;
+        this.x = isAt.getX();
+        this.y = isAt.getY();
+        this.z = isAt.getZ();
+        this.effects = Arrays.asList(isAt);
     }
 
     @Override
@@ -56,7 +43,7 @@ public class MoveTo extends AbstractAction {
         }
         float yawDifference = (360-targetYaw) - observations.Yaw;
 
-
+        agentHost.sendCommand("move 1");
         if (discrete) {
             if (zDifference > 0) {
                 agentHost.sendCommand("movesouth 1");

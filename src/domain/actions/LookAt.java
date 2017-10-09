@@ -28,7 +28,7 @@ public class LookAt extends AbstractAction {
     }
 
     @Override
-    public void perform() {
+    public void doAction(Observations observations) {
         // TODO: Implement
     }
 }

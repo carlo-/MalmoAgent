@@ -49,4 +49,7 @@ public abstract class AbstractAction implements Action {
             }
         } while (!effectsCompleted(observations));
     }
+
+
+    abstract void doAction(Observations observations);
 }

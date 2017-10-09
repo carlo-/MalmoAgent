@@ -118,7 +118,6 @@ public class JavaAgent {
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
 
-
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");
         drawTree(my_mission, -15, 20);
@@ -130,7 +129,7 @@ public class JavaAgent {
     }
 
     private static void drawTree(MissionSpec my_mission, int x, int z) {
-        my_mission.drawLine(x, 225, z, x, 230, z, "log");
+        my_mission.drawLine(x, 226, z, x, 230, z, "log");
     }
 
     private static MissionRecordSpec createMissionRecords() {

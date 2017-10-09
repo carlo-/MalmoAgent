@@ -101,7 +101,7 @@ public class JavaAgent {
 //        my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
         //  my_mission.startAt(0.5f, 67.0f, 0.5f);
 
-        my_mission.startAt(0.5f, 230.0f, 0.5f);
+        my_mission.startAt(10.5f, 230.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");

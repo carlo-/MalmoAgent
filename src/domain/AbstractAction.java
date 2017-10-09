@@ -2,6 +2,7 @@ package domain;
 
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.AgentHost;
+import com.microsoft.msr.malmo.TimestampedStringVector;
 import domain.fluents.IsAt;
 import main.Observations;
 
@@ -33,7 +34,19 @@ public abstract class AbstractAction implements Action {
         return effects;
     }
 
-    protected boolean effectsCompleted(Observations observations) {
+    private boolean effectsCompleted(Observations observations) {
         return observations != null && effects.stream().allMatch(predicate -> predicate.test(observations));
+    }
+
+    @Override
+    public void perform() {
+        Observations observations = null;
+        do {
+            TimestampedStringVector obs = agentHost.getWorldState().getObservations();
+            if (obs.size() > 0) {
+                observations = builder.create().fromJson(obs.get(0).getText(), Observations.class);
+                doAction(observations);
+            }
+        } while (!effectsCompleted(observations));
     }
 }

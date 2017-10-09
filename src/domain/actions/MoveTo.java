@@ -25,31 +25,24 @@ public class MoveTo extends AbstractAction {
         this.effects = Arrays.asList(isAt);
     }
 
-    @Override
-    public void perform() {
-        Observations observations = null;
-        do {
-            TimestampedStringVector obs = agentHost.getWorldState().getObservations();
-            if (obs.size() > 0) {
-                observations = builder.create().fromJson(obs.get(0).getText(), Observations.class);
 
-                float xDifference = x - observations.XPos;
-                float yDifference = y - observations.YPos;
-                float zDifference = z - observations.ZPos;
+    public void doAction(Observations observations) {
+        float xDifference = x - observations.XPos;
+        float yDifference = y - observations.YPos;
+        float zDifference = z - observations.ZPos;
 
-                if (zDifference > 0) {
-                    agentHost.sendCommand("movesouth 1");
-                } else if (zDifference < 0) {
-                    agentHost.sendCommand("movenorth 1");
-                }
+        if (zDifference > 0) {
+            agentHost.sendCommand("movesouth 1");
+        } else if (zDifference < 0) {
+            agentHost.sendCommand("movenorth 1");
+        }
 
-                if (xDifference > 0) {
-                    agentHost.sendCommand("moveeast 1");
-                } else if (xDifference < 0) {
-                    agentHost.sendCommand("movewest 1");
-                }
-            }
-        } while (!effectsCompleted(observations));
+        if (xDifference > 0) {
+            agentHost.sendCommand("moveeast 1");
+        } else if (xDifference < 0) {
+            agentHost.sendCommand("movewest 1");
+        }
+
     }
 
 //        float yawDifference = (360 - targetYaw) - observations.Yaw;

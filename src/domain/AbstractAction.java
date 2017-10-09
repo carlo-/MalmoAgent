@@ -51,5 +51,5 @@ public abstract class AbstractAction implements Action {
     }
 
 
-    abstract void doAction(Observations observations);
+    protected abstract void doAction(Observations observations);
 }

@@ -12,7 +12,7 @@ public class Stop extends AbstractAction {
         super(agentHost);
     }
 
-    public void accept(Observations observations) {
+    public void perform() {
         agentHost.sendCommand("move 0");
         agentHost.sendCommand("strafe 0");
         agentHost.sendCommand("turn 0");

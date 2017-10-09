@@ -27,7 +27,9 @@ public class MoveTo extends AbstractAction {
     }
 
     @Override
-    public void accept(Observations observations) {
+    public void perform() {
+        // TODO: Implement
+        /*
         float xDifference = x - observations.XPos;
         float yDifference = y - observations.YPos; //Needed later for jumping etc
         float zDifference = z - observations.ZPos;
@@ -69,5 +71,6 @@ public class MoveTo extends AbstractAction {
                 agentHost.sendCommand("turn 0");
             }
         }
+        */
     }
 }

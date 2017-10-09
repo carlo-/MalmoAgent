@@ -37,9 +37,9 @@ public class Planner {
         }
 
         if (currentAction != null && !currentAction.getEffects().stream().allMatch(fluent -> fluent.test(observations))) {
-            currentAction.accept(observations);
+            currentAction.perform();
         } else {
-            stop.accept(observations); //Temporary so we can identify when we have ended.
+            stop.perform(); //Temporary so we can identify when we have ended.
             currentAction = null;
         }
     }

@@ -54,19 +54,7 @@ public class JavaAgent {
         Thread.sleep(500);
 
         planner = createGoalAgent(agent_host);
-
-        do {
-            world_state = agent_host.getWorldState();
-            TimestampedStringVector observations = world_state.getObservations();
-
-            if (observations.size() > 0) {
-                Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
-                System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
-                //  planner.execute(unmarshalled);
-                Thread.sleep(50);
-            }
-            if (world_state == null) return;
-        } while (world_state.getIsMissionRunning());
+        planner.execute();
 
         System.out.println("Mission has stopped.");
     }
@@ -83,7 +71,7 @@ public class JavaAgent {
 
         String text = observations.get(0).getText();
         Observations unmarshalled = builder.create().fromJson(text, Observations.class);
-        return new Planner(new IsAt(0, unmarshalled.YPos, 0), factory = new ActionFactory(agent_host));
+        return new Planner(new IsAt(0, unmarshalled.YPos, 0), agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {

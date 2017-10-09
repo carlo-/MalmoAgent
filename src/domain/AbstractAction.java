@@ -1,7 +1,9 @@
 package domain;
 
+import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.fluents.IsAt;
+import main.Observations;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +15,7 @@ public abstract class AbstractAction implements Action {
     protected final AgentHost agentHost;
     protected List<AtomicFluent> effects;
     protected List<AtomicFluent> preconditions;
+    protected GsonBuilder builder = new GsonBuilder();
 
     public AbstractAction(AgentHost agentHost) {
         this.agentHost = agentHost;
@@ -30,4 +33,7 @@ public abstract class AbstractAction implements Action {
         return effects;
     }
 
+    protected boolean effectsCompleted(Observations observations) {
+        return observations != null && effects.stream().allMatch(predicate -> predicate.test(observations));
+    }
 }

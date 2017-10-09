@@ -1,22 +1,22 @@
 package domain.fluents;
 
 import domain.AtomicFluent;
+import domain.BlockType;
 import main.Observations;
 
 public class BlockAt implements AtomicFluent {
-    public final static String ANY_BLOCK = "any_block";
     private final float mX;
     private final float mZ;
     private final float mY;
-    private final String mTypeOfBlock;
+    private final BlockType mTypeOfBlock;
 
 
-    public BlockAt(float x, float y, float z, String typeOfBlock){
+    public BlockAt(float x, float y, float z, BlockType type){
         this.mX = x;
         this.mY = y;
         this.mZ = z;
 
-        mTypeOfBlock = typeOfBlock;
+        mTypeOfBlock = type;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BlockAt implements AtomicFluent {
         return mZ;
     }
 
-    public String getTypeOfBlock(){
+    public BlockType getTypeOfBlock(){
         return mTypeOfBlock;
     }
 }

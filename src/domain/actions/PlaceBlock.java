@@ -22,7 +22,6 @@ public class PlaceBlock extends AbstractAction {
         this.preconditions = Arrays.asList(new CanPlaceBlock(x,y,z)/*, HaveNumberOf(mBlockAt.getTypeOfBlock(), 1), hasItemInHand(mBlockAt.getTypeOfBlock())*/);//waiting for skeleton to implement
     }
 
-
     @Override
     protected void doAction(Observations observations) {
         agentHost.sendCommand("use 1");

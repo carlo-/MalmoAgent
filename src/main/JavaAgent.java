@@ -62,7 +62,7 @@ public class JavaAgent {
             if (observations.size() > 0) {
                 Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
                 System.out.println("X: " + unmarshalled.XPos + "  Y:" + unmarshalled.YPos + "  Z:" + unmarshalled.ZPos + "  Yaw:" + unmarshalled.Yaw + "  Pitch:" + unmarshalled.Pitch);
-                planner.execute(unmarshalled);
+                //  planner.execute(unmarshalled);
                 Thread.sleep(50);
             }
             if (world_state == null) return;
@@ -81,7 +81,8 @@ public class JavaAgent {
             Thread.sleep(50);
         }
 
-        Observations unmarshalled = builder.create().fromJson(observations.get(0).getText(), Observations.class);
+        String text = observations.get(0).getText();
+        Observations unmarshalled = builder.create().fromJson(text, Observations.class);
         return new Planner(new IsAt(0, unmarshalled.YPos, 0), factory = new ActionFactory(agent_host));
     }
 
@@ -108,15 +109,28 @@ public class JavaAgent {
     private static MissionSpec createMissionSpec(AgentHost agent_host) {
         MissionSpec my_mission = new MissionSpec();
         my_mission.forceWorldReset();
-        //my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
+//        my_mission.createDefaultTerrain();
+//        my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
+        //  my_mission.startAt(0.5f, 67.0f, 0.5f);
+
+        my_mission.startAt(0.5f, 230.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
-        my_mission.observeGrid(3, -1, 3, -3, -1, -3, "CellObs");
-        my_mission.startAt(-50.5f, 230.0f, -50.5f);
+        my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
+
+
         my_mission.allowAllDiscreteMovementCommands();
-        my_mission.allowAllAbsoluteMovementCommands();
-        my_mission.allowAllContinuousMovementCommands();
+        my_mission.drawSphere(20, 226, 20, 6, "stone");
+        drawTree(my_mission, -15, 20);
+        drawTree(my_mission, -16, 23);
+        drawTree(my_mission, -13, 21);
+        drawTree(my_mission, -12, 25);
+        drawTree(my_mission, -14, 27);
         return my_mission;
+    }
+
+    private static void drawTree(MissionSpec my_mission, int x, int z) {
+        my_mission.drawLine(x, 225, z, x, 230, z, "log");
     }
 
     private static MissionRecordSpec createMissionRecords() {

@@ -1,10 +1,12 @@
 package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
+import domain.actions.LookAt;
 import domain.actions.MoveTo;
 import domain.actions.PlaceBlock;
 import domain.fluents.BlockAt;
 import domain.fluents.IsAt;
+import domain.fluents.LookingAt;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,8 +34,15 @@ public class ActionFactory {
         } else if (fluent instanceof BlockAt) {
             BlockAt blockAt = (BlockAt) fluent;
             return Arrays.asList(createPlaceBlockAction(blockAt));
+        } else if (fluent instanceof LookingAt) {
+            LookingAt blockAt = (LookingAt) fluent;
+            return Arrays.asList(createLookAtAction(blockAt));
         }
         return Arrays.asList();
+    }
+
+    private LookAt createLookAtAction(LookingAt lookingAt) {
+        return new LookAt(agentHost,lookingAt);
     }
 
     private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {

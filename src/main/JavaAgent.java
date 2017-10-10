@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
 import domain.fluents.IsAt;
+import domain.fluents.LookingAt;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public class JavaAgent {
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
         my_mission.allowAllDiscreteMovementCommands();
+        my_mission.allowAllAbsoluteMovementCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);

@@ -35,8 +35,8 @@ public class ActionFactory {
             BlockAt blockAt = (BlockAt) fluent;
             return Arrays.asList(createPlaceBlockAction(blockAt));
         } else if (fluent instanceof LookingAt) {
-            LookingAt blockAt = (LookingAt) fluent;
-            return Arrays.asList(createLookAtAction(blockAt));
+            LookingAt lookingAt = (LookingAt) fluent;
+            return Arrays.asList(createLookAtAction(lookingAt));
         }
         return Arrays.asList();
     }

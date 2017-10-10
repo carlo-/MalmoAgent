@@ -14,5 +14,6 @@ public interface Action {
     List<AtomicFluent> getEffects();
     void perform();
 
+    boolean preconditionsMet();
     Observations getObservations();
 }

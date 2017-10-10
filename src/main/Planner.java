@@ -32,7 +32,14 @@ public class Planner {
     public void execute() {
         WorldState worldState = agentHost.getWorldState();
         while (plan.size() > 0 && worldState.getIsMissionRunning()) {
-            plan.remove(0).perform();
+            Action action = plan.get(0);
+            if (action.preconditionsMet()) {
+                plan.remove(0).perform();
+            } else {
+                List<Action> actions = satisfyConditions(action); //Reevaluate if our preconditions are not met for some reason
+                actions.addAll(plan);
+                plan = actions;
+            }
         }
         System.out.println("Done executing");
     }
@@ -54,13 +61,17 @@ public class Planner {
             return determinedList;
         }
 
-        List<Action> collect = bestAction.getPreconditions().stream()
+        List<Action> collect = satisfyConditions(bestAction);
+        collect.add(bestAction);
+        return collect;
+    }
+
+    private List<Action> satisfyConditions(Action bestAction) {
+        return bestAction.getPreconditions().stream()
                 .filter(precondition -> !precondition.test(bestAction.getObservations()))
                 .map(this::evaluate)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        collect.add(bestAction);
-        return collect;
     }
 
     private Action findCheapest(List<Action> actions) {

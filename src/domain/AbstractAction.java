@@ -36,6 +36,10 @@ public abstract class AbstractAction implements Action {
         return effects;
     }
 
+    public boolean preconditionsMet(){
+        return preconditions.size() == 0 || preconditions.stream().allMatch(predicate->predicate.test(getObservations()));
+    }
+
     private boolean effectsCompleted(Observations observations) {
         return observations != null && effects.stream().allMatch(predicate -> predicate.test(observations));
     }

@@ -11,4 +11,6 @@ public class Observations {
     public float Pitch;
     public boolean IsAlive;
     public List<String> CellObs;
+    public List<Integer> nbItems;
+    public List<String> items;
 }

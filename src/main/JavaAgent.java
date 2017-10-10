@@ -28,6 +28,10 @@ import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
 import domain.fluents.IsAt;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JavaAgent {
 
@@ -71,6 +75,9 @@ public class JavaAgent {
 
         String text = observations.get(0).getText();
         Observations unmarshalled = builder.create().fromJson(text, Observations.class);
+        Pair<List<Integer>, List<String>> x = JSONToLists(text);
+        unmarshalled.items = x.getValue();
+        unmarshalled.nbItems = x.getKey();
         return new Planner(new IsAt(0, unmarshalled.YPos, 0), agent_host);
     }
 
@@ -107,6 +114,7 @@ public class JavaAgent {
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");
+        my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
         drawTree(my_mission, -16, 23);
         drawTree(my_mission, -13, 21);
@@ -158,6 +166,44 @@ public class JavaAgent {
         } while (!world_state.getIsMissionRunning());
         System.out.println("");
         return world_state;
+    }
+
+    private final static String P1 = "InventorySlot_";
+    private final static String P2 = "_size";
+    private final static String P3 = "_item";
+
+    private static Pair<List<Integer>, List<String>> JSONToLists(String text) {
+        int sizeChars = P1.length() + P2.length() +3;
+        List<Integer> out1 = new ArrayList<>();
+        for (int i = 0; i <= 40; ++i) {
+            if (i == 10) sizeChars++;
+            int index = text.indexOf(P1 + i + P2)+ sizeChars;
+            boolean test;
+            String current = "";
+            do {
+                char c = text.charAt(index++);
+                test = c != ',';
+                if (test) current += c;
+            } while (test);
+            out1.add(Integer.valueOf(current));
+        }
+
+        List<String> out2 = new ArrayList<>();
+        for (int i = 0; i <= 40; ++i) {
+            if (i == 10) sizeChars++;
+            int index = text.indexOf(P1 + i + P3) + sizeChars;
+            boolean test;
+            String current = "";
+            do {
+                char c = text.charAt(index++);
+                test = c != '"';
+                if (test) current += c;
+            } while (test);
+            out2.add(current);
+        }
+
+        //System.out.println(out1.toString()+"\n"+ out2.toString());
+        return new Pair<>(out1, out2);
     }
 
     public static String createMissionXml() {

@@ -50,7 +50,6 @@ public abstract class AbstractAction implements Action {
         while (!effectsCompleted(observations)) {
             observations = getObservations();
             doAction(observations);
-            System.out.println("Z: " + observations.ZPos + " X: " + observations.XPos);
         }
     }
 

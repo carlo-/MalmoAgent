@@ -21,23 +21,24 @@ public class LookingAt implements AtomicFluent {
     @Override
     public boolean test(Observations observations) {
 
-        float xRel = observations.XPos - x;
-        float yRel = observations.YPos - y;
+        float xRel = x - observations.XPos;
+        float yRel = y - observations.YPos;
         float zRel = z - observations.ZPos;
 
-        float d_xz = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2));
-        float phi = (float)Math.toDegrees(Math.asin(zRel/d_xz));
-        if (xRel>0 && zRel<0) phi += (90-phi)*2;
-        if (xRel<0 && zRel<0) phi += 180-(phi*2);
-        if (xRel<0 && zRel>0) phi = 360+phi;
-        phi = 90-phi;
+        float d = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2)+Math.pow(yRel, 2));
 
-        float d_yz = (float)Math.sqrt(Math.pow(yRel, 2)+Math.pow(zRel, 2));
-        float theta = -(float)Math.toDegrees(Math.asin(zRel/d_yz));
+        float d_xz = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2));
+        float phi = (float)Math.toDegrees(Math.acos(zRel/d_xz));
+        if (xRel<0 && zRel<0) phi += (180-phi)*2;
+        if (xRel<0 && zRel>0) phi = 360-phi;
+        phi = 360-phi;
+
+        // float d_yz = d; //(float)Math.sqrt(Math.pow(yRel, 2)+Math.pow(zRel, 2));
+        float theta = (float)Math.toDegrees(-Math.asin(yRel/d));
 
         // Margin
-        float alpha_xz = (float)Math.toDegrees(Math.atan(1.0/(2*d_xz -1)));
-        float alpha_yz = (float)Math.toDegrees(Math.atan(1.0/(2*d_yz -1)));
+        float alpha_xz = (float)Math.toDegrees(Math.atan(1.0/(2*d -1)));
+        float alpha_yz = (float)Math.toDegrees(Math.atan(1.0/(2*d -1)));
 
         float pitch = observations.Pitch;
         float yaw = observations.Yaw;

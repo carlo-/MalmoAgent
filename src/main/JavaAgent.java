@@ -41,7 +41,7 @@ public class JavaAgent {
     private static Planner planner;
 
 
-    public static void main(String argv[]) throws InterruptedException {
+    public static void main(String argv[]) throws Exception {
         AgentHost agent_host = createAgentHost(argv);
         MissionSpec my_mission = createMissionSpec(agent_host);
         MissionRecordSpec my_mission_record = createMissionRecords();
@@ -94,8 +94,8 @@ public class JavaAgent {
         return agent_host;
     }
 
-    private static MissionSpec createMissionSpec(AgentHost agent_host) {
-        MissionSpec my_mission = new MissionSpec();
+    private static MissionSpec createMissionSpec(AgentHost agent_host) throws Exception {
+        MissionSpec my_mission = new MissionSpec(createMissionXml(), true);
         my_mission.forceWorldReset();
 //        my_mission.createDefaultTerrain();
 //        my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
@@ -105,7 +105,6 @@ public class JavaAgent {
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
-
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");
         drawTree(my_mission, -15, 20);
@@ -159,6 +158,36 @@ public class JavaAgent {
         } while (!world_state.getIsMissionRunning());
         System.out.println("");
         return world_state;
+    }
+
+    public static String createMissionXml() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "    <Mission xmlns=\"http://ProjectMalmo.microsoft.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+                "        <About>\n" +
+                "            <Summary>Lets build a house</Summary>\n" +
+                "        </About>\n" +
+                "\n" +
+                "        <ServerSection>\n" +
+                "            <ServerHandlers>\n" +
+                "                <FlatWorldGenerator generatorString=\"3;7,220*1,5*3,2;3;,biome_1\"/>" +
+                "                <ServerQuitFromTimeUp timeLimitMs=\"3000000\" description=\"out_of_time\"/>\n" +
+                "                <ServerQuitWhenAnyAgentFinishes />\n" +
+                "            </ServerHandlers>\n" +
+                "        </ServerSection>\n" +
+                "\n" +
+                "        <AgentSection mode=\"Survival\">\n" +
+                "            <Name>Rover</Name>\n" +
+                "            <AgentStart>\n" +
+                "            <Inventory>" +
+                "                 <InventoryItem slot=\"0\" type=\"diamond_pickaxe\"/>" +
+                "            </Inventory>" +
+                "            </AgentStart>\n" +
+                "            <AgentHandlers>\n" +
+                "                <ContinuousMovementCommands/>\n" +
+                "                <ObservationFromFullStats/>\n" +
+                "            </AgentHandlers>            \n" +
+                "        </AgentSection>\n" +
+                "    </Mission>\n";
     }
 
 }

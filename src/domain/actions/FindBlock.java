@@ -76,8 +76,21 @@ public class FindBlock extends AbstractAction {
         return blockAt;
     }
 
-    public boolean isBlockAt (IsAt isAt) {
-        //TODO
+    public boolean isBlockAt (IsAt isAt, Observations observations) {
+        int i = 0;
+        for (String block : observations.CellObs) {
+            int xPos = i % xObservationSize;
+            int yPos = (i % (xObservationSize * yObservationSize)) / xObservationSize;
+            int zPos = i / (xObservationSize * yObservationSize);
+            if (xPos == (int)isAt.getX() && yPos == (int)isAt.getY() && zPos == (int)isAt.getZ()) {
+                if (BlockType.valueOf(block).compareTo(BlockType.air) == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            i++;
+        }
         return false;
     }
 }

@@ -3,7 +3,6 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.MoveTo;
 import domain.actions.PlaceBlock;
-import domain.actions.Stop;
 import domain.fluents.BlockAt;
 import domain.fluents.IsAt;
 

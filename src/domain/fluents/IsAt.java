@@ -11,18 +11,23 @@ public class IsAt implements AtomicFluent {
     private final float x;
     private final float z;
     private final float y;
+    private final float distance;
 
-    public IsAt(float x, float y, float z) {
+    public IsAt(float x, float y, float z, float distance) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.distance = distance;
+    }
+    public IsAt(float x, float y, float z) {
+        this(x,y,z, 0.0f);
     }
 
     @Override
     public boolean test(Observations observations) {
-        return Math.abs(x - observations.XPos) < 1
-                && Math.abs(y - observations.YPos) <1
-                && Math.abs(z - observations.ZPos) < 1;
+        return Math.abs(x - observations.XPos) <= distance
+                && Math.abs(y - observations.YPos) <= distance
+                && Math.abs(z - observations.ZPos) <= distance;
     }
 
     public float getX() {
@@ -35,5 +40,9 @@ public class IsAt implements AtomicFluent {
 
     public float getZ() {
         return z;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 }

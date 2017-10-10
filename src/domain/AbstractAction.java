@@ -4,6 +4,8 @@ import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.AgentHost;
 import com.microsoft.msr.malmo.TimestampedStringVector;
 import domain.fluents.IsAt;
+import javafx.util.Pair;
+import main.JavaAgent;
 import main.Observations;
 
 import java.util.Arrays;
@@ -41,10 +43,11 @@ public abstract class AbstractAction implements Action {
     @Override
     public void perform() {
         Observations observations = null;
-        do {
+        while (!effectsCompleted(observations)) {
             observations = getObservations();
             doAction(observations);
-        } while (!effectsCompleted(observations));
+            System.out.println("Z: " + observations.ZPos + " X: " + observations.XPos);
+        }
     }
 
     public Observations getObservations() {
@@ -52,8 +55,11 @@ public abstract class AbstractAction implements Action {
         do {
             TimestampedStringVector obs = agentHost.getWorldState().getObservations();
             if (obs.size() > 0) {
+                String text = obs.get(0).getText();
                 observations = builder.create().fromJson(obs.get(0).getText(), Observations.class);
-
+                Pair<List<Integer>, List<String>> x = JavaAgent.JSONToLists(text);
+                observations.items = x.getValue();
+                observations.nbItems = x.getKey();
             }
         } while (observations == null);
         return observations;

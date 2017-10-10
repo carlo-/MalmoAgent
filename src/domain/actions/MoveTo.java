@@ -16,12 +16,14 @@ public class MoveTo extends AbstractAction {
     private final float z;
     private final float y;
     private final float x;
+    private final float distance;
 
     public MoveTo(AgentHost agentHost, IsAt isAt) {
         super(agentHost);
         this.x = isAt.getX();
         this.y = isAt.getY();
         this.z = isAt.getZ();
+        this.distance = isAt.getDistance();
         this.effects = Arrays.asList(isAt);
     }
 
@@ -31,43 +33,17 @@ public class MoveTo extends AbstractAction {
         float yDifference = y - observations.YPos;
         float zDifference = z - observations.ZPos;
 
-        if (zDifference > 0.5) {
+        if (zDifference > distance) {
             agentHost.sendCommand("movesouth 1");
-        } else if (zDifference < -0.5) {
+        } else if (zDifference < -distance) {
             agentHost.sendCommand("movenorth 1");
         }
 
-        if (xDifference > 0.5) {
+        if (xDifference > distance) {
             agentHost.sendCommand("moveeast 1");
-        } else if (xDifference < -0.5) {
+        } else if (xDifference < -distance) {
             agentHost.sendCommand("movewest 1");
         }
     }
 
-//        float yawDifference = (360 - targetYaw) - observations.Yaw;
-    // float targetYaw = (float) Math.toDegrees(Math.atan((double) (zDifference / xDifference)));
-//        if (xDifference > 0 && zDifference < 0) {
-//            targetYaw = 360 - targetYaw;
-//        }
-//        if (xDifference < 0 && zDifference > 0) {
-//            targetYaw = 180 + targetYaw;
-//        }
-//        if (xDifference < 0 && zDifference < 0) {
-//            targetYaw = 180 + targetYaw;
-//        }
-
-//} else {
-//            if (Math.abs(xDifference) > 1 || Math.abs(zDifference) > 1)
-//                agentHost.sendCommand("move 1");
-//            else
-//                agentHost.sendCommand("move 0");
-//
-//            if (yawDifference > 3) {
-//                agentHost.sendCommand("turn 0.5");
-//            } else if (yawDifference < 3) {
-//                agentHost.sendCommand("turn -0.5");
-//            } else {
-//                agentHost.sendCommand("turn 0");
-//            }
-//        }
 }

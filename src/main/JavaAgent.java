@@ -78,7 +78,7 @@ public class JavaAgent {
         Pair<List<Integer>, List<String>> x = JSONToLists(text);
         unmarshalled.items = x.getValue();
         unmarshalled.nbItems = x.getKey();
-        return new Planner(new IsAt(0, unmarshalled.YPos, 0), agent_host);
+        return new Planner(new IsAt(15.5f, unmarshalled.YPos, 15.5f), agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -104,11 +104,7 @@ public class JavaAgent {
     private static MissionSpec createMissionSpec(AgentHost agent_host) throws Exception {
         MissionSpec my_mission = new MissionSpec(createMissionXml(), true);
         my_mission.forceWorldReset();
-//        my_mission.createDefaultTerrain();
-//        my_mission.setWorldSeed("3;minecraft:bedrock,59*minecraft:stone,3*minecraft:dirt,minecraft:grass;1;");
-        //  my_mission.startAt(0.5f, 67.0f, 0.5f);
-
-        my_mission.startAt(10.5f, 230.0f, 0.5f);
+        my_mission.startAt(0.5f, 229.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
@@ -172,7 +168,7 @@ public class JavaAgent {
     private final static String P2 = "_size";
     private final static String P3 = "_item";
 
-    private static Pair<List<Integer>, List<String>> JSONToLists(String text) {
+    public static Pair<List<Integer>, List<String>> JSONToLists(String text) {
         int sizeChars = P1.length() + P2.length() +3;
         List<Integer> out1 = new ArrayList<>();
         for (int i = 0; i <= 40; ++i) {
@@ -202,7 +198,6 @@ public class JavaAgent {
             out2.add(current);
         }
 
-        //System.out.println(out1.toString()+"\n"+ out2.toString());
         return new Pair<>(out1, out2);
     }
 

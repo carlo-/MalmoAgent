@@ -4,6 +4,7 @@ import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
 import domain.BlockType;
 import domain.fluents.BlockAt;
+import domain.fluents.IsAt;
 import main.Observations;
 
 import java.util.List;
@@ -25,35 +26,58 @@ public class FindBlock extends AbstractAction {
 
     @Override
     public void doAction(Observations observations) {
-            BlockAt position = findBlock(observations.XPos, observations.YPos, observations.ZPos, observations.CellObs);
+        BlockAt dirt = findClosestBlockOf(observations.XPos, observations.YPos, observations.ZPos, observations.CellObs);
     }
 
-    private BlockAt findBlock(float xPos, float yPos, float zPos, List<String> cellObs) {
-        //TODO special case any
-        int xRelative = 0;
-        int yRelative = 0;
-        int zRelative = 0;
+    private void parseBlockMatrix(List<String> cellObs) {
+        int i = 0;
+        for (String blockType : cellObs) {
+            blocks[i % xObservationSize][(i % (xObservationSize * yObservationSize)) / xObservationSize]
+                    [i / (xObservationSize * yObservationSize)] = BlockType.valueOf(blockType);
+            i++;
+        }
+    }
+
+    private BlockAt findClosestBlockOf(float xPos, float yPos, float zPos, List<String> cellObs) {
+        System.out.println(xPos + "  " + yPos + "  " + zPos);
+        int xRelative = Integer.MAX_VALUE;
+        int yRelative = Integer.MAX_VALUE;
+        int zRelative = Integer.MAX_VALUE;
+        int distance = Integer.MAX_VALUE;
         int i = 0;
         for (String block : cellObs) {
             if (targetBlock.compareTo(BlockType.valueOf(block)) == 0) {
                 // calculate position in the grid
-                xRelative = i % xObservationSize;
-                yRelative = (i % (xObservationSize * yObservationSize)) / xObservationSize;
-                zRelative = i / (xObservationSize * yObservationSize);
+                int nextXRelative = i % xObservationSize;
+                int nextYRelative = (i % (xObservationSize * yObservationSize)) / xObservationSize;
+                int nextZRelative = i / (xObservationSize * yObservationSize);
                 // calculate position relative to us
-                xRelative += X_START_OBSERVATION + 1;
-                yRelative += Y_START_OBSERVATION;
-                zRelative += Z_START_OBSERVATION + 1;
-                break;
-                //TODO maybe find nearest Block isntead?
+                nextXRelative += X_START_OBSERVATION;
+                nextYRelative += Y_START_OBSERVATION;
+                nextZRelative += Z_START_OBSERVATION;
+                // calculate distance to us
+                int nextDistance = nextXRelative * nextXRelative + nextYRelative * nextYRelative + nextZRelative * nextZRelative;
+                // check if block is closer than previous best result
+                if (nextDistance < distance) {
+                    xRelative = nextXRelative;
+                    yRelative = nextYRelative;
+                    zRelative = nextZRelative;
+                    distance = nextDistance;
+                }
             }
             i++;
         }
-        if (xRelative == yRelative && yRelative == zRelative && zRelative == 0){
+        if (xRelative == yRelative && yRelative == zRelative && zRelative == Integer.MAX_VALUE){
             // no blocks of given type found
             return null;
         }
+        // return absolute position
         BlockAt blockAt = new BlockAt(xPos + xRelative, yPos + yRelative, zPos + zRelative, targetBlock);
         return blockAt;
+    }
+
+    public boolean isBlockAt (IsAt isAt) {
+        //TODO
+        return false;
     }
 }

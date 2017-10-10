@@ -5,10 +5,10 @@ package domain;
  */
 public enum BlockType {
     Any,
-    Air,
-    Log,
-    Plank,
-    Stone,
-    Grass,
-    Dirt;
+    air,
+    log,
+    plank,
+    stone,
+    grass,
+    dirt;
 }

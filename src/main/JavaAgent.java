@@ -36,6 +36,13 @@ import java.util.List;
 
 public class JavaAgent {
 
+    // start point must be lower than or equal to end point, for findBlock
+    public final static int X_START_OBSERVATION = -50;
+    public final static int Y_START_OBSERVATION = 0;
+    public final static int Z_START_OBSERVATION = -50;
+    public final static int X_STOP_OBSERVATION = 50;
+    public final static int Y_STOP_OBSERVATION = 0;
+    public final static int Z_STOP_OBSERVATION = 50;
 
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
@@ -108,7 +115,7 @@ public class JavaAgent {
         my_mission.startAt(0.5f, 229.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
-        my_mission.observeGrid(-5, 0, -5, 5, 0, 5, "CellObs");
+        my_mission.observeGrid(X_START_OBSERVATION, Y_START_OBSERVATION, Z_START_OBSERVATION, X_STOP_OBSERVATION, Y_STOP_OBSERVATION, Z_STOP_OBSERVATION, "CellObs");
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");

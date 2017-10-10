@@ -23,7 +23,7 @@ public class PlaceBlock extends AbstractAction {
     }
 
     @Override
-    protected void doAction(Observations observations) {
+    public void doAction(Observations observations) {
         agentHost.sendCommand("use 1");
     }
 }

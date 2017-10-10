@@ -27,6 +27,7 @@ package main;// ----------------------------------------------------------------
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
+import domain.actions.SelectItem;
 import domain.fluents.IsAt;
 import domain.fluents.LookingAt;
 import javafx.util.Pair;
@@ -59,11 +60,13 @@ public class JavaAgent {
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
 
-        Thread.sleep(500);
+        Thread.sleep(1000);
         agent_host.sendCommand("jump 1");
-        Thread.sleep(500);
+        Thread.sleep(1000);
         agent_host.sendCommand("jump 0");
-        Thread.sleep(500);
+        Thread.sleep(2000);
+        /*System.out.println("swap");
+        agent_host.sendCommand("swapInventoryItems 0 1");*/
 
         planner = createGoalAgent(agent_host);
         planner.execute();
@@ -230,6 +233,7 @@ public class JavaAgent {
                 "            <AgentStart>\n" +
                 "            <Inventory>" +
                 "                 <InventoryItem slot=\"0\" type=\"diamond_pickaxe\"/>" +
+                "                 <InventoryItem slot=\"1\" type=\"wooden_pickaxe\"/>" +
                 "            </Inventory>" +
                 "            </AgentStart>\n" +
                 "            <AgentHandlers>\n" +

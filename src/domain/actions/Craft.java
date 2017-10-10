@@ -32,7 +32,7 @@ public class Craft extends AbstractAction {
     }
 
     @Override
-    protected void doAction(Observations observations) {
+    public void doAction(Observations observations) {
         agentHost.sendCommand("craft "+mItem);
     }
 }

@@ -2,8 +2,13 @@ package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.MoveTo;
+import domain.actions.PlaceBlock;
 import domain.actions.Stop;
+import domain.fluents.BlockAt;
 import domain.fluents.IsAt;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Mart on 8.10.2017.
@@ -20,7 +25,19 @@ public class ActionFactory {
         return new MoveTo(agentHost, isAt);
     }
 
-    public Stop createStop() {
-        return new Stop(agentHost);
+
+    public List<Action> createPossibleActions(AtomicFluent fluent) {
+        if (fluent instanceof IsAt) {
+            IsAt isAt = (IsAt) fluent;
+            return Arrays.asList(createMoveToAction(isAt));
+        } else if (fluent instanceof BlockAt) {
+            BlockAt blockAt = (BlockAt) fluent;
+            return Arrays.asList(createPlaceBlockAction(blockAt));
+        }
+        return Arrays.asList();
+    }
+
+    private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {
+        return new PlaceBlock(agentHost, blockAt);
     }
 }

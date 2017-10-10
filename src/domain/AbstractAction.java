@@ -42,12 +42,21 @@ public abstract class AbstractAction implements Action {
     public void perform() {
         Observations observations = null;
         do {
+            observations = getObservations();
+            doAction(observations);
+        } while (!effectsCompleted(observations));
+    }
+
+    public Observations getObservations() {
+        Observations observations = null;
+        do {
             TimestampedStringVector obs = agentHost.getWorldState().getObservations();
             if (obs.size() > 0) {
                 observations = builder.create().fromJson(obs.get(0).getText(), Observations.class);
-                doAction(observations);
+
             }
-        } while (!effectsCompleted(observations));
+        } while (observations == null);
+        return observations;
     }
 
 

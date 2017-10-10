@@ -13,4 +13,6 @@ public interface Action {
     List<AtomicFluent> getPreconditions();
     List<AtomicFluent> getEffects();
     void perform();
+
+    Observations getObservations();
 }

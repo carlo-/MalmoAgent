@@ -31,18 +31,17 @@ public class MoveTo extends AbstractAction {
         float yDifference = y - observations.YPos;
         float zDifference = z - observations.ZPos;
 
-        if (zDifference > 0) {
+        if (zDifference > 0.5) {
             agentHost.sendCommand("movesouth 1");
-        } else if (zDifference < 0) {
+        } else if (zDifference < -0.5) {
             agentHost.sendCommand("movenorth 1");
         }
 
-        if (xDifference > 0) {
+        if (xDifference > 0.5) {
             agentHost.sendCommand("moveeast 1");
-        } else if (xDifference < 0) {
+        } else if (xDifference < -0.5) {
             agentHost.sendCommand("movewest 1");
         }
-
     }
 
 //        float yawDifference = (360 - targetYaw) - observations.Yaw;

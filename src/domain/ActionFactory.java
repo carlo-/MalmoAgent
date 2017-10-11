@@ -48,9 +48,13 @@ public class ActionFactory {
         if (Craft.CRAFTS.containsKey(item))
             return new Craft(agentHost, item);
         else {
-            BlockAt blockType = ObservationFactory.getObservations(agentHost).findBlockType(BlockType.log).get(0); //TODO: Just a  test
+            BlockAt blockType = findClosest(ObservationFactory.getObservations(agentHost).findBlockType(BlockType.log));
             return new GatherBlock(agentHost, blockType);
         }
+    }
+
+    private BlockAt findClosest(List<BlockAt> blocks) {
+        return blocks.get(0); //TODO: Just a  test,  find whatever
     }
 
     private LookAt createLookAtAction(LookingAt lookingAt) {

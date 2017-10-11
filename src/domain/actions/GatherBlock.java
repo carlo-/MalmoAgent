@@ -29,6 +29,11 @@ public class GatherBlock extends AbstractAction{
     @Override
     public void doAction (Observations observations) {
         agentHost.sendCommand("attack 1");
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         agentHost.sendCommand("attack 0");
     }
 

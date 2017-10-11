@@ -6,12 +6,14 @@ import domain.fluents.HasItemSelected;
 import domain.fluents.HasNumberOfItem;
 import main.Observations;
 
+import java.util.Arrays;
+
 public class SelectItem extends AbstractAction {
     private final String mItem;
 
     public SelectItem(AgentHost agentHost, String item) {
         super(agentHost);
-        preconditions.add(new HasNumberOfItem(item, 1));
+        preconditions = Arrays.asList(new HasNumberOfItem(item, 1));
         mItem = item;
     }
 

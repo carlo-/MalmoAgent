@@ -44,7 +44,7 @@ public class LookingAt implements AtomicFluent {
         float yaw = observations.Yaw;
         float yawCW = yaw >= 0f ? yaw : 360f+yaw;
 
-        boolean yawSat = Math.abs(yawCW-phi) < alpha_xz;
+        boolean yawSat = Math.abs(yawCW-phi) < alpha_xz || Math.abs(yawCW-phi) == 360;
         boolean pitchSat = Math.abs(pitch-theta) < alpha_yz;
 
         /*

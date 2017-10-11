@@ -26,10 +26,11 @@ public class BlockAt implements AtomicFluent {
 
     @Override
     public boolean test(Observations observations) {
+        BlockAt blockAt = observations.blockAt(mX, mY, mZ);
         if (mTypeOfBlock.compareTo(BlockType.Any) == 0) {
-            return !(observations.blockAt(mX, mY, mZ).getTypeOfBlock().compareTo(BlockType.air) == 0);
+            return !mTypeOfBlock.equals(BlockType.air);
         }
-        return mTypeOfBlock.compareTo(observations.blockAt(mX, mY, mZ).getTypeOfBlock()) == 0;
+        return mTypeOfBlock.equals(blockAt.getTypeOfBlock());
     }
 
     public float getX() {

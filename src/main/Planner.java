@@ -36,7 +36,7 @@ public class Planner {
             Action action = plan.get(0);
             if (action.preconditionsMet()) {
                 Action remove = plan.remove(0);
-                if (!remove.effectsCompleted()) {
+                if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
                     remove.perform();
                 }
             } else {

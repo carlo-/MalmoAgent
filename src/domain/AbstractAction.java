@@ -3,7 +3,7 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import main.Observations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,8 +16,8 @@ public abstract class AbstractAction implements Action {
 
     public AbstractAction(AgentHost agentHost) {
         this.agentHost = agentHost;
-        this.effects = Arrays.asList();
-        this.preconditions = Arrays.asList();
+        this.effects = new ArrayList<>();
+        this.preconditions = new ArrayList<>();
     }
 
     @Override

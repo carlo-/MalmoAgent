@@ -26,7 +26,9 @@ public class BlockAt implements AtomicFluent {
 
     @Override
     public boolean test(Observations observations) {
-        // to test for any block just see that there is no air
+        if (mTypeOfBlock.compareTo(BlockType.Any) == 0) {
+            return !(observations.blockAt(mX, mY, mZ).getTypeOfBlock().compareTo(BlockType.air) == 0);
+        }
         return mTypeOfBlock.compareTo(observations.blockAt(mX, mY, mZ).getTypeOfBlock()) == 0;
     }
 

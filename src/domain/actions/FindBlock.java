@@ -11,6 +11,8 @@ import java.util.List;
 
 import static main.JavaAgent.*;
 
+
+//TODO: Might be ok to remove this now  that it s moved to Observation?
 public class FindBlock extends AbstractAction {
 
     private final BlockType targetBlock;

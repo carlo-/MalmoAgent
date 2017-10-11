@@ -38,12 +38,15 @@ import java.util.List;
 public class JavaAgent {
 
     // start point must be lower than or equal to end point, for findBlock
-    public final static int X_START_OBSERVATION = -50;
-    public final static int Y_START_OBSERVATION = 0;
-    public final static int Z_START_OBSERVATION = -50;
-    public final static int X_STOP_OBSERVATION = 50;
-    public final static int Y_STOP_OBSERVATION = 0;
-    public final static int Z_STOP_OBSERVATION = 50;
+    public static final int X_START_OBSERVATION = -50;
+    public static final int Y_START_OBSERVATION = 0;
+    public static final int Z_START_OBSERVATION = -50;
+    public static final int X_STOP_OBSERVATION = 50;
+    public static final int Y_STOP_OBSERVATION = 0;
+    public static final int Z_STOP_OBSERVATION = 50;
+    public static final int X_OBSERVATION_SIZE = Math.abs(X_START_OBSERVATION - X_STOP_OBSERVATION) + 1;
+    public static final int Y_OBSERVATION_SIZE = Math.abs(Y_START_OBSERVATION - Y_STOP_OBSERVATION) + 1;
+    public static final int Z_OBSERVATION_SIZE = Math.abs(Z_START_OBSERVATION - Z_STOP_OBSERVATION) + 1;
 
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)

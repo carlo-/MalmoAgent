@@ -9,6 +9,7 @@ public enum BlockType {
     log,
     plank,
     stone,
+    cobblestone,
     grass,
     dirt;
 }

@@ -41,16 +41,8 @@ import java.util.List;
 
 public class JavaAgent {
 
-    // start point must be lower than or equal to end point, for findBlock
-    public static final int X_START_OBSERVATION = -50;
-    public static final int Y_START_OBSERVATION = 0;
-    public static final int Z_START_OBSERVATION = -50;
-    public static final int X_STOP_OBSERVATION = 50;
-    public static final int Y_STOP_OBSERVATION = 0;
-    public static final int Z_STOP_OBSERVATION = 50;
-    public static final int X_OBSERVATION_SIZE = Math.abs(X_START_OBSERVATION - X_STOP_OBSERVATION) + 1;
-    public static final int Y_OBSERVATION_SIZE = Math.abs(Y_START_OBSERVATION - Y_STOP_OBSERVATION) + 1;
-    public static final int Z_OBSERVATION_SIZE = Math.abs(Z_START_OBSERVATION - Z_STOP_OBSERVATION) + 1;
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, 0, -50, 50, 0, 50);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1, -5, 5, 5, 5);
 
     public static void checkArgs(float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
         if (fromX > toX || fromY > toY || fromZ > toZ) {
@@ -159,7 +151,10 @@ public class JavaAgent {
         my_mission.startAt(0.5f, 229.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
-        my_mission.observeGrid(X_START_OBSERVATION, Y_START_OBSERVATION, Z_START_OBSERVATION, X_STOP_OBSERVATION, Y_STOP_OBSERVATION, Z_STOP_OBSERVATION, "CellObs");
+        my_mission.observeGrid(CELL_PLANE.getXStartObservation(), CELL_PLANE.getYStartObservation(), CELL_PLANE.getZStartObservation(),
+                CELL_PLANE.getXEndObservation(), CELL_PLANE.getYEndObservation(), CELL_PLANE.getZEndObservation(), "CellPlane");
+        my_mission.observeGrid(CELL_BOX.getXStartObservation(), CELL_BOX.getYStartObservation(), CELL_BOX.getZStartObservation(),
+                CELL_BOX.getXEndObservation(), CELL_BOX.getYEndObservation(), CELL_BOX.getZEndObservation(), "CellBox");
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();

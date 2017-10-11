@@ -22,10 +22,6 @@ public class ActionFactory {
         return new MoveTo(agentHost, isAt);
     }
 
-    public FindBlock createFindBlockAction(BlockType blockType) {
-        return new FindBlock(agentHost, blockType);
-    }
-
     public List<Action> createPossibleActions(AtomicFluent fluent) {
         if (fluent instanceof IsAt) {
             return Arrays.asList(createMoveToAction((IsAt) fluent));

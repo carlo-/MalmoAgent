@@ -57,6 +57,7 @@ public class ActionFactory {
     }
 
     private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {
+        //TODO case we want a block to be free => gather the block instead
         return new PlaceBlock(agentHost, blockAt);
     }
 }

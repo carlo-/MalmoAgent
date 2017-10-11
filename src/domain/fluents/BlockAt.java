@@ -3,6 +3,7 @@ package domain.fluents;
 import domain.AtomicFluent;
 import domain.BlockType;
 import main.Observations;
+import static main.JavaAgent.*;
 
 public class BlockAt implements AtomicFluent {
     private final float mX;
@@ -19,10 +20,14 @@ public class BlockAt implements AtomicFluent {
         mTypeOfBlock = type;
     }
 
+    public String getTypeOfBlockString(){
+        return mTypeOfBlock.name();
+    }
+
     @Override
     public boolean test(Observations observations) {
-        //TODO special case ANY_BLOCK
-        return false;
+        // to test for any block just see that there is no air
+        return mTypeOfBlock.compareTo(observations.blockAt(mX, mY, mZ).getTypeOfBlock()) == 0;
     }
 
     public float getX() {

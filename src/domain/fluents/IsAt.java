@@ -12,6 +12,7 @@ public class IsAt implements AtomicFluent {
     private final float z;
     private final float y;
     private final float distance;
+    private boolean negate = false;
 
     public IsAt(float x, float y, float z, float distance) {
         this.x = x;

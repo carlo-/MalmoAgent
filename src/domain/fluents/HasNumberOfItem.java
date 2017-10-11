@@ -12,18 +12,12 @@ public class HasNumberOfItem implements AtomicFluent {
         mNumberOf = numberOf;
     }
 
+    public String getItem(){
+        return mItem;
+    }
 
     @Override
     public boolean test(Observations observations) {
-        int index = 0;
-        int total = 0;
-        for(String s : observations.items){
-            if(s.equals(mItem)){
-                total+=observations.nbItems.get(index);
-                if(total >= mNumberOf) return true;
-            }
-            ++index;
-        }
-        return false;
+        return observations.numberOf(mItem) >= mNumberOf;
     }
 }

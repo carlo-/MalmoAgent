@@ -23,7 +23,8 @@ public class Observations {
 
     public BlockAt blockAt(float x, float y, float z) {
         return new BlockAt(x, y, z, BlockType.log);
-        //TODO: Ugly hack. But its good enough for the test run to mine a block. Block at currently doesnt compute correctly. Too  tired to fix it.
+        //TODO: Ugly hack. But its good enough for the test run to mine a block. Block at currently doesnt compute correctly. Too  tired to fix it. If you ran it, this is the
+        // TODO:reason it doesnt stop attacking
      /*   BlockAt blockAt = blockAt(x, y, z, "CellBox");
         if (blockAt != null) {
             return blockAt;

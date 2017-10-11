@@ -3,6 +3,7 @@ package domain.fluents;
 import domain.AtomicFluent;
 import domain.BlockType;
 import main.Observations;
+import static main.JavaAgent.*;
 
 public class BlockAt implements AtomicFluent {
     private final float mX;
@@ -25,7 +26,21 @@ public class BlockAt implements AtomicFluent {
 
     @Override
     public boolean test(Observations observations) {
-        //TODO special case ANY_BLOCK
+        // to test for any block just see that there is no air
+        int i = 0;
+        for (String block : observations.CellObs) {
+            int xPos = i % X_OBSERVATION_SIZE;
+            int yPos = (i % (X_OBSERVATION_SIZE * Y_OBSERVATION_SIZE)) / X_OBSERVATION_SIZE;
+            int zPos = i / (X_OBSERVATION_SIZE * Y_OBSERVATION_SIZE);
+            if (xPos == (int)mX && yPos == (int)mY && zPos == (int)mZ) {
+                if (BlockType.valueOf(block).compareTo(BlockType.air) == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            i++;
+        }
         return false;
     }
 

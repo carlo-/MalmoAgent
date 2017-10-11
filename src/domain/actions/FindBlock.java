@@ -11,6 +11,8 @@ import java.util.List;
 
 import static main.JavaAgent.*;
 
+
+//TODO: Might be ok to remove this now  that it s moved to Observation?
 public class FindBlock extends AbstractAction {
 
     private final BlockType targetBlock;
@@ -74,23 +76,5 @@ public class FindBlock extends AbstractAction {
         // return absolute position
         BlockAt blockAt = new BlockAt(xPos + xRelative, yPos + yRelative, zPos + zRelative, targetBlock);
         return blockAt;
-    }
-
-    public boolean isBlockAt (IsAt isAt, Observations observations) {
-        int i = 0;
-        for (String block : observations.CellObs) {
-            int xPos = i % xObservationSize;
-            int yPos = (i % (xObservationSize * yObservationSize)) / xObservationSize;
-            int zPos = i / (xObservationSize * yObservationSize);
-            if (xPos == (int)isAt.getX() && yPos == (int)isAt.getY() && zPos == (int)isAt.getZ()) {
-                if (BlockType.valueOf(block).compareTo(BlockType.air) == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-            i++;
-        }
-        return false;
     }
 }

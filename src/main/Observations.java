@@ -21,7 +21,11 @@ public class Observations {
     public List<Integer> nbItems;
     public List<String> items;
 
-    public List<BlockAt> findBlockType (BlockType blockType) {
+    public BlockAt blockAt(float x, float y, float z){
+        return new BlockAt(x,y,z,BlockType.air); //TODO: Julian, I will leave this for you.
+    }
+
+    public List<BlockAt> findBlockType(BlockType blockType) {
         List<BlockAt> blocks = new ArrayList<BlockAt>();
         int i = 0;
         int xRelative;

@@ -19,7 +19,8 @@ public class PlaceBlock extends AbstractAction {
         float z = blockAt.getZ();
         mBlockAt = blockAt;
         this.effects = Arrays.asList(blockAt);
-        this.preconditions = Arrays.asList(new CanPlaceBlock(x,y,z)/*, HaveNumberOf(mBlockAt.getTypeOfBlock(), 1), hasItemInHand(mBlockAt.getTypeOfBlock())*/);//waiting for skeleton to implement
+        this.preconditions = Arrays.asList(new CanPlaceBlock(x,y,z)/*, HaveNumberOf(mBlockAt.getTypeOfBlock(), 1), hasItemInHand(mBlockAt.getTypeOfBlock())*/);//waiting for
+        // skeleton to implement
     }
 
     @Override

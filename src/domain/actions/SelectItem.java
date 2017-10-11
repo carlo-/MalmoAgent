@@ -16,7 +16,6 @@ public class SelectItem extends AbstractAction {
 
     @Override
     public void doAction(Observations observations) {
-        String item = observations.items.get(0);
-        if (!item.equals(mItem)) agentHost.sendCommand("swapInventoryItems "+mItem+" "+item);
+        agentHost.sendCommand("swapInventoryItems 0 "+observations.items.indexOf(mItem));
     }
 }

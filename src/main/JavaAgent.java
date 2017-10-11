@@ -65,8 +65,6 @@ public class JavaAgent {
         Thread.sleep(1000);
         agent_host.sendCommand("jump 0");
         Thread.sleep(2000);
-        /*System.out.println("swap");
-        agent_host.sendCommand("swapInventoryItems 0 1");*/
 
         planner = createGoalAgent(agent_host);
         planner.execute();
@@ -121,6 +119,7 @@ public class JavaAgent {
         my_mission.observeGrid(X_START_OBSERVATION, Y_START_OBSERVATION, Z_START_OBSERVATION, X_STOP_OBSERVATION, Y_STOP_OBSERVATION, Z_STOP_OBSERVATION, "CellObs");
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
+        my_mission.allowAllInventoryCommands();
         my_mission.drawSphere(20, 226, 20, 6, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);

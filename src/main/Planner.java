@@ -5,6 +5,7 @@ import com.microsoft.msr.malmo.WorldState;
 import domain.Action;
 import domain.ActionFactory;
 import domain.AtomicFluent;
+import domain.ObservationFactory;
 import domain.fluents.IsAt;
 
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ public class Planner {
 
     public Planner(AtomicFluent currentGoal, AgentHost agentHost) {
         this.currentGoal = currentGoal;
+        this.agentHost = agentHost;
         this.factory = new ActionFactory(agentHost);
         this.plan = determinePlan(currentGoal);
-        this.agentHost = agentHost;
     }
 
     public void execute() {
@@ -71,7 +72,7 @@ public class Planner {
 
     private List<Action> satisfyConditions(Action bestAction) {
         return bestAction.getPreconditions().stream()
-                .filter(precondition -> !precondition.test(bestAction.getObservations()))
+                .filter(precondition -> !precondition.test(ObservationFactory.getObservations(agentHost)))
                 .map(this::evaluate)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

@@ -19,7 +19,7 @@ public class GatherBlock extends AbstractAction{
         String tool = toolForTheJob(targetBlock.getTypeOfBlock());
         preconditions = Arrays.asList(targetBlock,
                 new LookingAt(x, y, z),
-                new IsLineOfSightFree(x, y, z),
+              //  new IsLineOfSightFree(x, y, z),
                 new IsAt(x, y, z, 1),
                 new HasNumberOfItem(tool, 1),
                 new HasItemSelected(tool));

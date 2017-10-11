@@ -3,6 +3,7 @@ package domain.actions;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
 import domain.AtomicFluent;
+import domain.ObservationFactory;
 import domain.fluents.HasNumberOfItem;
 import javafx.util.Pair;
 import main.Observations;
@@ -31,9 +32,9 @@ public class Craft extends AbstractAction {
             name = pair.getKey();
             quantity = pair.getValue();
             this.preconditions.add(new HasNumberOfItem(name, quantity));
-            this.effects.add(new HasNumberOfItem(name, getObservations().numberOf(name) - quantity));
+            this.effects.add(new HasNumberOfItem(name, ObservationFactory.getObservations(agentHost).numberOf(name) - quantity));
         }
-        this.effects.add(new HasNumberOfItem(item, getObservations().numberOf(item) + 1));
+        this.effects.add(new HasNumberOfItem(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1));
     }
 
     @Override

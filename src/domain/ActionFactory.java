@@ -3,6 +3,7 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.*;
 import domain.fluents.*;
+import main.Observations;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,7 @@ public class ActionFactory {
             return Arrays.asList(createLookAtAction((LookingAt) fluent));
         } else if (fluent instanceof HasItemSelected) {
             return Arrays.asList(createSelectItemAction((HasItemSelected) fluent));
-        } else if (fluent instanceof HasNumberOfItem){
+        } else if (fluent instanceof HasNumberOfItem) {
             return Arrays.asList(createGatherOrCraftAction((HasNumberOfItem) fluent));
         }
         return Arrays.asList();
@@ -45,11 +46,15 @@ public class ActionFactory {
         return new SelectItem(agentHost, item);
     }
 
-    private AbstractAction createGatherOrCraftAction(HasNumberOfItem nbItems){
+    private AbstractAction createGatherOrCraftAction(HasNumberOfItem nbItems) {
         String item = nbItems.getItem();
         //Check if the item is craftable, otherwise try to gather it
-        if(Craft.CRAFTS.containsKey(item))return new Craft(agentHost, item);
-        else return null; //TODO will be a gather action
+        if (Craft.CRAFTS.containsKey(item))
+            return new Craft(agentHost, item);
+        else {
+            BlockAt blockType = ObservationFactory.getObservations(agentHost).findBlockType(BlockType.log).get(0); //TODO: Just a  test
+            return new GatherBlock(agentHost, blockType);
+        }
     }
 
     private LookAt createLookAtAction(LookingAt lookingAt) {
@@ -57,7 +62,6 @@ public class ActionFactory {
     }
 
     private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {
-        //TODO case we want a block to be free => gather the block instead
         return new PlaceBlock(agentHost, blockAt);
     }
 }

@@ -31,6 +31,7 @@ import domain.AtomicFluent;
 import domain.BlockType;
 import domain.actions.SelectItem;
 import domain.fluents.BlockAt;
+import domain.fluents.HasNumberOfItem;
 import domain.fluents.IsAt;
 import domain.fluents.LookingAt;
 import javafx.util.Pair;
@@ -129,7 +130,7 @@ public class JavaAgent {
         Pair<List<Integer>, List<String>> x = JSONToLists(text);
         unmarshalled.items = x.getValue();
         unmarshalled.nbItems = x.getKey();
-        return new Planner(new IsAt(15.5f, unmarshalled.YPos, 15.5f), agent_host);
+        return new Planner(new HasNumberOfItem("log", 1), agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -273,8 +274,8 @@ public class JavaAgent {
                 "            <Name>Rover</Name>\n" +
                 "            <AgentStart>\n" +
                 "            <Inventory>" +
-                "                 <InventoryItem slot=\"0\" type=\"diamond_pickaxe\"/>" +
-                "                 <InventoryItem slot=\"1\" type=\"wooden_pickaxe\"/>" +
+                "                 <InventoryItem slot=\"1\" type=\"diamond_pickaxe\"/>" +
+                "                 <InventoryItem slot=\"2\" type=\"diamond_axe\"/>" +
                 "            </Inventory>" +
                 "            </AgentStart>\n" +
                 "            <AgentHandlers>\n" +

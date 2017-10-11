@@ -4,6 +4,7 @@ import domain.BlockType;
 import domain.fluents.BlockAt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static main.JavaAgent.*;
@@ -48,7 +49,7 @@ public class Observations {
         }
         if (blocks.size() == 0) {
             // no blocks of given type found
-            return null;
+            return Arrays.asList();
         }
         return blocks;
     }

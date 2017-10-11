@@ -15,5 +15,6 @@ public interface Action {
     void perform();
 
     boolean preconditionsMet();
+    boolean effectsCompleted();
     Observations getObservations();
 }

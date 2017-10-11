@@ -10,6 +10,10 @@ public class HasItemSelected implements AtomicFluent {
         mItem = item;
     }
 
+    public String getItem(){
+        return mItem;
+    }
+
     @Override
     public boolean test(Observations observations) {
         //the item selected should always be at position 0, the AI will not ever move it

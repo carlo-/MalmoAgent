@@ -21,7 +21,7 @@ public class Observations {
     public List<Integer> nbItems;
     public List<String> items;
 
-    public List<BlockAt> findBlockType (BlockType blockType) {
+    public List<BlockAt> findBlockType(BlockType blockType) {
         List<BlockAt> blocks = new ArrayList<BlockAt>();
         int i = 0;
         int xRelative;
@@ -47,5 +47,17 @@ public class Observations {
             return null;
         }
         return blocks;
+    }
+
+    public int numberOf(String item) {
+        int index = 0;
+        int total = 0;
+        for (String s : items) {
+            if (s.equals(item)) {
+                total += nbItems.get(index);
+            }
+            ++index;
+        }
+        return total;
     }
 }

@@ -22,8 +22,19 @@ public class Observations {
     public List<Integer> nbItems;
     public List<String> items;
 
-    public BlockAt blockAt(float x, float y, float z){
-        return new BlockAt(x,y,z,BlockType.air); //TODO: Julian, I will leave this for you.
+    public BlockAt blockAt(float x, float y, float z) {
+        // to test for any block just see that there is no air
+        int i = 0;
+        for (String block : CellObs) {
+            int nX = i % X_OBSERVATION_SIZE;
+            int nY = (i % (X_OBSERVATION_SIZE * Y_OBSERVATION_SIZE)) / X_OBSERVATION_SIZE;
+            int nZ = i / (X_OBSERVATION_SIZE * Y_OBSERVATION_SIZE);
+            if (nX == (int)x && nY == (int)y && nZ == (int)z) {
+                return new BlockAt(x, y, z, BlockType.valueOf(block));
+            }
+            i++;
+        }
+        return new BlockAt(x, y, z, BlockType.Any);
     }
 
     public List<BlockAt> findBlockType(BlockType blockType) {

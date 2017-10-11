@@ -19,6 +19,10 @@ public class BlockAt implements AtomicFluent {
         mTypeOfBlock = type;
     }
 
+    public String getTypeOfBlockString(){
+        return mTypeOfBlock.name();
+    }
+
     @Override
     public boolean test(Observations observations) {
         //TODO special case ANY_BLOCK

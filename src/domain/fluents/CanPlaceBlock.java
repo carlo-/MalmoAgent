@@ -5,7 +5,7 @@ import domain.BlockType;
 import main.Observations;
 
 public class CanPlaceBlock implements AtomicFluent {
-    private final static float MAX_DISTANCE_TO_CLICK = 2.5f;
+    private final static float MAX_DISTANCE_TO_CLICK = 2f;
     private final float mX;
     private final float mZ;
     private final float mY;
@@ -24,14 +24,7 @@ public class CanPlaceBlock implements AtomicFluent {
 
     @Override
     public boolean test(Observations obs) {
-        //check destination block is free
-        boolean output = !new BlockAt(mX, mY, mZ, BlockType.Any).test(obs);
-        if(!output)return false;//intermediate possible return to be faster often...
-        //check the player is close enough, MAX_DISTANCE_TO_CLICK on the 3 axes
-        output = output && Math.abs(mX - obs.XPos) < MAX_DISTANCE_TO_CLICK
-                && Math.abs(mY - obs.YPos) < MAX_DISTANCE_TO_CLICK
-                && Math.abs(mZ - obs.ZPos) < MAX_DISTANCE_TO_CLICK;
-        if(!output)return false;
+        boolean output = true;
         //check the player is looking at ANY face of a cube next to this one (suppose only plane cubes...)
         output = output && ((new BlockAt(mX + 1, mY, mZ, BlockType.Any).test(obs) && new IsLineOfSightFree(mX + 0.5f, mY, mZ).test(obs))||
                 (new BlockAt(mX - 1, mY, mZ, BlockType.Any).test(obs) && new IsLineOfSightFree(mX - 0.5f, mY, mZ).test(obs))||

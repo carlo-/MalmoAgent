@@ -40,4 +40,9 @@ public class BlockAt implements AtomicFluent {
     public BlockType getTypeOfBlock(){
         return mTypeOfBlock;
     }
+
+    @Override
+    public String toString() {
+        return "Block Type: " + mTypeOfBlock.toString() + "\tx: " + mX + "\ty: " + mY + "\tz: " + mZ;
+    }
 }

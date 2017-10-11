@@ -40,14 +40,15 @@ public abstract class AbstractAction implements Action {
         return preconditions.size() == 0 || preconditions.stream().allMatch(predicate->predicate.test(getObservations()));
     }
 
-    private boolean effectsCompleted(Observations observations) {
+    public boolean effectsCompleted() {
+        Observations observations = getObservations();
         return observations != null && effects.stream().allMatch(predicate -> predicate.test(observations));
     }
 
     @Override
     public void perform() {
         Observations observations = null;
-        while (!effectsCompleted(observations)) {
+        while (!effectsCompleted()) {
             observations = getObservations();
             doAction(observations);
         }

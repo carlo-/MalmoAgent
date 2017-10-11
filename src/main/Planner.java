@@ -34,7 +34,10 @@ public class Planner {
         while (plan.size() > 0 && worldState.getIsMissionRunning()) {
             Action action = plan.get(0);
             if (action.preconditionsMet()) {
-                plan.remove(0).perform();
+                Action remove = plan.remove(0);
+                if (!remove.effectsCompleted()) {
+                    remove.perform();
+                }
             } else {
                 List<Action> actions = satisfyConditions(action); //Reevaluate if our preconditions are not met for some reason
                 actions.addAll(plan);

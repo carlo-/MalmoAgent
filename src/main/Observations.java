@@ -87,7 +87,7 @@ public class Observations {
             grid.observations = CellPlane;
         } else if (gridName.equals("CellBox")) {
             grid = JavaAgent.CELL_BOX;
-            grid.observations = CellPlane;
+            grid.observations = CellBox;
         }
         return grid;
     }

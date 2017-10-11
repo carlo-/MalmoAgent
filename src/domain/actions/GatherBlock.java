@@ -19,7 +19,7 @@ public class GatherBlock extends AbstractAction{
         String tool = toolForTheJob(targetBlock.getTypeOfBlock());
         preconditions = Arrays.asList(targetBlock,
                 new LookingAt(x, y, z),
-              //  new IsLineOfSightFree(x, y, z),
+              //  new IsLineOfSightFree(x, y, z),//TODO: Cant use it before we have an action defined that can solve it.  Otherwise planner fails
                 new IsAt(x, y, z, 1),
                 new HasNumberOfItem(tool, 1),
                 new HasItemSelected(tool));
@@ -30,7 +30,7 @@ public class GatherBlock extends AbstractAction{
     public void doAction (Observations observations) {
         agentHost.sendCommand("attack 1");
         try {
-            Thread.sleep(100);
+            Thread.sleep(100); //TODO: Test value, might need some other way of attacking long
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

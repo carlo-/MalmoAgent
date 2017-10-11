@@ -23,6 +23,7 @@ public class IsLineOfSightFree implements AtomicFluent {
     @Override
     public boolean test(Observations observations) {
         //TODO if someone feel like he knows well spacial geometry: need to figure out every block in the segment from the player to the destination
+        //This should only be implemented if we see its necessary. I think alot can be done without it.
         return false;
     }
 }

@@ -22,7 +22,8 @@ public class Observations {
     public List<String> items;
 
     public BlockAt blockAt(float x, float y, float z) {
-        return new BlockAt(x, y, z, BlockType.log);//TODO: Ugly hack. But its good enough for the test run. Block at currently doesnt compute correctly. Too tired  to fix it.
+        return new BlockAt(x, y, z, BlockType.log);
+        //TODO: Ugly hack. But its good enough for the test run to mine a block. Block at currently doesnt compute correctly. Too  tired to fix it.
      /*   BlockAt blockAt = blockAt(x, y, z, "CellBox");
         if (blockAt != null) {
             return blockAt;

@@ -73,10 +73,6 @@ public class Observations {
             }
             i++;
         }
-        if (blocks.size() == 0) {
-            // no blocks of given type found
-            return Arrays.asList();
-        }
         return blocks;
     }
 

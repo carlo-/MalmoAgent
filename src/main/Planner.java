@@ -71,6 +71,7 @@ public class Planner {
     }
 
     private List<Action> satisfyConditions(Action bestAction) {
+        ObservationFactory.invalidate();
         return bestAction.getPreconditions().stream()
                 .filter(precondition -> !precondition.test(ObservationFactory.getObservations(agentHost)))
                 .map(this::evaluate)

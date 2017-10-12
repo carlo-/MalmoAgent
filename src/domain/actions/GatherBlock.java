@@ -2,13 +2,25 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
+import domain.ActionFactory;
 import domain.BlockType;
+import domain.ObservationFactory;
 import domain.fluents.*;
 import main.Observations;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GatherBlock extends AbstractAction{
+    private final static Map<BlockType, String> BLOCK_TO_ITEM;
+    static{
+        Map<BlockType, String> temp = new HashMap<>();
+        temp.put(BlockType.log, "oak");
+        temp.put(BlockType.stone, "cobblestone");
+        BLOCK_TO_ITEM = Collections.unmodifiableMap(temp);
+    }
 
     public GatherBlock (AgentHost agentHost, BlockAt targetBlock) {
         super(agentHost);
@@ -22,7 +34,8 @@ public class GatherBlock extends AbstractAction{
                 new IsAt(x, y, z, 1),
                 new HasNumberOfItem(tool, 1),
                 new HasItemSelected(tool));
-        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air)); //TODO effect collected item
+        String item = BLOCK_TO_ITEM.get(targetBlock.getTypeOfBlock());
+        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air), new HasNumberOfItem(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1)); //TODO effect collected item
     }
 
     @Override
@@ -36,7 +49,7 @@ public class GatherBlock extends AbstractAction{
         agentHost.sendCommand("attack 0");
     }
 
-    private String toolForTheJob(BlockType blockType) {
+    private static String toolForTheJob(BlockType blockType) {
         switch (blockType) {
             case log:
                 return "diamond_axe";

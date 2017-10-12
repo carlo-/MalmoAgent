@@ -15,7 +15,7 @@ public class Craft extends AbstractAction {
     static {
         Map<String, Pair<Integer, List<Pair<String, Integer>>>> crafts = new HashMap<>();
         crafts.put("diamond_pickaxe", new Pair<>(1, Collections.unmodifiableList(Arrays.asList(new Pair<>("diamond", 3), new Pair<>("stick", 2)))));
-        crafts.put("planks", new Pair<>(4, Collections.unmodifiableList(Arrays.asList(new Pair<>("log", 1)))));
+        crafts.put("planks", new Pair<>(4, Collections.unmodifiableList(Arrays.asList(new Pair<>("oak", 1)))));
         //TODO fill the necessary crafts
         CRAFTS = Collections.unmodifiableMap(crafts);
     }

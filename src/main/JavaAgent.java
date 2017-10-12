@@ -120,11 +120,12 @@ public class JavaAgent {
         }
 
         String text = observations.get(0).getText();
+        System.out.println(text);
         Observations unmarshalled = builder.create().fromJson(text, Observations.class);
         Pair<List<Integer>, List<String>> x = JSONToLists(text);
         unmarshalled.items = x.getValue();
         unmarshalled.nbItems = x.getKey();
-        return new Planner(new HasNumberOfItem("oak_wood_planks", 1), agent_host);
+        return new Planner(new HasNumberOfItem("planks", 1), agent_host);
         //TODO: Once observations are fixed. Look into increasing this.
     }
 

@@ -47,6 +47,7 @@ public abstract class AbstractAction implements Action {
     public void perform() {
         Observations observations = null;
         while (!effectsCompleted(observations)) {
+            ObservationFactory.invalidate();
             observations = ObservationFactory.getObservations(agentHost);
             doAction(observations);
         }

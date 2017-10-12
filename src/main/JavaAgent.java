@@ -41,8 +41,10 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, 0, -50, 50, 0, 50);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1, -5, 5, 5, 5);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 0, -100,
+            100, 0, 100);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,
+            -5, 5, 5, 5);
 
     public static void checkArgs(float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
         if (fromX > toX || fromY > toY || fromZ > toZ) {

@@ -2,10 +2,7 @@ package main;
 
 import com.microsoft.msr.malmo.AgentHost;
 import com.microsoft.msr.malmo.WorldState;
-import domain.Action;
-import domain.ActionFactory;
-import domain.AtomicFluent;
-import domain.ObservationFactory;
+import domain.*;
 import domain.fluents.IsAt;
 
 import java.util.ArrayList;

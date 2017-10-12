@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GatherBlock extends AbstractAction {
-    private final static Map<BlockType, String> BLOCK_TO_ITEM;
+    public final static Map<BlockType, String> BLOCK_TO_ITEM;
 
     static {
         Map<BlockType, String> temp = new HashMap<>();

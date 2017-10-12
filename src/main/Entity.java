@@ -1,5 +1,7 @@
 package main;
 
+import domain.BlockType;
+
 /**
  * Created by kartasevm on 12.10.2017.
  */
@@ -9,7 +11,7 @@ public class Entity {
     public float y;
     public float z;
     public float pitch;
-    public String name;
+    public BlockType name;
     public int quantity;
     public String variation;
 }

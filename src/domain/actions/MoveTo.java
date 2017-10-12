@@ -2,7 +2,10 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
+import domain.ObservationFactory;
+import domain.fluents.Have;
 import domain.fluents.IsAt;
+import main.Entity;
 import main.Observations;
 
 import java.util.Arrays;
@@ -17,13 +20,21 @@ public class MoveTo extends AbstractAction {
     private final float x;
     private final float distance;
 
-    public MoveTo(AgentHost agentHost, IsAt isAt) {
+    public MoveTo(AgentHost agentHost, IsAt isAt){
+        this(agentHost, isAt, null);
+    }
+
+    public MoveTo(AgentHost agentHost, IsAt isAt, Entity entity) {
         super(agentHost);
         this.x = isAt.getX();
         this.y = isAt.getY();
         this.z = isAt.getZ();
         this.distance = isAt.getDistance();
-        this.effects = Arrays.asList(isAt);
+        this.effects.add(isAt);
+        if(entity != null) {
+            String item = GatherBlock.BLOCK_TO_ITEM.get(entity.name);
+            this.effects.add(new Have(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1));
+        }
     }
 
 

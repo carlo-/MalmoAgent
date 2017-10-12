@@ -3,7 +3,9 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.*;
 import domain.fluents.*;
+import main.Observations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,9 +34,23 @@ public class ActionFactory {
         } else if (fluent instanceof HaveSelected) {
             return Arrays.asList(createSelectItemAction((HaveSelected) fluent));
         } else if (fluent instanceof Have) {
-            return Arrays.asList(createGatherOrCraftAction((Have) fluent));
+            ArrayList<Action> fluents = new ArrayList<>();
+            Have have = (Have) fluent;
+            fluents.add(createGatherOrCraftAction(have));
+            Action entityMove = createEntityMove(have);
+            if(entityMove != null) {
+                fluents.add(entityMove);
+            }
+            return fluents;
         }
         return Arrays.asList();
+    }
+
+    private Action createEntityMove(Have have) {
+        Observations observations = ObservationFactory.getObservations(agentHost);
+        if(observations.Entities.size() > 1);
+
+        return null;
     }
 
     private SelectItem createSelectItemAction(HaveSelected item) {

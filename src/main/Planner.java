@@ -20,7 +20,7 @@ public class Planner {
     private final ActionFactory factory;
     private final AgentHost agentHost;
     private List<Action> plan;
-
+    private List<AtomicFluent> achievedEffects;
 
     public Planner(AtomicFluent currentGoal, AgentHost agentHost) {
         this.currentGoal = currentGoal;

@@ -24,9 +24,7 @@ package main;// ----------------------------------------------------------------
 // To run from the jar file without compiling:   java -cp MalmoJavaJar.jar:main.JavaAgent.jar -Djava.library.path=. main.JavaAgent (on Linux)
 //                                               java -cp MalmoJavaJar.jar;main.JavaAgent.jar -Djava.library.path=. main.JavaAgent (on Windows)
 
-import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.*;
-import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.BlockType;
 import domain.ObservationFactory;
@@ -38,7 +36,7 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 2, -100,100, 2, 100);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 1, -100,100, 1, 100);
     public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,-5, 5, 5, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
@@ -62,14 +60,14 @@ public class JavaAgent {
         Thread.sleep(2000);
 
         planner = createGoalAgent(agent_host);
-        planner.execute();
+ //      planner.execute();
 
         System.out.println("Mission has stopped.");
     }
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(new BlockAt(0.5f, observations.YPos - 1, 0.5f, BlockType.planks), agent_host);//TODO: Once observations are fixed. Look into increasing this.
+        return new Planner(new BlockAt(1.5f, observations.YPos - 1, 1.5f, BlockType.planks), agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {

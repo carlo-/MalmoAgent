@@ -44,12 +44,18 @@ public abstract class AbstractAction implements Action {
     }
 
     @Override
-    public void perform() {
+    public boolean perform() {
         Observations observations = null;
-        while (!effectsCompleted(observations)) {
+        while (!effectsCompleted(observations) && preconditionsMet()) {
             observations = ObservationFactory.getObservations(agentHost);
             doAction(observations);
         }
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return effectsCompleted();
     }
 
     protected abstract void doAction(Observations observations);

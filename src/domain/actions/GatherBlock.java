@@ -2,7 +2,6 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.ActionFactory;
 import domain.BlockType;
 import domain.ObservationFactory;
 import domain.fluents.*;
@@ -44,9 +43,10 @@ public class GatherBlock extends AbstractAction{
         agentHost.sendCommand("attack 1");
     }
 
-    public void perform() {
-        super.perform();
+    public boolean perform() {
+        boolean perform = super.perform();
         agentHost.sendCommand("attack 0");
+        return perform;
     }
 
     private static String toolForTheJob(BlockType blockType) {

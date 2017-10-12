@@ -11,6 +11,7 @@ import java.util.*;
 
 public class Craft extends AbstractAction {
     public final static Map<String, Pair<Integer, List<Pair<String, Integer>>>> CRAFTS;//name of item -> (numberOfInstanceOfTheItemYouWillGet, list of ingredients and # times needed
+
     static {
         Map<String, Pair<Integer, List<Pair<String, Integer>>>> crafts = new HashMap<>();
         crafts.put("diamond_pickaxe", new Pair<>(1, Collections.unmodifiableList(Arrays.asList(new Pair<>("diamond", 3), new Pair<>("stick", 2)))));
@@ -29,7 +30,7 @@ public class Craft extends AbstractAction {
         String name;
         int quantity;
         Observations obs = ObservationFactory.getObservations(agentHost);
-        for(Pair<String, Integer> pair : CRAFTS.get(item).getValue()){
+        for (Pair<String, Integer> pair : CRAFTS.get(item).getValue()) {
             name = pair.getKey();
             quantity = pair.getValue();
             this.preconditions.add(new Have(name, quantity));
@@ -40,6 +41,6 @@ public class Craft extends AbstractAction {
 
     @Override
     public void doAction(Observations observations) {
-        agentHost.sendCommand("craft "+mItem);
+        agentHost.sendCommand("craft " + mItem);
     }
 }

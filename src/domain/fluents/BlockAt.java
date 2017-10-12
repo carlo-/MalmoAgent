@@ -11,7 +11,7 @@ public class BlockAt implements AtomicFluent {
     private final BlockType mTypeOfBlock;
 
 
-    public BlockAt(float x, float y, float z, BlockType type){
+    public BlockAt(float x, float y, float z, BlockType type) {
         this.mX = x;
         this.mY = y;
         this.mZ = z;
@@ -19,7 +19,7 @@ public class BlockAt implements AtomicFluent {
         mTypeOfBlock = type;
     }
 
-    public String getTypeOfBlockString(){
+    public String getTypeOfBlockString() {
         return mTypeOfBlock.name();
     }
 
@@ -45,7 +45,7 @@ public class BlockAt implements AtomicFluent {
         return mZ;
     }
 
-    public BlockType getTypeOfBlock(){
+    public BlockType getTypeOfBlock() {
         return mTypeOfBlock;
     }
 

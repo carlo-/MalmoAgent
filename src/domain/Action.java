@@ -8,9 +8,12 @@ import java.util.List;
 public interface Action {
 
     List<AtomicFluent> getPreconditions();
+
     List<AtomicFluent> getEffects();
+
     boolean perform();
 
     boolean preconditionsMet();
+
     boolean effectsCompleted();
 }

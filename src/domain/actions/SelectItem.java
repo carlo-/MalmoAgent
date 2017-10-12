@@ -2,8 +2,8 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.fluents.HaveSelected;
 import domain.fluents.Have;
+import domain.fluents.HaveSelected;
 import main.Observations;
 
 import java.util.Arrays;
@@ -17,12 +17,12 @@ public class SelectItem extends AbstractAction {
         mItem = item;
     }
 
-    public SelectItem(AgentHost agentHost, HaveSelected haveSelected){
+    public SelectItem(AgentHost agentHost, HaveSelected haveSelected) {
         this(agentHost, haveSelected.getItem());
     }
 
     @Override
     public void doAction(Observations observations) {
-        agentHost.sendCommand("swapInventoryItems 0 "+observations.items.indexOf(mItem));
+        agentHost.sendCommand("swapInventoryItems 0 " + observations.items.indexOf(mItem));
     }
 }

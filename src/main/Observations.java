@@ -3,9 +3,8 @@ package main;
 import domain.BlockType;
 import domain.fluents.BlockAt;
 
-import java.util.*;
-
-import static main.JavaAgent.*;
+import java.util.ArrayList;
+import java.util.List;
 
 //All fields are case sensitive in relation to their json counterparts
 public class Observations {
@@ -37,8 +36,8 @@ public class Observations {
         int zRelative = (int) (z - grid.getZStartObservation() - ZPos);
 
         if (zRelative > grid.getZObservationSize() || zRelative < 0 ||
-            xRelative > grid.getXObservationSize() || xRelative < 0 ||
-            yRelative > grid.getYObservationSize() || yRelative < 0) {
+                xRelative > grid.getXObservationSize() || xRelative < 0 ||
+                yRelative > grid.getYObservationSize() || yRelative < 0) {
             return null;
         }
 

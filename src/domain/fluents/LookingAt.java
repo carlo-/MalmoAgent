@@ -25,27 +25,27 @@ public class LookingAt implements AtomicFluent {
         float yRel = y - observations.YPos;
         float zRel = z - observations.ZPos;
 
-        float d = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2)+Math.pow(yRel, 2));
+        float d = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2) + Math.pow(yRel, 2));
 
-        float d_xz = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2));
-        float phi = (float)Math.toDegrees(Math.acos(zRel/d_xz));
-        if (xRel<0 && zRel<0) phi += (180-phi)*2;
-        if (xRel<0 && zRel>0) phi = 360-phi;
-        phi = 360-phi;
+        float d_xz = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2));
+        float phi = (float) Math.toDegrees(Math.acos(zRel / d_xz));
+        if (xRel < 0 && zRel < 0) phi += (180 - phi) * 2;
+        if (xRel < 0 && zRel > 0) phi = 360 - phi;
+        phi = 360 - phi;
 
         // float d_yz = d; //(float)Math.sqrt(Math.pow(yRel, 2)+Math.pow(zRel, 2));
-        float theta = (float)Math.toDegrees(-Math.asin(yRel/d));
+        float theta = (float) Math.toDegrees(-Math.asin(yRel / d));
 
         // Margin
-        float alpha_xz = (float)Math.toDegrees(Math.atan(1.0/(2*d -1)));
-        float alpha_yz = (float)Math.toDegrees(Math.atan(1.0/(2*d -1)));
+        float alpha_xz = (float) Math.toDegrees(Math.atan(1.0 / (2 * d - 1)));
+        float alpha_yz = (float) Math.toDegrees(Math.atan(1.0 / (2 * d - 1)));
 
         float pitch = observations.Pitch;
         float yaw = observations.Yaw;
-        float yawCW = yaw >= 0f ? yaw : 360f+yaw;
+        float yawCW = yaw >= 0f ? yaw : 360f + yaw;
 
-        boolean yawSat = Math.abs(yawCW-phi) < alpha_xz || Math.abs(yawCW-phi) == 360;
-        boolean pitchSat = Math.abs(pitch-theta) < alpha_yz;
+        boolean yawSat = Math.abs(yawCW - phi) < alpha_xz || Math.abs(yawCW - phi) == 360;
+        boolean pitchSat = Math.abs(pitch - theta) < alpha_yz;
 
         /*
         System.err.println("yawCW: "+yawCW+", phi: "+phi+", alpha_xz: "+alpha_xz+", yawSat: "+yawSat);

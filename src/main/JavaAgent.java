@@ -38,19 +38,20 @@ import java.util.List;
 
 public class JavaAgent {
 
-    static {
-        System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
-    }
-
     public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 2, -100,
             100, 2, 100);
     public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,
             -5, 5, 5, 5);
-
+    private final static String P1 = "InventorySlot_";
+    private final static String P2 = "_size";
+    private final static String P3 = "_item";
     private static GsonBuilder builder = new GsonBuilder();
     private static ActionFactory factory;
     private static Planner planner;
 
+    static {
+        System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
+    }
 
     public static void main(String argv[]) throws Exception {
         AgentHost agent_host = createAgentHost(argv);
@@ -72,7 +73,7 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(new BlockAt(0.5f,observations.YPos-1, 0.5f, BlockType.planks), agent_host);//TODO: Once observations are fixed. Look into increasing this.
+        return new Planner(new BlockAt(0.5f, observations.YPos - 1, 0.5f, BlockType.planks), agent_host);//TODO: Once observations are fixed. Look into increasing this.
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -163,10 +164,6 @@ public class JavaAgent {
         return world_state;
     }
 
-    private final static String P1 = "InventorySlot_";
-    private final static String P2 = "_size";
-    private final static String P3 = "_item";
-
     public static Pair<List<Integer>, List<String>> JSONToLists(String text) {
         int sizeChars = P1.length() + P2.length() + 3;
         List<Integer> out1 = new ArrayList<>();
@@ -228,7 +225,7 @@ public class JavaAgent {
                 "                   <Range name=\"Entities\" xrange=\"10\" yrange=\"10\" zrange=\"10\"/>\n" +
                 "               </ObservationFromNearbyEntities>" +
                 "                <ContinuousMovementCommands/>\n" +
-                "                <SimpleCraftCommands/>\n"+
+                "                <SimpleCraftCommands/>\n" +
                 "                <ObservationFromFullStats/>\n" +
                 "            </AgentHandlers>            \n" +
                 "        </AgentSection>\n" +

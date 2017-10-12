@@ -6,11 +6,11 @@ import main.Observations;
 public class HaveSelected implements AtomicFluent {
     private final String mItem;
 
-    public HaveSelected(String item){
+    public HaveSelected(String item) {
         mItem = item;
     }
 
-    public String getItem(){
+    public String getItem() {
         return mItem;
     }
 

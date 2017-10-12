@@ -2,7 +2,6 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.fluents.IsAt;
 import domain.fluents.LookingAt;
 import main.Observations;
 
@@ -34,22 +33,22 @@ public class LookAt extends AbstractAction {
         float yRel = y - observations.YPos;
         float zRel = z - observations.ZPos;
 
-        float d = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2)+Math.pow(yRel, 2));
+        float d = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2) + Math.pow(yRel, 2));
 
-        float d_xz = (float)Math.sqrt(Math.pow(xRel, 2)+Math.pow(zRel, 2));
-        float phi = (float)Math.toDegrees(Math.acos(zRel/d_xz));
-        if (xRel<0 && zRel<0) phi += (180-phi)*2;
-        if (xRel<0 && zRel>0) phi = 360-phi;
-        phi = 360-phi;
+        float d_xz = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2));
+        float phi = (float) Math.toDegrees(Math.acos(zRel / d_xz));
+        if (xRel < 0 && zRel < 0) phi += (180 - phi) * 2;
+        if (xRel < 0 && zRel > 0) phi = 360 - phi;
+        phi = 360 - phi;
 
         // float d_yz = d; //(float)Math.sqrt(Math.pow(yRel, 2)+Math.pow(zRel, 2));
-        float theta = (float)Math.toDegrees(-Math.asin(yRel/d));
+        float theta = (float) Math.toDegrees(-Math.asin(yRel / d));
 
-        agentHost.sendCommand("setYaw "+phi);
-        agentHost.sendCommand("setPitch "+theta);
+        agentHost.sendCommand("setYaw " + phi);
+        agentHost.sendCommand("setPitch " + theta);
     }
 
-    public String toString(){
-        return "LookAt: "+x+" "+y+" "+z;
+    public String toString() {
+        return "LookAt: " + x + " " + y + " " + z;
     }
 }

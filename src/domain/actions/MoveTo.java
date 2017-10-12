@@ -1,7 +1,6 @@
 package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
-import com.microsoft.msr.malmo.TimestampedStringVector;
 import domain.AbstractAction;
 import domain.fluents.IsAt;
 import main.Observations;

@@ -20,8 +20,9 @@ public class IsAt implements AtomicFluent {
         this.z = z;
         this.distance = distance;
     }
+
     public IsAt(float x, float y, float z) {
-        this(x,y,z, 0.0f);
+        this(x, y, z, 0.0f);
     }
 
     @Override

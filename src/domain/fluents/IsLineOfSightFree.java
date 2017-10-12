@@ -10,6 +10,7 @@ public class IsLineOfSightFree implements AtomicFluent {
 
     /**
      * You may want to look at the edges of the cube instead of its center sometimes...
+     *
      * @param x
      * @param y
      * @param z

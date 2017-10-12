@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ObservationGrid {
 
+    public List<BlockType> observations;
     // start point must be lower than or equal to end point, for findBlock
     private int xStartObservation;
     private int yStartObservation;
@@ -15,6 +16,18 @@ public class ObservationGrid {
     private int zEndObservation;
     private int xObservationSize;
     private int yObservationSize;
+    private int zObservationSize;
+    public ObservationGrid(int xStartObservation, int yStartObservation, int zStartObservation, int xEndObservation, int yEndObservation, int zEndObservation) {
+        this.xStartObservation = xStartObservation;
+        this.yStartObservation = yStartObservation;
+        this.zStartObservation = zStartObservation;
+        this.xEndObservation = xEndObservation;
+        this.yEndObservation = yEndObservation;
+        this.zEndObservation = zEndObservation;
+        xObservationSize = Math.abs(xStartObservation - xEndObservation) + 1;
+        yObservationSize = Math.abs(yStartObservation - yEndObservation) + 1;
+        zObservationSize = Math.abs(zStartObservation - zEndObservation) + 1;
+    }
 
     @Override
     public String toString() {
@@ -30,9 +43,6 @@ public class ObservationGrid {
                 ", zObservationSize=" + zObservationSize +
                 '}';
     }
-
-    private int zObservationSize;
-    public List<BlockType> observations;
 
     public int getXStartObservation() {
         return xStartObservation;
@@ -68,17 +78,5 @@ public class ObservationGrid {
 
     public int getZObservationSize() {
         return zObservationSize;
-    }
-
-    public ObservationGrid(int xStartObservation, int yStartObservation, int zStartObservation, int xEndObservation, int yEndObservation, int zEndObservation) {
-        this.xStartObservation = xStartObservation;
-        this.yStartObservation = yStartObservation;
-        this.zStartObservation = zStartObservation;
-        this.xEndObservation = xEndObservation;
-        this.yEndObservation = yEndObservation;
-        this.zEndObservation = zEndObservation;
-        xObservationSize = Math.abs(xStartObservation - xEndObservation) + 1;
-        yObservationSize = Math.abs(yStartObservation - yEndObservation) + 1;
-        zObservationSize = Math.abs(zStartObservation - zEndObservation) + 1;
     }
 }

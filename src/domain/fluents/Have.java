@@ -7,12 +7,12 @@ public class Have implements AtomicFluent {
     private final String mItem;
     private final int mNumberOf;
 
-    public Have(String item, int numberOf){
+    public Have(String item, int numberOf) {
         mItem = item;
         mNumberOf = numberOf;
     }
 
-    public String getItem(){
+    public String getItem() {
         return mItem;
     }
 

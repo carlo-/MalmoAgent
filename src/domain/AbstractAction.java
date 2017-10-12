@@ -39,7 +39,7 @@ public abstract class AbstractAction implements Action {
         return effectsCompleted(observations);
     }
 
-    private boolean effectsCompleted(Observations observations) {
+    protected boolean effectsCompleted(Observations observations) {
         return observations != null && effects.stream().allMatch(predicate -> predicate.test(observations));
     }
 

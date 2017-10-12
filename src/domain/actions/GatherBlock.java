@@ -42,11 +42,10 @@ public class GatherBlock extends AbstractAction{
     @Override
     public void doAction (Observations observations) {
         agentHost.sendCommand("attack 1");
-        try {
-            Thread.sleep(100); //TODO: Test value, might need some other way of attacking long
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public void perform() {
+        super.perform();
         agentHost.sendCommand("attack 0");
     }
 

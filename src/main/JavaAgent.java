@@ -73,7 +73,7 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(new HasNumberOfItem("planks", 1), agent_host);//TODO: Once observations are fixed. Look into increasing this.
+        return new Planner(new BlockAt(0.5f,observations.YPos-1, 0.5f, BlockType.planks), agent_host);//TODO: Once observations are fixed. Look into increasing this.
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -229,6 +229,7 @@ public class JavaAgent {
                 "                   <Range name=\"Entities\" xrange=\"10\" yrange=\"10\" zrange=\"10\"/>\n" +
                 "               </ObservationFromNearbyEntities>" +
                 "                <ContinuousMovementCommands/>\n" +
+                "                <SimpleCraftCommands/>\n"+
                 "                <ObservationFromFullStats/>\n" +
                 "            </AgentHandlers>            \n" +
                 "        </AgentSection>\n" +

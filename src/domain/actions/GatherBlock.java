@@ -16,7 +16,7 @@ public class GatherBlock extends AbstractAction{
     private final static Map<BlockType, String> BLOCK_TO_ITEM;
     static{
         Map<BlockType, String> temp = new HashMap<>();
-        temp.put(BlockType.log, "oak");
+        temp.put(BlockType.log, "log");
         temp.put(BlockType.stone, "cobblestone");
         BLOCK_TO_ITEM = Collections.unmodifiableMap(temp);
     }

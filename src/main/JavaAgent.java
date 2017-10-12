@@ -29,6 +29,7 @@ import com.microsoft.msr.malmo.*;
 import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.BlockType;
+import domain.ObservationFactory;
 import domain.actions.SelectItem;
 import domain.fluents.BlockAt;
 import domain.fluents.HasNumberOfItem;
@@ -112,23 +113,8 @@ public class JavaAgent {
     }
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
-        WorldState world_state;
-        world_state = agent_host.getWorldState();
-        TimestampedStringVector observations = world_state.getObservations();
-
-        while (observations.size() < 1) {
-            observations = world_state.getObservations();
-            Thread.sleep(50);
-            System.out.println("bug");
-        }
-
-        String text = observations.get(0).getText();
-        Observations unmarshalled = builder.create().fromJson(text, Observations.class);
-        Pair<List<Integer>, List<String>> x = JSONToLists(text);
-        unmarshalled.items = x.getValue();
-        unmarshalled.nbItems = x.getKey();
-        return new Planner(new HasNumberOfItem("planks", 1), agent_host);
-        //TODO: Once observations are fixed. Look into increasing this.
+        Observations observations = ObservationFactory.getObservations(agent_host);
+        return new Planner(new HasNumberOfItem("planks", 1), agent_host);//TODO: Once observations are fixed. Look into increasing this.
     }
 
     private static AgentHost createAgentHost(String[] argv) {

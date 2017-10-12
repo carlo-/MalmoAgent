@@ -16,10 +16,11 @@ public class Observations {
     public float Yaw;
     public float Pitch;
     public boolean IsAlive;
-    public List<String> CellPlane;
-    public List<String> CellBox;
+    public List<BlockType> CellPlane;
+    public List<BlockType> CellBox;
     public List<Integer> nbItems;
     public List<String> items;
+    public List<Entity> Entities;
 
     public BlockAt blockAt(float x, float y, float z) {
         return new BlockAt(x, y, z, BlockType.log);
@@ -35,12 +36,12 @@ public class Observations {
         ObservationGrid grid = getGrid(gridName);
         // to test for any block just see that there is no air
         int i = 0;
-        for (String block : grid.observations) {
+        for (BlockType block : grid.observations) {
             int nX = i % grid.getXObservationSize();
             int nY = (i % (grid.getXObservationSize() * grid.getYObservationSize())) / grid.getXObservationSize();
             int nZ = i / (grid.getXObservationSize() * grid.getYObservationSize());
             if (nX == (int)x && nY == (int)y && nZ == (int)z) {
-                return new BlockAt(x, y, z, BlockType.valueOf(block));
+                return new BlockAt(x, y, z, block);
             }
             i++;
         }
@@ -60,8 +61,8 @@ public class Observations {
         int xRelative;
         int yRelative;
         int zRelative;
-        for (String block : grid.observations) {
-            if (blockType.name().equals(block)) {
+        for (BlockType block : grid.observations) {
+            if (blockType.equals(block)) {
                 // calculate position in the grid
                 xRelative = i % grid.getXObservationSize();
                 yRelative = (i % (grid.getXObservationSize() * grid.getYObservationSize())) / grid.getXObservationSize();

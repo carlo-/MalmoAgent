@@ -11,5 +11,6 @@ public enum BlockType {
     stone,
     cobblestone,
     grass,
-    dirt;
+    dirt,
+    UNKNOWN //Used by GSON library for types not defined here, to avoid NullPointerException
 }

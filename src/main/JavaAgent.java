@@ -30,11 +30,8 @@ import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.BlockType;
 import domain.ObservationFactory;
-import domain.actions.SelectItem;
 import domain.fluents.BlockAt;
 import domain.fluents.HasNumberOfItem;
-import domain.fluents.IsAt;
-import domain.fluents.LookingAt;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -266,6 +263,9 @@ public class JavaAgent {
                 "            </Inventory>" +
                 "            </AgentStart>\n" +
                 "            <AgentHandlers>\n" +
+                "               <ObservationFromNearbyEntities>\n" +
+                "                   <Range name=\"Entities\" xrange=\"10\" yrange=\"10\" zrange=\"10\"/>\n" +
+                "               </ObservationFromNearbyEntities>" +
                 "                <ContinuousMovementCommands/>\n" +
                 "                <ObservationFromFullStats/>\n" +
                 "            </AgentHandlers>            \n" +

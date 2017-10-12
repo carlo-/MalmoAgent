@@ -1,5 +1,7 @@
 package main;
 
+import domain.BlockType;
+
 import java.util.List;
 
 public class ObservationGrid {
@@ -30,7 +32,7 @@ public class ObservationGrid {
     }
 
     private int zObservationSize;
-    public List<String> observations;
+    public List<BlockType> observations;
 
     public int getXStartObservation() {
         return xStartObservation;

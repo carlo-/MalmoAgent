@@ -29,6 +29,5 @@ public class ObservationFactory {
             }
         } while (observations == null);
         return observations;
-
     }
 }

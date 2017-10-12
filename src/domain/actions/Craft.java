@@ -43,4 +43,9 @@ public class Craft extends AbstractAction {
     public void doAction(Observations observations) {
         agentHost.sendCommand("craft " + mItem);
     }
+
+    @Override
+    public String toString(){
+        return "Craft item "+mItem;
+    }
 }

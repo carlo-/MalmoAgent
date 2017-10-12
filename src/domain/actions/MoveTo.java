@@ -44,5 +44,8 @@ public class MoveTo extends AbstractAction {
             agentHost.sendCommand("movewest 1");
         }
     }
-
+    @Override
+    public String toString(){
+        return "MoveTo position : x = "+x+", y = "+y+", z = "+z+" within distance of "+distance;
+    }
 }

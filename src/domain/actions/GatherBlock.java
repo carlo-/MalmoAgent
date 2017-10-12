@@ -68,7 +68,6 @@ public class GatherBlock extends AbstractAction {
 
     @Override
     public String toString() {
-
         return "Gathering blocktype: " + block.toString();
     }
 }

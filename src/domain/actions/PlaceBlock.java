@@ -24,7 +24,7 @@ public class PlaceBlock extends AbstractAction {
 
         this.preconditions = Arrays.asList(
                 bestNearby,
-                new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
+                //new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
                 new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new BlockAt(x, y, z, BlockType.air),

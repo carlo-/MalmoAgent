@@ -6,7 +6,7 @@ import main.Observations;
 
 import java.lang.reflect.Array;
 
-public class IsLineOfSightFree implements AtomicFluent {
+public class HaveLineOfSight implements AtomicFluent {
     private final float mX;
     private final float mZ;
     private final float mY;
@@ -18,7 +18,7 @@ public class IsLineOfSightFree implements AtomicFluent {
      * @param y
      * @param z
      */
-    public IsLineOfSightFree(float x, float y, float z) {
+    public HaveLineOfSight(float x, float y, float z) {
         this.mX = x;
         this.mY = y;
         this.mZ = z;

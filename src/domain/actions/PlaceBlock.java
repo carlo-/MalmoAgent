@@ -23,13 +23,14 @@ public class PlaceBlock extends AbstractAction {
         BlockAt bestNearby = findBestNearbyBlock(x, y, z, ObservationFactory.getObservations(agentHost));
 
         this.preconditions = Arrays.asList(
+                new Have(blockAt.getTypeOfBlockString(), 1),
+                new HaveSelected(blockAt.getTypeOfBlockString()),
                 bestNearby,
-                //new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
+                new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
                 new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
-                new BlockAt(x, y, z, BlockType.air),
-                new Have(blockAt.getTypeOfBlockString(), 1),
-                new HaveSelected(blockAt.getTypeOfBlockString()));
+                new BlockAt(x, y, z, BlockType.air)
+        );
     }
 
     private BlockAt findBestNearbyBlock(float x, float y, float z, Observations observations) {
@@ -56,10 +57,17 @@ public class PlaceBlock extends AbstractAction {
     @Override
     public void doAction(Observations observations) {
         agentHost.sendCommand("use 1");
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        agentHost.sendCommand("use 0");
+
     }
 
     @Override
-    public String toString(){
-        return "PlaceBlock "+mBlockAt.getTypeOfBlockString()+" at position: x = "+mBlockAt.getX()+", y = "+mBlockAt.getY()+", z = "+mBlockAt.getZ();
+    public String toString() {
+        return "PlaceBlock " + mBlockAt.getTypeOfBlockString() + " at position: x = " + mBlockAt.getX() + ", y = " + mBlockAt.getY() + ", z = " + mBlockAt.getZ();
     }
 }

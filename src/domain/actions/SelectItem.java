@@ -14,6 +14,7 @@ public class SelectItem extends AbstractAction {
     public SelectItem(AgentHost agentHost, String item) {
         super(agentHost);
         preconditions = Arrays.asList(new Have(item, 1));
+        effects.add(new HaveSelected(item));
         mItem = item;
     }
 

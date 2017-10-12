@@ -24,8 +24,8 @@ public class PlaceBlock extends AbstractAction {
         this.preconditions = Arrays.asList(
                 bestNearby,
                 //     new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()), //TODO: Cant use it before we have an action defined that can solve it.  Otherwise planner fails
-                new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
+                new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new BlockAt(x, y, z, BlockType.air),
                 new Have(blockAt.getTypeOfBlockString(), 1),
                 new HaveSelected(blockAt.getTypeOfBlockString()));

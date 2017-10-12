@@ -44,7 +44,7 @@ public class Planner {
                     remove.perform();
                 }
             } else {
-                List<Action> actions = satisfyConditions(action); //Reevaluate if our preconditions are not met for some reason
+                List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
                 actions.addAll(plan);
                 plan = actions;
             }
@@ -70,7 +70,7 @@ public class Planner {
             return determinedList;
         }
 
-        List<Action> collect = satisfyConditions(bestAction);
+        List<Action> collect = satisfyConditions(bestAction, planObservation);
         collect.add(bestAction);
         updatePlanObservation(bestAction);
         return collect;
@@ -106,9 +106,9 @@ public class Planner {
         });
     }
 
-    private List<Action> satisfyConditions(Action bestAction) {
+    private List<Action> satisfyConditions(Action bestAction, Observations observations) {
         List<Action> test = bestAction.getPreconditions().stream()
-                .filter(precondition -> !precondition.test(planObservation))
+                .filter(precondition -> !precondition.test(observations))
                 .map(this::evaluate)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

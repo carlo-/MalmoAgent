@@ -63,13 +63,26 @@ public class ActionFactory {
         if (Craft.CRAFTS.containsKey(item))
             return new Craft(agentHost, item);
         else {
-            BlockAt blockType = findClosest(ObservationFactory.getObservations(agentHost).findBlockType(BlockType.log));
+            Observations obs = ObservationFactory.getObservations(agentHost);
+            BlockAt blockType = findClosest(obs.findBlockType(BlockType.log), obs);
             return new GatherBlock(agentHost, blockType);
         }
     }
 
-    private BlockAt findClosest(List<BlockAt> blocks) {
-        return blocks.get(0); //TODO: Just a  test,  find whatever
+    private BlockAt findClosest(List<BlockAt> blocks, Observations obs) {
+        return blocks.get(0);
+        /*
+        float minD = Float.MAX_VALUE;
+        BlockAt closest = null;
+        for (BlockAt b : blocks) {
+            float d = b.distanceFrom(obs.XPos, obs.YPos, obs.ZPos);
+            if (d <= minD) {
+                closest = b;
+                minD = d;
+            }
+        }
+        return closest;
+        */
     }
 
     private LookAt createLookAtAction(LookingAt lookingAt) {

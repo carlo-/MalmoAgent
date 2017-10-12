@@ -25,4 +25,9 @@ public class SelectItem extends AbstractAction {
     public void doAction(Observations observations) {
         agentHost.sendCommand("swapInventoryItems 0 " + observations.items.indexOf(mItem));
     }
+
+    @Override
+    public String toString(){
+        return "Select item "+mItem;
+    }
 }

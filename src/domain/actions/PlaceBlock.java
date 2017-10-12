@@ -56,4 +56,9 @@ public class PlaceBlock extends AbstractAction {
     public void doAction(Observations observations) {
         agentHost.sendCommand("use 1");
     }
+
+    @Override
+    public String toString(){
+        return "PlaceBlock "+mBlockAt.getTypeOfBlockString()+" at position: x = "+mBlockAt.getX()+", y = "+mBlockAt.getY()+", z = "+mBlockAt.getZ();
+    }
 }

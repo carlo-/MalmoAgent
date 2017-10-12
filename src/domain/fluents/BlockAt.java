@@ -49,6 +49,10 @@ public class BlockAt implements AtomicFluent {
         return mTypeOfBlock;
     }
 
+    public float distanceFrom(float x, float y, float z) {
+        return (float)Math.sqrt(Math.pow(mX-x, 2)+Math.pow(mY-y, 2)+Math.pow(mZ-z, 2));
+    }
+
     // for test purposes
     @Override
     public String toString() {

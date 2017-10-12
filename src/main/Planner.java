@@ -68,12 +68,13 @@ public class Planner {
     }
 
     private List<Action> satisfyConditions(Action bestAction) {
-        ObservationFactory.invalidate();
-        return bestAction.getPreconditions().stream()
+        List<Action> test = bestAction.getPreconditions().stream()
                 .filter(precondition -> !precondition.test(ObservationFactory.getObservations(agentHost)))
                 .map(this::evaluate)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+        System.out.println(test.toString());
+        return test;
     }
 
     private Action findCheapest(List<Action> actions) {

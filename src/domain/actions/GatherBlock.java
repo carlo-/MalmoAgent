@@ -21,9 +21,10 @@ public class GatherBlock extends AbstractAction{
         temp.put(BlockType.stone, "cobblestone");
         BLOCK_TO_ITEM = Collections.unmodifiableMap(temp);
     }
-
+    private BlockAt block;
     public GatherBlock (AgentHost agentHost, BlockAt targetBlock) {
         super(agentHost);
+        block = targetBlock;
         float x = targetBlock.getX();
         float y = targetBlock.getY();
         float z = targetBlock.getZ();
@@ -61,5 +62,11 @@ public class GatherBlock extends AbstractAction{
                 return "diamond_pickaxe";
         }
         return "diamond_sword";
+    }
+
+    @Override
+    public String toString() {
+
+        return "Gathering blocktype: "+block.toString();
     }
 }

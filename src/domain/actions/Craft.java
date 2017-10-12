@@ -29,13 +29,14 @@ public class Craft extends AbstractAction {
             throw new IllegalArgumentException("The item " + item + " cannot be crafted! (or isn't in the list of crafts");
         String name;
         int quantity;
+        Observations obs = ObservationFactory.getObservations(agentHost);
         for(Pair<String, Integer> pair : CRAFTS.get(item).getValue()){
             name = pair.getKey();
             quantity = pair.getValue();
             this.preconditions.add(new HasNumberOfItem(name, quantity));
-            this.effects.add(new HasNumberOfItem(name, ObservationFactory.getObservations(agentHost).numberOf(name) - quantity));
+            this.effects.add(new HasNumberOfItem(name, obs.numberOf(name) - quantity));
         }
-        this.effects.add(new HasNumberOfItem(item, ObservationFactory.getObservations(agentHost).numberOf(item) + CRAFTS.get(item).getKey()));
+        this.effects.add(new HasNumberOfItem(item, obs.numberOf(item) + CRAFTS.get(item).getKey()));
     }
 
     @Override

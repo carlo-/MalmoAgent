@@ -48,4 +48,8 @@ public class LookAt extends AbstractAction {
         agentHost.sendCommand("setYaw "+phi);
         agentHost.sendCommand("setPitch "+theta);
     }
+
+    public String toString(){
+        return "LookAt: "+x+" "+y+" "+z;
+    }
 }

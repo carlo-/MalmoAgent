@@ -116,9 +116,10 @@ public class JavaAgent {
         world_state = agent_host.getWorldState();
         TimestampedStringVector observations = world_state.getObservations();
 
-        while (observations.size() < 0) {
+        while (observations.size() < 1) {
             observations = world_state.getObservations();
             Thread.sleep(50);
+            System.out.println("bug");
         }
 
         String text = observations.get(0).getText();

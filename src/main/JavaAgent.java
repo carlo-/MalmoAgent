@@ -43,8 +43,6 @@ public class JavaAgent {
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
     private final static String P3 = "_item";
-    private static GsonBuilder builder = new GsonBuilder();
-    private static ActionFactory factory;
     private static Planner planner;
 
     static {

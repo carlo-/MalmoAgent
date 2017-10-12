@@ -3,7 +3,6 @@ package domain.fluents;
 import domain.AtomicFluent;
 import domain.BlockType;
 import main.Observations;
-import static main.JavaAgent.*;
 
 public class BlockAt implements AtomicFluent {
     private final float mX;
@@ -49,6 +48,7 @@ public class BlockAt implements AtomicFluent {
         return mTypeOfBlock;
     }
 
+    // for test purposes
     @Override
     public String toString() {
         return "Block Type: " + mTypeOfBlock.toString() + "\tx: " + mX + "\ty: " + mY + "\tz: " + mZ;

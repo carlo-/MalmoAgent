@@ -7,7 +7,7 @@ public enum BlockType {
     Any,
     air,
     log,
-    plank,
+    planks,
     stone,
     cobblestone,
     grass,

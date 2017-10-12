@@ -13,6 +13,22 @@ public class ObservationGrid {
     private int zEndObservation;
     private int xObservationSize;
     private int yObservationSize;
+
+    @Override
+    public String toString() {
+        return "ObservationGrid{" +
+                "xStartObservation=" + xStartObservation +
+                ", yStartObservation=" + yStartObservation +
+                ", zStartObservation=" + zStartObservation +
+                ", xEndObservation=" + xEndObservation +
+                ", yEndObservation=" + yEndObservation +
+                ", zEndObservation=" + zEndObservation +
+                ", xObservationSize=" + xObservationSize +
+                ", yObservationSize=" + yObservationSize +
+                ", zObservationSize=" + zObservationSize +
+                '}';
+    }
+
     private int zObservationSize;
     public List<String> observations;
 

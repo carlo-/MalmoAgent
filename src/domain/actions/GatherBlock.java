@@ -6,7 +6,6 @@ import domain.BlockType;
 import domain.fluents.*;
 import main.Observations;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GatherBlock extends AbstractAction{
@@ -23,7 +22,7 @@ public class GatherBlock extends AbstractAction{
                 new IsAt(x, y, z, 1),
                 new HasNumberOfItem(tool, 1),
                 new HasItemSelected(tool));
-        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air));
+        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air)); //TODO effect collected item
     }
 
     @Override
@@ -41,7 +40,7 @@ public class GatherBlock extends AbstractAction{
         switch (blockType) {
             case log:
                 return "diamond_axe";
-            case plank:
+            case planks:
                 return "diamond_axe";
             case stone:
                 return "diamond_pickaxe";

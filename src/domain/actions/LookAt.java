@@ -49,6 +49,6 @@ public class LookAt extends AbstractAction {
     }
     @Override
     public String toString(){
-        return "MoveTo position : x = "+x+", y = "+y+", z = "+z;
+        return "LookAt position : x = "+x+", y = "+y+", z = "+z;
     }
 }

@@ -36,8 +36,8 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 1, -100,100, 1, 100);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,-5, 5, 5, 5);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 1, -100, 100, 1, 100);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1, -5, 5, 5, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
     private final static String P3 = "_item";
@@ -60,7 +60,7 @@ public class JavaAgent {
         Thread.sleep(2000);
 
         planner = createGoalAgent(agent_host);
- //      planner.execute();
+        planner.execute();
 
         System.out.println("Mission has stopped.");
     }

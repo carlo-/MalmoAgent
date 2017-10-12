@@ -16,6 +16,10 @@ public class Have implements AtomicFluent {
         return mItem;
     }
 
+    public int getmNumberOf() {
+        return mNumberOf;
+    }
+
     @Override
     public boolean test(Observations observations) {
         return observations.numberOf(mItem) >= mNumberOf;

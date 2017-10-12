@@ -6,6 +6,9 @@ import domain.Action;
 import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.ObservationFactory;
+import domain.fluents.Have;
+import domain.fluents.HaveSelected;
+import domain.fluents.IsAt;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,13 +23,15 @@ public class Planner {
     private final ActionFactory factory;
     private final AgentHost agentHost;
     private List<Action> plan;
-    private List<AtomicFluent> achievedEffects;
+    private Observations planObservation;
 
     public Planner(AtomicFluent currentGoal, AgentHost agentHost) {
         this.currentGoal = currentGoal;
         this.agentHost = agentHost;
         this.factory = new ActionFactory(agentHost);
+        planObservation = ObservationFactory.getObservations(agentHost);
         this.plan = determinePlan(currentGoal);
+        System.out.println(plan);
     }
 
     public void execute() {
@@ -43,6 +48,7 @@ public class Planner {
                 actions.addAll(plan);
                 plan = actions;
             }
+            System.out.println(plan);
         }
         System.out.println("Done executing");
     }
@@ -66,16 +72,46 @@ public class Planner {
 
         List<Action> collect = satisfyConditions(bestAction);
         collect.add(bestAction);
+        updatePlanObservation(bestAction);
         return collect;
+    }
+
+    private void updatePlanObservation(Action bestAction) {
+        bestAction.getEffects().forEach(effect -> {
+            if(effect instanceof Have){
+                Have have = (Have) effect;
+                int i = planObservation.items.indexOf((have.getItem()));
+                if(i != -1){
+                    planObservation.nbItems.set(i, have.getmNumberOf());
+                } else {
+                    int air = planObservation.items.indexOf("air");
+                    planObservation.items.set(air, have.getItem());
+                    planObservation.nbItems.set(air, have.getmNumberOf());
+                }
+            }else if(effect instanceof HaveSelected){
+                HaveSelected haveSelected = (HaveSelected) effect;
+                int i = planObservation.items.indexOf(haveSelected.getItem());
+                String itemSwapped = planObservation.items.get(0);
+                int quantitySwapped = planObservation.nbItems.get(0);
+                planObservation.items.set(0, planObservation.items.get(i));
+                planObservation.nbItems.set(0, planObservation.nbItems.get(i));
+                planObservation.items.set(i, itemSwapped);
+                planObservation.nbItems.set(i, quantitySwapped);
+            }else if(effect instanceof IsAt){
+                IsAt isAt = (IsAt) effect;
+                planObservation.XPos = isAt.getX();
+                planObservation.YPos = isAt.getY();
+                planObservation.ZPos = isAt.getZ();
+            }
+        });
     }
 
     private List<Action> satisfyConditions(Action bestAction) {
         List<Action> test = bestAction.getPreconditions().stream()
-                .filter(precondition -> !precondition.test(ObservationFactory.getObservations(agentHost)))
+                .filter(precondition -> !precondition.test(planObservation))
                 .map(this::evaluate)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        System.out.println(test.toString());
         return test;
     }
 

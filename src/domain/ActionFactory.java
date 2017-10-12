@@ -48,8 +48,9 @@ public class ActionFactory {
 
     private Action createEntityMove(Have have) {
         Observations observations = ObservationFactory.getObservations(agentHost);
-        if(observations.Entities.size() > 1);
-
+        if(observations.Entities.size() > 1) {
+          //  observations.Entities.stream().filter(entity -> have.getItem().)
+        }
         return null;
     }
 

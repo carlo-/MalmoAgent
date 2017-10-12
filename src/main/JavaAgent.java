@@ -39,52 +39,14 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 0, -100,
-            100, 0, 100);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,
-            -5, 5, 5, 5);
-
-    public static void checkArgs(float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
-        if (fromX > toX || fromY > toY || fromZ > toZ) {
-            throw new IllegalArgumentException("from cannot be bigger than to!");
-        }
-    }
-
-    public static List<AtomicFluent> buildHouse(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
-        checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
-        //build floor
-        List<AtomicFluent> out = buildRectangularParallelepiped(type, fromX, fromY, fromZ, toX, fromY, toZ);
-        //build roof
-        out.addAll(buildRectangularParallelepiped(type, fromX, toY, fromZ, toX, toY, toZ));
-        //build 2 walls without the top/bottom
-        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, fromZ, toX, toY - 1, fromZ));
-        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, toZ, toX, toY - 1, toZ));
-        //build last 2 walls
-        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, fromZ + 1, fromX, toY - 1, toZ - 1));
-        out.addAll(buildRectangularParallelepiped(type, toX, fromY + 1, fromZ + 1, toX, toY - 1, toZ - 1));
-        //empty the inside of the house
-        out.addAll(buildRectangularParallelepiped(BlockType.air, fromX + 1, fromY + 1, fromZ + 1, toX - 1, toY - 1, toZ - 1));
-        //TODO: Might want to calculate a HasNumberOfItem, and put in in the start.
-        //Maybe planner should figure that out itself later? Then we can avoid running back and forth
-        return out;
-    }
-
-    public static List<AtomicFluent> buildRectangularParallelepiped(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
-        checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
-        List<AtomicFluent> out = new ArrayList<>();
-        for (float x = fromX; x <= toX; ++x) {
-            for (float z = fromZ; z <= toZ; ++z) {
-                for (float y = fromY; y <= toY; ++y) {
-                    out.add(new BlockAt(x, y, z, type));
-                }
-            }
-        }
-        return out;
-    }
-
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
     }
+
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 2, -100,
+            100, 2, 100);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,
+            -5, 5, 5, 5);
 
     private static GsonBuilder builder = new GsonBuilder();
     private static ActionFactory factory;
@@ -271,6 +233,44 @@ public class JavaAgent {
                 "            </AgentHandlers>            \n" +
                 "        </AgentSection>\n" +
                 "    </Mission>\n";
+    }
+
+    public static void checkArgs(float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+        if (fromX > toX || fromY > toY || fromZ > toZ) {
+            throw new IllegalArgumentException("from cannot be bigger than to!");
+        }
+    }
+
+    public static List<AtomicFluent> buildHouse(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+        checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
+        //build floor
+        List<AtomicFluent> out = buildRectangularParallelepiped(type, fromX, fromY, fromZ, toX, fromY, toZ);
+        //build roof
+        out.addAll(buildRectangularParallelepiped(type, fromX, toY, fromZ, toX, toY, toZ));
+        //build 2 walls without the top/bottom
+        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, fromZ, toX, toY - 1, fromZ));
+        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, toZ, toX, toY - 1, toZ));
+        //build last 2 walls
+        out.addAll(buildRectangularParallelepiped(type, fromX, fromY + 1, fromZ + 1, fromX, toY - 1, toZ - 1));
+        out.addAll(buildRectangularParallelepiped(type, toX, fromY + 1, fromZ + 1, toX, toY - 1, toZ - 1));
+        //empty the inside of the house
+        out.addAll(buildRectangularParallelepiped(BlockType.air, fromX + 1, fromY + 1, fromZ + 1, toX - 1, toY - 1, toZ - 1));
+        //TODO: Might want to calculate a HasNumberOfItem, and put in in the start.
+        //Maybe planner should figure that out itself later? Then we can avoid running back and forth
+        return out;
+    }
+
+    public static List<AtomicFluent> buildRectangularParallelepiped(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+        checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
+        List<AtomicFluent> out = new ArrayList<>();
+        for (float x = fromX; x <= toX; ++x) {
+            for (float z = fromZ; z <= toZ; ++z) {
+                for (float y = fromY; y <= toY; ++y) {
+                    out.add(new BlockAt(x, y, z, type));
+                }
+            }
+        }
+        return out;
     }
 
 }

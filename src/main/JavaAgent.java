@@ -64,7 +64,8 @@ public class JavaAgent {
         out.addAll(buildRectangularParallelepiped(type, toX, fromY + 1, fromZ + 1, toX, toY - 1, toZ - 1));
         //empty the inside of the house
         out.addAll(buildRectangularParallelepiped(BlockType.air, fromX + 1, fromY + 1, fromZ + 1, toX - 1, toY - 1, toZ - 1));
-        //TODO: Might want to calculate a HasNumberOfItem, and put in in the start. Maybe planner should figure that out itself later? Then we can avoid running back and forth
+        //TODO: Might want to calculate a HasNumberOfItem, and put in in the start.
+        //Maybe planner should figure that out itself later? Then we can avoid running back and forth
         return out;
     }
 
@@ -123,7 +124,8 @@ public class JavaAgent {
         Pair<List<Integer>, List<String>> x = JSONToLists(text);
         unmarshalled.items = x.getValue();
         unmarshalled.nbItems = x.getKey();
-        return new Planner(new HasNumberOfItem("log", 1), agent_host); //TODO: Once observations are fixed. Look into increasing this.
+        return new Planner(new HasNumberOfItem("oak_wood_planks", 1), agent_host);
+        //TODO: Once observations are fixed. Look into increasing this.
     }
 
     private static AgentHost createAgentHost(String[] argv) {

@@ -2,8 +2,8 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.fluents.HasItemSelected;
-import domain.fluents.HasNumberOfItem;
+import domain.fluents.HaveSelected;
+import domain.fluents.Have;
 import main.Observations;
 
 import java.util.Arrays;
@@ -13,12 +13,12 @@ public class SelectItem extends AbstractAction {
 
     public SelectItem(AgentHost agentHost, String item) {
         super(agentHost);
-        preconditions = Arrays.asList(new HasNumberOfItem(item, 1));
+        preconditions = Arrays.asList(new Have(item, 1));
         mItem = item;
     }
 
-    public SelectItem(AgentHost agentHost, HasItemSelected hasItemSelected){
-        this(agentHost, hasItemSelected.getItem());
+    public SelectItem(AgentHost agentHost, HaveSelected haveSelected){
+        this(agentHost, haveSelected.getItem());
     }
 
     @Override

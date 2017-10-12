@@ -3,11 +3,11 @@ package domain.fluents;
 import domain.AtomicFluent;
 import main.Observations;
 
-public class HasNumberOfItem implements AtomicFluent {
+public class Have implements AtomicFluent {
     private final String mItem;
     private final int mNumberOf;
 
-    public HasNumberOfItem(String item, int numberOf){
+    public Have(String item, int numberOf){
         mItem = item;
         mNumberOf = numberOf;
     }

@@ -3,10 +3,10 @@ package domain.fluents;
 import domain.AtomicFluent;
 import main.Observations;
 
-public class HasItemSelected implements AtomicFluent {
+public class HaveSelected implements AtomicFluent {
     private final String mItem;
 
-    public HasItemSelected(String item){
+    public HaveSelected(String item){
         mItem = item;
     }
 

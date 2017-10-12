@@ -31,7 +31,6 @@ import domain.AtomicFluent;
 import domain.BlockType;
 import domain.ObservationFactory;
 import domain.fluents.BlockAt;
-import domain.fluents.HasNumberOfItem;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -256,7 +255,7 @@ public class JavaAgent {
         out.addAll(buildRectangularParallelepiped(type, toX, fromY + 1, fromZ + 1, toX, toY - 1, toZ - 1));
         //empty the inside of the house
         out.addAll(buildRectangularParallelepiped(BlockType.air, fromX + 1, fromY + 1, fromZ + 1, toX - 1, toY - 1, toZ - 1));
-        //TODO: Might want to calculate a HasNumberOfItem, and put in in the start.
+        //TODO: Might want to calculate a Have, and put in in the start.
         //Maybe planner should figure that out itself later? Then we can avoid running back and forth
         return out;
     }

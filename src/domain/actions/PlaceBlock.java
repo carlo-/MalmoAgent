@@ -26,8 +26,8 @@ public class PlaceBlock extends AbstractAction {
                 new IsAt(x, y, z, 1),
                 new IsAt(x, y ,z, 0).negate(),
                 new BlockAt(x, y, z, BlockType.Any),
-                new HasNumberOfItem(blockAt.getTypeOfBlockString(), 1),
-                new HasItemSelected(blockAt.getTypeOfBlockString()));
+                new Have(blockAt.getTypeOfBlockString(), 1),
+                new HaveSelected(blockAt.getTypeOfBlockString()));
     }
 
     private BlockAt findBestNearbyBlock(float x, float y, float z, Observations observations){

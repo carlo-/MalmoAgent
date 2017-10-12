@@ -3,7 +3,6 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.*;
 import domain.fluents.*;
-import main.Observations;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,19 +29,19 @@ public class ActionFactory {
             return Arrays.asList(createPlaceBlockAction((BlockAt) fluent));
         } else if (fluent instanceof LookingAt) {
             return Arrays.asList(createLookAtAction((LookingAt) fluent));
-        } else if (fluent instanceof HasItemSelected) {
-            return Arrays.asList(createSelectItemAction((HasItemSelected) fluent));
-        } else if (fluent instanceof HasNumberOfItem) {
-            return Arrays.asList(createGatherOrCraftAction((HasNumberOfItem) fluent));
+        } else if (fluent instanceof HaveSelected) {
+            return Arrays.asList(createSelectItemAction((HaveSelected) fluent));
+        } else if (fluent instanceof Have) {
+            return Arrays.asList(createGatherOrCraftAction((Have) fluent));
         }
         return Arrays.asList();
     }
 
-    private SelectItem createSelectItemAction(HasItemSelected item) {
+    private SelectItem createSelectItemAction(HaveSelected item) {
         return new SelectItem(agentHost, item);
     }
 
-    private AbstractAction createGatherOrCraftAction(HasNumberOfItem nbItems) {
+    private AbstractAction createGatherOrCraftAction(Have nbItems) {
         String item = nbItems.getItem();
         //Check if the item is craftable, otherwise try to gather it
         if (Craft.CRAFTS.containsKey(item))

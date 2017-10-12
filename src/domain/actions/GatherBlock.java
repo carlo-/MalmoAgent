@@ -32,10 +32,10 @@ public class GatherBlock extends AbstractAction{
                 new LookingAt(x, y, z),
               //  new IsLineOfSightFree(x, y, z),//TODO: Cant use it before we have an action defined that can solve it.  Otherwise planner fails
                 new IsAt(x, y, z, 1),
-                new HasNumberOfItem(tool, 1),
-                new HasItemSelected(tool));
+                new Have(tool, 1),
+                new HaveSelected(tool));
         String item = BLOCK_TO_ITEM.get(targetBlock.getTypeOfBlock());
-        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air), new HasNumberOfItem(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1)); //TODO effect collected item
+        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air), new Have(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1)); //TODO effect collected item
     }
 
     @Override

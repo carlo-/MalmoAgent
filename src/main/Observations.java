@@ -23,34 +23,37 @@ public class Observations {
     public List<String> items;
 
     public BlockAt blockAt(float x, float y, float z) {
-        //TODO: Ugly hack. But its good enough for the test run to mine a block. Block at currently doesnt compute correctly. Too  tired to fix it. If you ran it, this is the
-        // TODO:reason it doesnt stop attacking
         //System.out.println((int)x + ", " + y + ", " + (int)z);
-        BlockAt blockAt = blockAt(x, y, z, "CellBox");
+        BlockAt blockAt = blockAt(x, y, z, "CellBox"); //TODO this method call causes a lot of trouble
         if (blockAt != null) {
+            //System.out.println("Block in CellBox: " + blockAt);
             return blockAt;
         }
         blockAt = blockAt(x, y, z, "CellPlane");
         if (blockAt != null) {
+            //System.out.println("Block in CellPlane: " + blockAt);
             return blockAt;
         }
-        return null;
+        //System.out.println("testFail");
+        //return null;
         //return new BlockAt(x, y, z, BlockType.log);
-        //return new BlockAt(x, y, z, BlockType.Any);
+        return new BlockAt(x, y, z, BlockType.Any);
     }
 
     private BlockAt blockAt (float x, float y, float z, String gridName) {
         ObservationGrid grid = getGrid(gridName);
         // to test for any block just see that there is no air
         int i = 0;
+        x = getMiddleOfBlock(x);
+        y = getMiddleOfBlock(y);
+        z = getMiddleOfBlock(z);
         for (String block : grid.observations) {
             BlockAt position = coordinatesOf(i, grid);
-            int nX = (int)position.getX();
-            int nY = (int)position.getY();
-            int nZ = (int)position.getZ();
-            //System.out.print(nX + ", " + nY + ", " + nZ + ";  ");
-            if (nX == (int)x && nY == (int)y && nZ == (int)z) {
-                //System.out.println("penis " + new BlockAt(x, y, z, BlockType.valueOf(block)) + " in " + gridName + "\n" + CellBox);
+            if(block.equals("log"))System.out.println("haha: " + position);
+            //System.out.println("Block found at: " + position);
+            if (getMiddleOfBlock(position.getX()) == x && getMiddleOfBlock(position.getY()) == y && getMiddleOfBlock(position.getZ()) == z) {
+                //System.out.println("Block at requested location: (" + new BlockAt(x, y, z, BlockType.valueOf(block)) + ") in " + gridName + "\n" + grid.observations);
+                if (block.equals("air"))System.exit(0);
                 return new BlockAt(x, y, z, BlockType.valueOf(block));
             }
             i++;
@@ -68,9 +71,6 @@ public class Observations {
         ObservationGrid grid = getGrid(gridName);
         List<BlockAt> blocks = new ArrayList<BlockAt>();
         int i = 0;
-        int xRelative;
-        int yRelative;
-        int zRelative;
         for (String block : grid.observations) {
             if (blockType.name().equals(block)) {
                 BlockAt position = coordinatesOf(i, grid);
@@ -78,6 +78,7 @@ public class Observations {
             }
             i++;
         }
+        //System.out.println("Blocks of type " + blockType + ": " + blocks);
         return blocks;
     }
 
@@ -118,6 +119,13 @@ public class Observations {
         x += XPos;
         y += YPos;
         z += ZPos;
-        return new BlockAt(x, y, z, BlockType.Any);
+        return new BlockAt(getMiddleOfBlock(x), getMiddleOfBlock(y), getMiddleOfBlock(z), BlockType.Any);
+    }
+
+    private float getMiddleOfBlock(float block) {
+        if (block >= 0) {
+            return ((int)block) + 0.5f;
+        }
+        return ((int) block - 1) + 0.5f;
     }
 }

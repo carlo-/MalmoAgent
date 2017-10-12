@@ -55,6 +55,8 @@ public class ActionFactory {
     }
 
     private BlockAt findClosest(List<BlockAt> blocks, Observations obs) {
+        return blocks.get(0);
+        /*
         float minD = Float.MAX_VALUE;
         BlockAt closest = null;
         for (BlockAt b : blocks) {
@@ -65,6 +67,7 @@ public class ActionFactory {
             }
         }
         return closest;
+        */
     }
 
     private LookAt createLookAtAction(LookingAt lookingAt) {

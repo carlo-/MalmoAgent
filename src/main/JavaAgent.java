@@ -38,10 +38,8 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 2, -100,
-            100, 2, 100);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,
-            -5, 5, 5, 5);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-100, 2, -100,100, 2, 100);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1,-5, 5, 5, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
     private final static String P3 = "_item";

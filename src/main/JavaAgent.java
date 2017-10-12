@@ -122,7 +122,6 @@ public class JavaAgent {
         }
 
         String text = observations.get(0).getText();
-        System.out.println(text);
         Observations unmarshalled = builder.create().fromJson(text, Observations.class);
         Pair<List<Integer>, List<String>> x = JSONToLists(text);
         unmarshalled.items = x.getValue();

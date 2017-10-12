@@ -21,9 +21,10 @@ public class PlaceBlock extends AbstractAction {
         mBlockAt = blockAt;
         this.effects = Arrays.asList(blockAt);
         BlockAt bestNearby = findBestNearbyBlock(x, y, z, ObservationFactory.getObservations(agentHost));
+
         this.preconditions = Arrays.asList(
                 bestNearby,
-                //     new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()), //TODO: Cant use it before we have an action defined that can solve it.  Otherwise planner fails
+                new IsLineOfSightFree(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
                 new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new BlockAt(x, y, z, BlockType.air),

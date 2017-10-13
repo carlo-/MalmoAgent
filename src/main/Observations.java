@@ -78,7 +78,7 @@ public class Observations {
         return blocks;
     }
 
-    private ObservationGrid getGrid(String gridName) {
+    public ObservationGrid getGrid(String gridName) {
         ObservationGrid grid = null;
         if (gridName.equals("CellPlane")) {
             grid = JavaAgent.CELL_PLANE;

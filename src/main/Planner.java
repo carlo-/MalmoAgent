@@ -112,6 +112,9 @@ public class Planner {
                 planObservation.XPos = isAt.getX();
                 planObservation.YPos = isAt.getY();
                 planObservation.ZPos = isAt.getZ();
+            } else if (effect instanceof BlockAt){
+                BlockAt blockAt = (BlockAt) effect;
+                planBlockAt(blockAt);
             }
         });
     }
@@ -125,6 +128,30 @@ public class Planner {
         return test;
     }
 
+    public void planBlockAt(BlockAt effect){
+        planBlockAt(effect, "CellBox");
+        planBlockAt(effect, "CellPlane");
+    }
+
+    public void planBlockAt(BlockAt effect, String gridd){
+        ObservationGrid grid = planObservation.getGrid(gridd);
+        int xRelative = (int) (effect.getX() - grid.getXStartObservation() - planObservation.XPos);
+        int yRelative = (int) (effect.getY() - grid.getYStartObservation() - planObservation.YPos + 1);
+        int zRelative = (int) (effect.getZ() - grid.getZStartObservation() - planObservation.ZPos);
+
+        if (zRelative > grid.getZObservationSize() || zRelative < 0 ||
+                xRelative > grid.getXObservationSize() || xRelative < 0 ||
+                yRelative > grid.getYObservationSize() || yRelative < 0) {
+            return;
+        }
+
+        int index = xRelative + zRelative * grid.getXObservationSize() + yRelative * grid.getXObservationSize() * grid.getZObservationSize();
+        if(gridd.equals("CellPlane")) {
+            planObservation.CellPlane.set(index, effect.getTypeOfBlock());
+        }else {
+            planObservation.CellBox.set(index, effect.getTypeOfBlock());
+        }
+    }
 
     private BlockAt findClosest(List<BlockAt> blocks, Observations obs) {
         //return blocks.get(0);

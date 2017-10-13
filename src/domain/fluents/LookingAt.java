@@ -29,6 +29,7 @@ public class LookingAt implements AtomicFluent {
 
         float d_xz = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2));
         float phi = (float) Math.toDegrees(Math.acos(zRel / d_xz));
+        if (!Float.isFinite(phi)) phi = 0;
         if (xRel < 0 && zRel < 0) phi += (180 - phi) * 2;
         if (xRel < 0 && zRel > 0) phi = 360 - phi;
         phi = 360 - phi;
@@ -44,8 +45,8 @@ public class LookingAt implements AtomicFluent {
         float yaw = observations.Yaw;
         float yawCW = yaw >= 0f ? yaw : 360f + yaw;
 
-        boolean yawSat = Math.abs(yawCW - phi) == 0 || (Math.abs(yawCW) == 360 && phi == 0) || (Math.abs(phi) == 360 && yawCW == 0);
-        boolean pitchSat = Math.abs(pitch - theta) == 0;
+        boolean yawSat = Math.abs(yawCW - phi) <= 4 || (Math.abs(yawCW) == 360 && phi == 0) || (Math.abs(phi) == 360 && yawCW == 0);
+        boolean pitchSat = Math.abs(pitch - theta) <= 4;
 
         /*
         System.err.println("yawCW: "+yawCW+", phi: "+phi+", alpha_xz: "+alpha_xz+", yawSat: "+yawSat);

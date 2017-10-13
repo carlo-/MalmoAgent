@@ -5,6 +5,7 @@ import domain.AbstractAction;
 import domain.BlockType;
 import domain.ObservationFactory;
 import domain.fluents.*;
+import javafx.util.Pair;
 import main.Observations;
 
 import java.util.Arrays;
@@ -12,7 +13,6 @@ import java.util.Arrays;
 public class PlaceBlock extends AbstractAction {
 
     private final BlockAt mBlockAt;
-
     public PlaceBlock(AgentHost agentHost, BlockAt blockAt) {
         super(agentHost);
         float x = blockAt.getX();
@@ -20,20 +20,19 @@ public class PlaceBlock extends AbstractAction {
         float z = blockAt.getZ();
         mBlockAt = blockAt;
         this.effects = Arrays.asList(blockAt);
-        BlockAt bestNearby = findBestNearbyBlock(x, y, z, ObservationFactory.getObservations(agentHost));
+        Pair<BlockAt, LookingAt> bestNearby = findBestNearbyBlock(x, y, z, ObservationFactory.getObservations(agentHost));
 
         this.preconditions = Arrays.asList(
                 new Have(blockAt.getTypeOfBlockString(), 1),
                 new HaveSelected(blockAt.getTypeOfBlockString()),
-                bestNearby,
-              //  new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
+                bestNearby.getKey(),bestNearby.getValue(),
+                //  new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
-                new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new BlockAt(x, y, z, BlockType.air)
         );
     }
 
-    private BlockAt findBestNearbyBlock(float x, float y, float z, Observations observations) {
+    private Pair<BlockAt, LookingAt> findBestNearbyBlock(float x, float y, float z, Observations observations) {
         float xPos = observations.XPos;
         float zPos = observations.ZPos;
         float xDis = x - xPos;
@@ -43,23 +42,22 @@ public class PlaceBlock extends AbstractAction {
         boolean isXBigger = xAbsDis >= zAbsDis;
 
         BlockAt output1 = new BlockAt(isXBigger ? x + Math.signum(xDis) : x, y, isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
-        if (output1.test(observations)) return output1;
+        if (output1.test(observations)) return new Pair<>(output1, new LookingAt(isXBigger ? x + Math.signum(xDis)/2 : x, y, isXBigger ? z : z + Math.signum(zDis)/2));
 
         output1 = new BlockAt(!isXBigger ? x + Math.signum(xDis) : x, y, !isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
-        if (output1.test(observations)) return output1;
+        if (output1.test(observations)) return new Pair<>(output1, new LookingAt(!isXBigger ? x + Math.signum(xDis)/2 : x, y, !isXBigger ? z : z + Math.signum(zDis)/2));
 
         BlockAt output0 = new BlockAt(x, y - 1, z, BlockType.Any);
-        if (output0.test(observations)) return output0;
+        if (output0.test(observations)) return new Pair<>(output0, new LookingAt(x, y - 0.5f, z));
 
         output1 = new BlockAt(!isXBigger ? x - Math.signum(xDis) : x, y, !isXBigger ? z : z - Math.signum(zDis), BlockType.Any);
-        if (output1.test(observations)) return output1;
+        if (output1.test(observations)) return new Pair<>(output1, new LookingAt(!isXBigger ? x - Math.signum(xDis)/2 : x, y, !isXBigger ? z : z - Math.signum(zDis)/2));
 
         output1 = new BlockAt(isXBigger ? x - Math.signum(xDis) : x, y, isXBigger ? z : z - Math.signum(zDis), BlockType.Any);
-        if (output1.test(observations)) return output1;
+        if (output1.test(observations)) return new Pair<>(output1, new LookingAt(isXBigger ? x - Math.signum(xDis)/2 : x, y, isXBigger ? z : z - Math.signum(zDis)/2));
 
-        else return output0;
+        else return new Pair<>(output0, new LookingAt(x, y - 0.5f, z));
     }
-
     @Override
     public void doAction(Observations observations) {
         agentHost.sendCommand("use 1");

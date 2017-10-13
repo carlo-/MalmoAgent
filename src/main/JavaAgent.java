@@ -115,15 +115,11 @@ public class JavaAgent {
     }
 
     private static void drawTree(MissionSpec my_mission, int x, int z) {
-        my_mission.drawLine(x, 226, z, x, 230, z, "log");
+        my_mission.drawLine(x, 227, z, x, 230, z, "log");
     }
 
     private static MissionRecordSpec createMissionRecords() {
         MissionRecordSpec my_mission_record = new MissionRecordSpec("./saved_data.tgz");
-        my_mission_record.recordCommands();
-        my_mission_record.recordMP4(20, 400000);
-        my_mission_record.recordRewards();
-        my_mission_record.recordObservations();
         return my_mission_record;
     }
 

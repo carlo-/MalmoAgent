@@ -65,7 +65,7 @@ public class Observations {
                 // calculate position in the grid
                 xRelative = i % grid.getXObservationSize();
                 yRelative = i / (grid.getXObservationSize() * grid.getZObservationSize());
-                zRelative = i / (grid.getXObservationSize());
+                zRelative = i / (grid.getXObservationSize()) - yRelative* grid.getZObservationSize();
                 // calculate position relative to us
                 xRelative += grid.getXStartObservation();
                 yRelative += grid.getYStartObservation() - 1;

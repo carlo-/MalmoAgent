@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Created by Mart on 8.10.2017.
  */
 public class MoveTo extends AbstractAction {
-    private final static int GROUND_LEVEL = 227;
     private final float z;
     private final float y;
     private final float x;
@@ -109,7 +108,7 @@ public class MoveTo extends AbstractAction {
     }
 
     public boolean isFree(float x, float z, Observations obs) {
-        return obs.blockAt(x, GROUND_LEVEL, z).getTypeOfBlock().equals(BlockType.air) && obs.blockAt(x, GROUND_LEVEL + 1, z).getTypeOfBlock().equals(BlockType.air);
+        return obs.blockAt(x, obs.YPos-1, z).getTypeOfBlock().equals(BlockType.air) && obs.blockAt(x, obs.YPos-1, z).getTypeOfBlock().equals(BlockType.air);
     }
 
     public class Position {

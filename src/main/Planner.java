@@ -6,6 +6,7 @@ import domain.Action;
 import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.ObservationFactory;
+import domain.fluents.BlockAt;
 import domain.fluents.Have;
 import domain.fluents.HaveSelected;
 import domain.fluents.IsAt;
@@ -36,19 +37,24 @@ public class Planner {
 
     public void execute() {
         WorldState worldState = agentHost.getWorldState();
-        while (plan.size() > 0 && worldState.getIsMissionRunning()) {
-            Action action = plan.get(0);
-            if (action.preconditionsMet()) {
-                Action remove = plan.remove(0);
-                if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
-                    remove.perform();
+        while (!currentGoal.test(ObservationFactory.getObservations(agentHost)) && worldState.getIsMissionRunning()) {
+            while (plan.size() > 0) {
+                Action action = plan.get(0);
+                if (action.preconditionsMet()) {
+                    Action remove = plan.remove(0);
+                    if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
+                        remove.perform();
+                    }
+                } else {
+                    List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
+                    actions.addAll(plan);
+                    plan = actions;
                 }
-            } else {
-                List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
-                actions.addAll(plan);
-                plan = actions;
+                System.out.println(plan);
             }
-            System.out.println(plan);
+            List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
+            actions.addAll(plan);
+            plan = actions;
         }
         System.out.println("Done executing");
     }
@@ -62,6 +68,7 @@ public class Planner {
         if (actions.size() < 1) {
             throw new IllegalStateException("I dont know how to solve this");
         }
+
         Action bestAction = findCheapest(actions);
 
         if (bestAction.getPreconditions().size() == 0) {
@@ -69,26 +76,30 @@ public class Planner {
             determinedList.add(bestAction);
             return determinedList;
         }
-
-        List<Action> collect = satisfyConditions(bestAction, planObservation);
+        List<Action> collect = null;
+        collect = satisfyConditions(bestAction, planObservation);
         collect.add(bestAction);
-        updatePlanObservation(bestAction);
+        while (!fluent.test(planObservation) && actions.size() > 0) {
+            collect.add(findCheapest(actions));
+            updatePlanObservation(bestAction);
+        }
+
         return collect;
     }
 
     private void updatePlanObservation(Action bestAction) {
         bestAction.getEffects().forEach(effect -> {
-            if(effect instanceof Have){
+            if (effect instanceof Have) {
                 Have have = (Have) effect;
                 int i = planObservation.items.indexOf((have.getItem()));
-                if(i != -1){
+                if (i != -1) {
                     planObservation.nbItems.set(i, have.getmNumberOf());
                 } else {
                     int air = planObservation.items.indexOf("air");
                     planObservation.items.set(air, have.getItem());
                     planObservation.nbItems.set(air, have.getmNumberOf());
                 }
-            }else if(effect instanceof HaveSelected){
+            } else if (effect instanceof HaveSelected) {
                 HaveSelected haveSelected = (HaveSelected) effect;
                 int i = planObservation.items.indexOf(haveSelected.getItem());
                 String itemSwapped = planObservation.items.get(0);
@@ -97,7 +108,7 @@ public class Planner {
                 planObservation.nbItems.set(0, planObservation.nbItems.get(i));
                 planObservation.items.set(i, itemSwapped);
                 planObservation.nbItems.set(i, quantitySwapped);
-            }else if(effect instanceof IsAt){
+            } else if (effect instanceof IsAt) {
                 IsAt isAt = (IsAt) effect;
                 planObservation.XPos = isAt.getX();
                 planObservation.YPos = isAt.getY();
@@ -115,7 +126,23 @@ public class Planner {
         return test;
     }
 
+
+    private BlockAt findClosest(List<BlockAt> blocks, Observations obs) {
+        //return blocks.get(0);
+        float minD = Float.MAX_VALUE;
+        BlockAt closest = null;
+        for (BlockAt b : blocks) {
+            float d = b.distanceFrom(obs.XPos, obs.YPos, obs.ZPos);
+            if (d <= minD) {
+                closest = b;
+                minD = d;
+            }
+        }
+        return closest;
+
+    }
+
     private Action findCheapest(List<Action> actions) {
-        return actions.get(0); //Whatever, doesn't matter for now
+        return actions.remove(0); //Whatever, doesn't matter for now
     }
 }

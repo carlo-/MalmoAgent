@@ -4,6 +4,7 @@ import domain.BlockType;
 import domain.fluents.BlockAt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //All fields are case sensitive in relation to their json counterparts
@@ -46,6 +47,7 @@ public class Observations {
     }
 
     public List<BlockAt> findBlockType(BlockType blockType) {
+        if(blockType == null) return Arrays.asList();
         List<BlockAt> blocks = findBlockType(blockType, "CellBox");
         blocks.addAll(findBlockType(blockType, "CellPlane"));
         return blocks;

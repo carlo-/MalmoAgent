@@ -14,12 +14,18 @@ import java.util.Map;
 
 public class GatherBlock extends AbstractAction {
     public final static Map<BlockType, String> BLOCK_TO_ITEM;
+    public static final Map<String, BlockType> ITEM_TO_BLOCK;
 
     static {
         Map<BlockType, String> temp = new HashMap<>();
         temp.put(BlockType.log, "log");
         temp.put(BlockType.stone, "cobblestone");
         BLOCK_TO_ITEM = Collections.unmodifiableMap(temp);
+        Map<String, BlockType> temp1 = new HashMap<>();
+        for(Map.Entry<BlockType, String> x : BLOCK_TO_ITEM.entrySet()){
+            temp1.put(x.getValue(), x.getKey());
+        }
+        ITEM_TO_BLOCK = Collections.unmodifiableMap(temp1);
     }
 
     private BlockAt block;
@@ -38,7 +44,8 @@ public class GatherBlock extends AbstractAction {
                 new Have(tool, 1),
                 new HaveSelected(tool));
         String item = BLOCK_TO_ITEM.get(targetBlock.getTypeOfBlock());
-        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air), new Have(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1)); //TODO effect collected item
+        effects = Arrays.asList(new BlockAt(x, y, z, BlockType.air),
+                new Have(item, ObservationFactory.getObservations(agentHost).numberOf(item) + 1));
     }
 
     private static String toolForTheJob(BlockType blockType) {

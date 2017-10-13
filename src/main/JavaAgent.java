@@ -29,6 +29,7 @@ import domain.AtomicFluent;
 import domain.BlockType;
 import domain.ObservationFactory;
 import domain.fluents.BlockAt;
+import domain.fluents.Have;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, -1, -50, 50, 2, 50);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, -1, -50, 50, 3, 50);
     public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1, -5, 5, 5, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
@@ -67,7 +68,7 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(new BlockAt(1.5f, observations.YPos - 1, 1.5f, BlockType.planks), agent_host);
+        return new Planner(new Have("planks", 60), agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -93,7 +94,7 @@ public class JavaAgent {
     private static MissionSpec createMissionSpec(AgentHost agent_host) throws Exception {
         MissionSpec my_mission = new MissionSpec(createMissionXml(), true);
         my_mission.forceWorldReset();
-        my_mission.startAt(0.5f, 229.0f, 0.5f);
+        my_mission.startAt(0.5f, 227.0f, 0.5f);
         my_mission.timeLimitInSeconds(100000000.0f);
         my_mission.requestVideo(1024, 800);
         my_mission.observeGrid(CELL_PLANE.getXStartObservation(), CELL_PLANE.getYStartObservation(), CELL_PLANE.getZStartObservation(),

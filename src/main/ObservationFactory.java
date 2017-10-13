@@ -1,4 +1,4 @@
-package domain;
+package main;
 
 import com.google.gson.GsonBuilder;
 import com.microsoft.msr.malmo.AgentHost;

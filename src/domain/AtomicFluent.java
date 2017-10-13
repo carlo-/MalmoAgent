@@ -9,7 +9,4 @@ import java.util.function.Predicate;
  */
 public interface AtomicFluent extends Predicate<Observations> {
 
-    default AtomicFluent negate() {
-        return (t) -> !test(t);
-    }
 }

@@ -38,10 +38,6 @@ public class MoveTo extends AbstractAction {
         this.y = isAt.getY();
         this.z = isAt.getZ();
         this.distance = isAt.getDistance();
-        if(distance == 0) {
-            this.preconditions.add(new BlockAt(x, y, z, BlockType.air));
-            this.preconditions.add(new BlockAt(x, y + 1, z, BlockType.air));
-        }
         powDistance = distance * distance;
         this.effects.add(isAt);
         Observations obs = ObservationFactory.getObservations(agentHost);

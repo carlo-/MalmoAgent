@@ -21,13 +21,13 @@ public class ActionFactory {
         this.agentHost = agentHost;
     }
 
-    public List<Action> createPossibleActions(AtomicFluent fluent) {
+    public List<Action> createPossibleActions(AtomicFluent fluent, Observations observations) {
         ArrayList<Action> possibleActions = new ArrayList<>();
         if (fluent instanceof IsAt) {
             possibleActions.add(new MoveTo(agentHost, (IsAt) fluent));
         } else if (fluent instanceof BlockAt) {
             BlockAt blockAt = (BlockAt) fluent;
-            if (BlockType.air.equals(blockAt.getTypeOfBlock())) {
+            if (BlockType.air.equals(blockAt.getTypeOfBlock()) && observations.blockAt(blockAt.getX(), blockAt.getY(), blockAt.getZ()).getTypeOfBlock().equals(BlockType.air)) {
                 possibleActions.add(new GatherBlock(agentHost, blockAt));
             } else {
                 possibleActions.add(createPlaceBlockAction(blockAt));
@@ -39,15 +39,14 @@ public class ActionFactory {
         } else if (fluent instanceof Have) {
             Have have = (Have) fluent;
             if (!have.getItem().equals("air")) {
-                possibleActions.addAll(createGatherOrCraftActions(have));
-                possibleActions.addAll(createEntityMove(have));
+                possibleActions.addAll(createGatherOrCraftActions(have, observations));
+                possibleActions.addAll(createEntityMove(have, observations));
             }
         }
         return possibleActions;
     }
 
-    private List<Action> createEntityMove(Have have) {
-        Observations observations = ObservationFactory.getObservations(agentHost);
+    private List<Action> createEntityMove(Have have, Observations observations) {
         return observations.Entities.stream()
                 .filter(entity -> entity.name != null && have.getItem().equals(entity.name.name()))
                 .map(entity -> new MoveTo(agentHost, new IsAt(((int) entity.x) + 0.5f, ((int) entity.y) + 0.5f, ((int) entity.z) + 0.5f), entity))
@@ -60,14 +59,13 @@ public class ActionFactory {
         return new SelectItem(agentHost, item);
     }
 
-    private List<Action> createGatherOrCraftActions(Have nbItems) {
+    private List<Action> createGatherOrCraftActions(Have nbItems, Observations observations) {
         String item = nbItems.getItem();
         //Check if the item is craftable, otherwise try to gather it
         if (Craft.CRAFTS.containsKey(item))
             return Arrays.asList(new Craft(agentHost, item));
         else {
-            Observations obs = ObservationFactory.getObservations(agentHost);
-            return obs.findBlockType(GatherBlock.ITEM_TO_BLOCK.get(nbItems.getItem()))
+            return observations.findBlockType(GatherBlock.ITEM_TO_BLOCK.get(nbItems.getItem()))
                     .stream()
                     .map(blockAt -> new GatherBlock(agentHost, blockAt))
                     .collect(Collectors.toList());

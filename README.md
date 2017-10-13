@@ -1,6 +1,6 @@
 # MalmoAgent
 
-In this work, we exploit the open-source framework Malmo to build an Artificial Intelligence connected to the popular computer game Minecraft. We explore planning methods with hierarchical actions tocontrol the main character and achieve predefined goals.
+This group work is based on Microsoft's Project Malmo: an Artificial Intelligence platform for AI training and research. In order to run it, one needs to unpack project Malmo and also some dependent binaries. It might seem somewhat complex at first hand but I can assure that that is not the case and if done correctly, it should be up and running in no time!
 
 ---
 ## Installation
@@ -10,10 +10,18 @@ In this work, we exploit the open-source framework Malmo to build an Artificial 
 2. Navigate to the downloaded folder and clone this repository in it.
 
 ### Windows
-3. Run ...
+3. Open a Powershell and run:
+```PowerShell
+Set-ExecutionPolicy -Scope CurrentUser Unrestricted
+path:\Malmo-0.30.0-Windows-64bit\scripts
+.\malmo_install.ps1
+```
+Refer to [this](https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.security/set-executionpolicy#example-4-set-the-scope-for-an-execution-policy) guide for details.
 
 ### macOS
-3. Run the script `install_macosx.sh` ([details](https://github.com/Microsoft/malmo/blob/master/doc/install_macosx.md))
+3. Run the script `install_macosx.sh`
+
+Refer to [this](https://github.com/Microsoft/malmo/blob/master/doc/install_macosx.md) guide for details.
 
 ### Linux
 3. Follow the instructions [here](https://github.com/Microsoft/malmo/blob/master/doc/install_linux.md).

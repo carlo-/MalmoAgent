@@ -6,6 +6,8 @@ import domain.Action;
 import domain.ActionFactory;
 import domain.AtomicFluent;
 import domain.ObservationFactory;
+import domain.actions.GatherBlock;
+import domain.actions.PlaceBlock;
 import domain.fluents.BlockAt;
 import domain.fluents.Have;
 import domain.fluents.HaveSelected;
@@ -13,6 +15,7 @@ import domain.fluents.IsAt;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +47,7 @@ public class Planner {
                     Action remove = plan.remove(0);
                     if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
                         boolean perform = remove.perform();
-                        if(!perform){
+                        if (!perform) {
                             List<AtomicFluent> fluents = remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
                             List<Action> actions = determinePlan(fluents); //Reevaluate if our preconditions are not met for some reason
                             actions.addAll(plan);
@@ -58,9 +61,10 @@ public class Planner {
                 }
                 System.out.println(plan);
             }
-            if(!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
+            if (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
                 currentGoal = currentGoal.stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
                 List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
+
                 actions.addAll(plan);
                 plan = actions;
             }
@@ -118,7 +122,7 @@ public class Planner {
                 planObservation.XPos = isAt.getX();
                 planObservation.YPos = isAt.getY();
                 planObservation.ZPos = isAt.getZ();
-            } else if (effect instanceof BlockAt){
+            } else if (effect instanceof BlockAt) {
                 BlockAt blockAt = (BlockAt) effect;
                 planBlockAt(blockAt);
             }
@@ -134,12 +138,12 @@ public class Planner {
         return test;
     }
 
-    public void planBlockAt(BlockAt effect){
+    public void planBlockAt(BlockAt effect) {
         planBlockAt(effect, "CellBox");
         planBlockAt(effect, "CellPlane");
     }
 
-    public void planBlockAt(BlockAt effect, String gridd){
+    public void planBlockAt(BlockAt effect, String gridd) {
         ObservationGrid grid = planObservation.getGrid(gridd);
         int xRelative = (int) (effect.getX() - grid.getXStartObservation() - planObservation.XPos);
         int yRelative = (int) (effect.getY() - grid.getYStartObservation() - planObservation.YPos + 1);
@@ -152,9 +156,9 @@ public class Planner {
         }
 
         int index = xRelative + zRelative * grid.getXObservationSize() + yRelative * grid.getXObservationSize() * grid.getZObservationSize();
-        if(gridd.equals("CellPlane")) {
+        if (gridd.equals("CellPlane")) {
             planObservation.CellPlane.set(index, effect.getTypeOfBlock());
-        }else {
+        } else {
             planObservation.CellBox.set(index, effect.getTypeOfBlock());
         }
     }
@@ -163,7 +167,7 @@ public class Planner {
         int cost = Integer.MAX_VALUE;
         Action cheapestAction = null;
         for (Action action : actions) {
-            if(cost > action.cost()){
+            if (cost > action.cost()) {
                 cost = action.cost();
                 cheapestAction = action;
             }
@@ -171,5 +175,9 @@ public class Planner {
         }
         actions.remove(cheapestAction);
         return cheapestAction;
+    }
+
+    public boolean excludeActionsExcept(Action action) {
+        return action instanceof GatherBlock || action instanceof PlaceBlock;
     }
 }

@@ -47,7 +47,7 @@ public abstract class AbstractAction implements Action {
     public boolean perform() {
         Observations observations = null;
         while (!effectsCompleted(observations) && preconditionsMet()) {
-                observations = ObservationFactory.getObservations(agentHost);
+            observations = ObservationFactory.getObservations(agentHost);
             doAction(observations);
             try {
                 Thread.sleep(100);
@@ -61,7 +61,7 @@ public abstract class AbstractAction implements Action {
 
     protected abstract void doAction(Observations observations);
 
-    public int cost(){
+    public int cost() {
         return 0;
     }
 }

@@ -4,12 +4,16 @@ import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
 import domain.BlockType;
 import domain.ObservationFactory;
+import domain.fluents.BlockAt;
 import domain.fluents.Have;
 import domain.fluents.IsAt;
 import main.Entity;
 import main.Observations;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -34,7 +38,11 @@ public class MoveTo extends AbstractAction {
         this.y = isAt.getY();
         this.z = isAt.getZ();
         this.distance = isAt.getDistance();
-        powDistance = distance*distance;
+        if(distance == 0) {
+            this.preconditions.add(new BlockAt(x, y, z, BlockType.air));
+            this.preconditions.add(new BlockAt(x, y + 1, z, BlockType.air));
+        }
+        powDistance = distance * distance;
         this.effects.add(isAt);
         Observations obs = ObservationFactory.getObservations(agentHost);
         if (entity != null) {
@@ -45,32 +53,32 @@ public class MoveTo extends AbstractAction {
     }
 
 
-    public int cost(){
+    public int cost() {
         Observations obs = ObservationFactory.getObservations(agentHost);
-        return (int)(Math.abs(x - obs.XPos) + Math.abs(z - obs.ZPos));
+        return (int) (Math.abs(x - obs.XPos) + Math.abs(z - obs.ZPos));
     }
 
     public void doAction(Observations observations) {
-        if(path == null || path.isEmpty()){
+        if (path == null || path.isEmpty()) {
             lastPos = new Position(observations.XPos, observations.ZPos);
             path = BFS(observations);
         }
-            Position currentChild = path.pop();
-            float xDifference = currentChild.mX - lastPos.mX;
-            //float yDifference = y - observations.YPos;
-            float zDifference = currentChild.mZ - lastPos.mZ;
+        Position currentChild = path.pop();
+        float xDifference = currentChild.mX - lastPos.mX;
+        //float yDifference = y - observations.YPos;
+        float zDifference = currentChild.mZ - lastPos.mZ;
 
-            if (zDifference > 0) {
-                agentHost.sendCommand("movesouth 1");
-            } else if (zDifference < 0) {
-                agentHost.sendCommand("movenorth 1");
-            } else if (xDifference > 0) {
-                agentHost.sendCommand("moveeast 1");
-            } else if (xDifference < 0) {
-                agentHost.sendCommand("movewest 1");
-            }
+        if (zDifference > 0) {
+            agentHost.sendCommand("movesouth 1");
+        } else if (zDifference < 0) {
+            agentHost.sendCommand("movenorth 1");
+        } else if (xDifference > 0) {
+            agentHost.sendCommand("moveeast 1");
+        } else if (xDifference < 0) {
+            agentHost.sendCommand("movewest 1");
+        }
 
-            lastPos = currentChild;
+        lastPos = currentChild;
 
     }
 
@@ -93,14 +101,14 @@ public class MoveTo extends AbstractAction {
             currentPosition = nextPositions.poll();
         }
         Stack<Position> output = new Stack<>();
-        while(currentPosition != null){
+        while (currentPosition != null) {
             output.push(currentPosition);
             currentPosition = map.get(currentPosition);
         }
         return output;
     }
 
-    public boolean checkPosGoal(Position current, Observations obs){
+    public boolean checkPosGoal(Position current, Observations obs) {
         return (Math.pow(current.mZ - z, 2) + Math.pow(current.mX - x, 2) <= powDistance);
     }
 
@@ -115,7 +123,7 @@ public class MoveTo extends AbstractAction {
     }
 
     public boolean isFree(float x, float z, Observations obs) {
-        return obs.blockAt(x, obs.YPos-1, z).getTypeOfBlock().equals(BlockType.air) && obs.blockAt(x, obs.YPos-1, z).getTypeOfBlock().equals(BlockType.air);
+        return obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) && obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air);
     }
 
     public class Position {
@@ -132,8 +140,8 @@ public class MoveTo extends AbstractAction {
             return (int) mX + 10000 * (int) mZ;
         }
 
-        public String toString(){
-            return "x "+mX+" z "+mZ;
+        public String toString() {
+            return "x " + mX + " z " + mZ;
         }
 
         @Override

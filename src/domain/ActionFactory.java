@@ -26,15 +26,22 @@ public class ActionFactory {
         if (fluent instanceof IsAt) {
             possibleActions.add(new MoveTo(agentHost, (IsAt) fluent));
         } else if (fluent instanceof BlockAt) {
-            possibleActions.add(createPlaceBlockAction((BlockAt) fluent));
+            BlockAt blockAt = (BlockAt) fluent;
+            if (BlockType.air.equals(blockAt.getTypeOfBlock())) {
+                possibleActions.add(new GatherBlock(agentHost, blockAt));
+            } else {
+                possibleActions.add(createPlaceBlockAction(blockAt));
+            }
         } else if (fluent instanceof LookingAt) {
             possibleActions.add(new LookAt(agentHost, (LookingAt) fluent));
         } else if (fluent instanceof HaveSelected) {
             possibleActions.add(createSelectItemAction((HaveSelected) fluent));
         } else if (fluent instanceof Have) {
             Have have = (Have) fluent;
-            possibleActions.addAll(createGatherOrCraftActions(have));
-            possibleActions.addAll(createEntityMove(have));
+            if (!have.getItem().equals("air")) {
+                possibleActions.addAll(createGatherOrCraftActions(have));
+                possibleActions.addAll(createEntityMove(have));
+            }
         }
         return possibleActions;
     }

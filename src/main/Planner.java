@@ -45,8 +45,8 @@ public class Planner {
                     if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
                         boolean perform = remove.perform();
                         if(!perform){
-                            remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
-                            List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
+                            List<AtomicFluent> fluents = remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
+                            List<Action> actions = determinePlan(fluents); //Reevaluate if our preconditions are not met for some reason
                             actions.addAll(plan);
                             plan = actions;
                         }

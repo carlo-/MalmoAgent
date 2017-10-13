@@ -2,6 +2,8 @@
 
 This group work is based on Microsoft's Project Malmo: an Artificial Intelligence platform for AI training and research. In order to run it, one needs to unpack project Malmo and also some dependent binaries. It might seem somewhat complex at first hand but I can assure that that is not the case and if done correctly, it should be up and running in no time!
 
+An updated version of this README file can be found at [this link](https://github.com/carlo-/MalmoAgent).
+
 ---
 ## Installation
 
@@ -29,14 +31,7 @@ Refer to [this](https://github.com/Microsoft/malmo/blob/master/doc/install_macos
 ---
 ## Running the agent
 
-### Windows
-xx
-
-### macOS
-xx
-
-### Linux
-xx
+To run Malmo please follow [these](https://github.com/Microsoft/malmo) instructions.
 
 ---
 ## Original project

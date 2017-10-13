@@ -22,17 +22,13 @@ public class ActionFactory {
         this.agentHost = agentHost;
     }
 
-    public MoveTo createMoveToAction(IsAt isAt) {
-        return new MoveTo(agentHost, isAt);
-    }
-
     public List<Action> createPossibleActions(AtomicFluent fluent) {
         if (fluent instanceof IsAt) {
-            return Arrays.asList(createMoveToAction((IsAt) fluent));
+            return Arrays.asList(new MoveTo(agentHost, (IsAt)fluent));
         } else if (fluent instanceof BlockAt) {
             return Arrays.asList(createPlaceBlockAction((BlockAt) fluent));
         } else if (fluent instanceof LookingAt) {
-            return Arrays.asList(createLookAtAction((LookingAt) fluent));
+            return Arrays.asList(new LookAt(agentHost, (LookingAt) fluent));
         } else if (fluent instanceof HaveSelected) {
             return Arrays.asList(createSelectItemAction((HaveSelected) fluent));
         } else if (fluent instanceof Have) {
@@ -58,7 +54,6 @@ public class ActionFactory {
                 Entity entity = matching.get(0);
                 return new MoveTo(agentHost, new IsAt((int) entity.x + 0.5f, (int) entity.y + 0.5f, (int) entity.z + 0.5f));
             }
-
         }
         return null;
     }
@@ -92,10 +87,6 @@ public class ActionFactory {
         }
         return closest;
 
-    }
-
-    private LookAt createLookAtAction(LookingAt lookingAt) {
-        return new LookAt(agentHost, lookingAt);
     }
 
     private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {

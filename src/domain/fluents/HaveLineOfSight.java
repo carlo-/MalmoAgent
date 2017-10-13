@@ -80,6 +80,7 @@ public class HaveLineOfSight implements AtomicFluent {
     public boolean test(Observations o) {
         BlockAt startingBlock = o.blockAt(o.XPos, o.YPos, o.ZPos);
         float dist = startingBlock.distanceFrom(mX, mY, mZ);
+
         return checkBlock(o, startingBlock, startingBlock, startingBlock, dist);
     }
 }

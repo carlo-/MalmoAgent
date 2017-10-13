@@ -27,7 +27,7 @@ public class BlockAt implements AtomicFluent {
     public boolean test(Observations observations) {
         BlockAt blockAt = observations.blockAt(mX, mY, mZ);
         if (mTypeOfBlock.equals(BlockType.Any)) {
-            return !mTypeOfBlock.equals(BlockType.air);
+            return !blockAt.getTypeOfBlock().equals(BlockType.air);
         }
         boolean equals = mTypeOfBlock.equals(blockAt.getTypeOfBlock());
         return equals;

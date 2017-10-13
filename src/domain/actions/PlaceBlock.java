@@ -26,7 +26,7 @@ public class PlaceBlock extends AbstractAction {
                 new Have(blockAt.getTypeOfBlockString(), 1),
                 new HaveSelected(blockAt.getTypeOfBlockString()),
                 bestNearby,
-                new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
+              //  new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new IsAt(x, y, z, 1),
                 new LookingAt(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
                 new BlockAt(x, y, z, BlockType.air)
@@ -41,16 +41,22 @@ public class PlaceBlock extends AbstractAction {
         float xAbsDis = Math.abs(xDis);
         float zAbsDis = Math.abs(zDis);
         boolean isXBigger = xAbsDis >= zAbsDis;
-        BlockAt output0 = new BlockAt(isXBigger ? x + Math.signum(xDis) : x, y, isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
+
+        BlockAt output1 = new BlockAt(isXBigger ? x + Math.signum(xDis) : x, y, isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
+        if (output1.test(observations)) return output1;
+
+        output1 = new BlockAt(!isXBigger ? x + Math.signum(xDis) : x, y, !isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
+        if (output1.test(observations)) return output1;
+
+        BlockAt output0 = new BlockAt(x, y - 1, z, BlockType.Any);
         if (output0.test(observations)) return output0;
-        BlockAt output1 = new BlockAt(!isXBigger ? x + Math.signum(xDis) : x, y, !isXBigger ? z : z + Math.signum(zDis), BlockType.Any);
-        if (output1.test(observations)) return output1;
-        output1 = new BlockAt(x, y - 1, z, BlockType.Any);
-        if (output1.test(observations)) return output1;
+
         output1 = new BlockAt(!isXBigger ? x - Math.signum(xDis) : x, y, !isXBigger ? z : z - Math.signum(zDis), BlockType.Any);
         if (output1.test(observations)) return output1;
+
         output1 = new BlockAt(isXBigger ? x - Math.signum(xDis) : x, y, isXBigger ? z : z - Math.signum(zDis), BlockType.Any);
         if (output1.test(observations)) return output1;
+
         else return output0;
     }
 

@@ -47,7 +47,7 @@ public class Observations {
     }
 
     public List<BlockAt> findBlockType(BlockType blockType) {
-        if(blockType == null) return Arrays.asList();
+        if (blockType == null) return Arrays.asList();
         List<BlockAt> blocks = findBlockType(blockType, "CellBox");
         blocks.addAll(findBlockType(blockType, "CellPlane"));
         return blocks;
@@ -65,7 +65,7 @@ public class Observations {
                 // calculate position in the grid
                 xRelative = i % grid.getXObservationSize();
                 yRelative = i / (grid.getXObservationSize() * grid.getZObservationSize());
-                zRelative = i / (grid.getXObservationSize()) - yRelative* grid.getZObservationSize();
+                zRelative = i / (grid.getXObservationSize()) - yRelative * grid.getZObservationSize();
                 // calculate position relative to us
                 xRelative += grid.getXStartObservation();
                 yRelative += grid.getYStartObservation() - 1;

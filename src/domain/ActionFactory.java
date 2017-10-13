@@ -10,9 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by Mart on 8.10.2017.
- */
+//This class is simply a mapping from Effect to Action. We use this in order to sneak past the fact that everything is an object and we can't currently instantiate without
+//A constructor. The purpose is of this class is to provide a list of all possible actions that fulfill through their effects, a given Fluent.
 public class ActionFactory {
 
     protected final AgentHost agentHost;
@@ -30,12 +29,12 @@ public class ActionFactory {
             if (BlockType.air.equals(blockAt.getTypeOfBlock()) && observations.blockAt(blockAt.getX(), blockAt.getY(), blockAt.getZ()).getTypeOfBlock().equals(BlockType.air)) {
                 possibleActions.add(new GatherBlock(agentHost, blockAt));
             } else {
-                possibleActions.add(createPlaceBlockAction(blockAt));
+                possibleActions.add(new PlaceBlock(agentHost, blockAt));
             }
         } else if (fluent instanceof LookingAt) {
             possibleActions.add(new LookAt(agentHost, (LookingAt) fluent));
         } else if (fluent instanceof HaveSelected) {
-            possibleActions.add(createSelectItemAction((HaveSelected) fluent));
+            possibleActions.add(new SelectItem(agentHost, (HaveSelected) fluent));
         } else if (fluent instanceof Have) {
             Have have = (Have) fluent;
             if (!have.getItem().equals("air")) {
@@ -51,17 +50,11 @@ public class ActionFactory {
                 .filter(entity -> entity.name != null && have.getItem().equals(entity.name.name()))
                 .map(entity -> new MoveTo(agentHost, new IsAt(((int) entity.x) + 0.5f, ((int) entity.y) + 0.5f, ((int) entity.z) + 0.5f), entity))
                 .collect(Collectors.toList());
-
-
-    }
-
-    private SelectItem createSelectItemAction(HaveSelected item) {
-        return new SelectItem(agentHost, item);
     }
 
     private List<Action> createGatherOrCraftActions(Have nbItems, Observations observations) {
         String item = nbItems.getItem();
-        //Check if the item is craftable, otherwise try to gather it
+        //Check if the item is craftable, otherwise try to gather it. Two ways to have something.
         if (Craft.CRAFTS.containsKey(item))
             return Arrays.asList(new Craft(agentHost, item));
         else {
@@ -70,10 +63,5 @@ public class ActionFactory {
                     .map(blockAt -> new GatherBlock(agentHost, blockAt))
                     .collect(Collectors.toList());
         }
-    }
-
-
-    private PlaceBlock createPlaceBlockAction(BlockAt blockAt) {
-        return new PlaceBlock(agentHost, blockAt);
     }
 }

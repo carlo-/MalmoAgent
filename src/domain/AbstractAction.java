@@ -1,6 +1,7 @@
 package domain;
 
 import com.microsoft.msr.malmo.AgentHost;
+import main.ObservationFactory;
 import main.Observations;
 
 import java.util.ArrayList;

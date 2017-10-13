@@ -5,7 +5,6 @@ import com.microsoft.msr.malmo.WorldState;
 import domain.Action;
 import domain.ActionFactory;
 import domain.AtomicFluent;
-import domain.ObservationFactory;
 import domain.actions.GatherBlock;
 import domain.actions.PlaceBlock;
 import domain.fluents.BlockAt;
@@ -13,7 +12,10 @@ import domain.fluents.Have;
 import domain.fluents.HaveSelected;
 import domain.fluents.IsAt;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -25,7 +27,6 @@ public class Planner {
     private final AgentHost agentHost;
     private List<Action> plan;
     private Observations planObservation;
-    private Map<Action, Integer> costs = new HashMap<>();
     private final static int THRESHOLD = 20;
 
     public Planner(List<AtomicFluent> currentGoal, AgentHost agentHost) {
@@ -34,7 +35,8 @@ public class Planner {
         this.agentHost = agentHost;
         this.factory = new ActionFactory(agentHost);
         planObservation = ObservationFactory.getObservations(agentHost);
-        this.plan = determinePlan(currentGoal, planObservation);
+        this.plan = determinePlan(currentGoal, planObservation).stream().filter(this::excludeActionsExcept).collect(Collectors.toList()); //Reduction, in order to sort more
+        Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
         System.out.println(plan);
     }
 
@@ -47,16 +49,6 @@ public class Planner {
                     Action remove = plan.remove(0);
                     if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
                         boolean perform = remove.perform();
-                        /*
-                        if (this.excludeActionsExcept(action) && (costs.isEmpty() || costs.get(action) >= THRESHOLD)) {
-                            plan = plan.stream().filter(this::excludeActionsExcept).collect(Collectors.toList());
-                            costs.clear();
-                            plan.stream().forEach(a -> {
-                                costs.put(a, a.cost());
-                            });
-                            Collections.sort(plan, (o1, o2) -> costs.get(o1) - costs.get(o2));
-                        }
-                        */
                         if (!perform) {
                             List<AtomicFluent> fluents = remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
                             List<Action> actions = determinePlan(fluents, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
@@ -108,6 +100,18 @@ public class Planner {
         return collect;
     }
 
+    private List<Action> satisfyConditions(Action bestAction, Observations observations) {
+        List<Action> test = bestAction.getPreconditions().stream()
+                .filter(precondition -> !precondition.test(observations))
+                .map(fluent -> evaluate(fluent, observations))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        return test;
+    }
+
+    //This was an important step in the implementation of the planner. In order to pre-generate a plan, we needed to keep track of the hypothetical changes we were going to make
+    //in the world. This is the main hub of keeping track of what we had done for planning. In normal cases, this would be the true game state instead, that we evaluate our
+    //Conditions against.
     private void updatePlanObservation(Action bestAction) {
         bestAction.getEffects().forEach(effect -> {
             if (effect instanceof Have) {
@@ -144,15 +148,8 @@ public class Planner {
         });
     }
 
-    private List<Action> satisfyConditions(Action bestAction, Observations observations) {
-        List<Action> test = bestAction.getPreconditions().stream()
-                .filter(precondition -> !precondition.test(observations))
-                .map(fluent -> evaluate(fluent, observations))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        return test;
-    }
-
+    //These two methods are part of the previous planObservation. They help us keep track of the changes we have made physically in the world, not just to our own inventory
+    //or position.
     public void planBlockAt(BlockAt effect) {
         planBlockAt(effect, "CellBox");
         planBlockAt(effect, "CellPlane");
@@ -178,6 +175,7 @@ public class Planner {
         }
     }
 
+    //Find the cheapest action based on cost. Through iteration.
     private Action findCheapest(List<Action> actions) {
         int cost = Integer.MAX_VALUE;
         Action cheapestAction = null;
@@ -192,16 +190,7 @@ public class Planner {
         return cheapestAction;
     }
 
-    public class BigAction {
-        private final int mCost;
-        private final Action mAction;
-
-        public BigAction(Action action) {
-            mCost = action.cost();
-            mAction = action;
-        }
-    }
-
+    //A method used in a later sorting example.
     public boolean excludeActionsExcept(Action action) {
         return action instanceof GatherBlock || action instanceof PlaceBlock;
     }

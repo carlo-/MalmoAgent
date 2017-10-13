@@ -3,7 +3,7 @@ package domain.actions;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
 import domain.BlockType;
-import domain.ObservationFactory;
+import main.ObservationFactory;
 import domain.fluents.*;
 import javafx.util.Pair;
 import main.Observations;

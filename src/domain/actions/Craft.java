@@ -2,7 +2,7 @@ package domain.actions;
 
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
-import domain.ObservationFactory;
+import main.ObservationFactory;
 import domain.fluents.Have;
 import javafx.util.Pair;
 import main.Observations;
@@ -16,7 +16,6 @@ public class Craft extends AbstractAction {
         Map<String, Pair<Integer, List<Pair<String, Integer>>>> crafts = new HashMap<>();
         crafts.put("diamond_pickaxe", new Pair<>(1, Collections.unmodifiableList(Arrays.asList(new Pair<>("diamond", 3), new Pair<>("stick", 2)))));
         crafts.put("planks", new Pair<>(4, Collections.unmodifiableList(Arrays.asList(new Pair<>("log", 1)))));
-        //TODO fill the necessary crafts
         CRAFTS = Collections.unmodifiableMap(crafts);
     }
 

@@ -27,7 +27,6 @@ package main;// ----------------------------------------------------------------
 import com.microsoft.msr.malmo.*;
 import domain.AtomicFluent;
 import domain.BlockType;
-import domain.ObservationFactory;
 import domain.fluents.BlockAt;
 import javafx.util.Pair;
 
@@ -62,8 +61,8 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos-1, 0.5f,
-                5.5f, observations.YPos, 0.5f),
+        return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
+                5.5f, observations.YPos - 1, 0.5f),
                 agent_host);
     }
 
@@ -111,7 +110,7 @@ public class JavaAgent {
     }
 
     private static void drawTree(MissionSpec my_mission, int x, int z) {
-        my_mission.drawLine(x, 227, z, x, 230, z, "log");
+        my_mission.drawLine(x, 227, z, x, 228, z, "log");
     }
 
     private static MissionRecordSpec createMissionRecords() {
@@ -188,7 +187,7 @@ public class JavaAgent {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                 "    <Mission xmlns=\"http://ProjectMalmo.microsoft.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
                 "        <About>\n" +
-                "            <Summary>Lets build a house</Summary>\n" +
+                "            <Summary>Let's build a wall</Summary>\n" +
                 "        </About>\n" +
                 "\n" +
                 "        <ServerSection>\n" +
@@ -239,7 +238,6 @@ public class JavaAgent {
         out.addAll(buildRectangularParallelepiped(type, toX, fromY + 1, fromZ + 1, toX, toY - 1, toZ - 1));
         //empty the inside of the house
         out.addAll(buildRectangularParallelepiped(BlockType.air, fromX + 1, fromY + 1, fromZ + 1, toX - 1, toY - 1, toZ - 1));
-        //TODO: Might want to calculate a Have, and put in in the start.
         //Maybe planner should figure that out itself later? Then we can avoid running back and forth
         return out;
     }

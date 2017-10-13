@@ -33,6 +33,7 @@ import domain.fluents.Have;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JavaAgent {
@@ -54,11 +55,6 @@ public class JavaAgent {
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
 
-        Thread.sleep(1000);
-        agent_host.sendCommand("jump 1");
-        Thread.sleep(1000);
-        agent_host.sendCommand("jump 0");
-        Thread.sleep(2000);
 
         planner = createGoalAgent(agent_host);
         planner.execute();
@@ -68,7 +64,9 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(new Have("planks", 60), agent_host);
+        return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos-1, 0.5f,
+                9.5f, observations.YPos-1, 0.5f),
+                agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -104,7 +102,7 @@ public class JavaAgent {
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();
-        my_mission.drawSphere(20, 226, 20, 6, "stone");
+        my_mission.drawSphere(20, 226, 20, 2, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
         drawTree(my_mission, -16, 23);

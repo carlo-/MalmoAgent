@@ -40,7 +40,7 @@ public class GatherBlock extends AbstractAction {
         preconditions = Arrays.asList(targetBlock,
                 new LookingAt(x, y, z),
                 //new HaveLineOfSight(x, y, z),
-                new IsAt(x, y, z, 1),
+                new IsAt(x, y, z, 2),
                 new Have(tool, 1),
                 new HaveSelected(tool));
         String item = BLOCK_TO_ITEM.get(targetBlock.getTypeOfBlock());

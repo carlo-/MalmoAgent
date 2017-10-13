@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
  * Created by Mart on 8.10.2017.
  */
 public class Planner {
-    private final AtomicFluent currentGoal;
+    private List<AtomicFluent> currentGoal;
     private final ActionFactory factory;
     private final AgentHost agentHost;
     private List<Action> plan;
     private Observations planObservation;
 
-    public Planner(AtomicFluent currentGoal, AgentHost agentHost) {
+    public Planner(List<AtomicFluent> currentGoal, AgentHost agentHost) {
         this.currentGoal = currentGoal;
         this.agentHost = agentHost;
         this.factory = new ActionFactory(agentHost);
@@ -37,7 +37,7 @@ public class Planner {
 
     public void execute() {
         WorldState worldState = agentHost.getWorldState();
-        while (!currentGoal.test(ObservationFactory.getObservations(agentHost)) && worldState.getIsMissionRunning()) {
+        while (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)) && worldState.getIsMissionRunning())) {
             while (plan.size() > 0) {
                 Action action = plan.get(0);
                 if (action.preconditionsMet()) {
@@ -52,15 +52,18 @@ public class Planner {
                 }
                 System.out.println(plan);
             }
-            List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
-            actions.addAll(plan);
-            plan = actions;
+            if(!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
+                currentGoal = currentGoal.stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
+                List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
+                actions.addAll(plan);
+                plan = actions;
+            }
         }
         System.out.println("Done executing");
     }
 
-    public List<Action> determinePlan(AtomicFluent goal) {
-        return evaluate(goal);
+    public List<Action> determinePlan(List<AtomicFluent> goal) {
+        return goal.stream().map(this::evaluate).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     private List<Action> evaluate(AtomicFluent fluent) {
@@ -79,11 +82,7 @@ public class Planner {
         List<Action> collect = null;
         collect = satisfyConditions(bestAction, planObservation);
         collect.add(bestAction);
-        while (!fluent.test(planObservation) && actions.size() > 0) {
-            collect.add(findCheapest(actions));
-            updatePlanObservation(bestAction);
-        }
-
+        updatePlanObservation(bestAction);
         return collect;
     }
 

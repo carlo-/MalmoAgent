@@ -37,13 +37,15 @@ public class LookAt extends AbstractAction {
 
         float d_xz = (float) Math.sqrt(Math.pow(xRel, 2) + Math.pow(zRel, 2));
         float phi = (float) Math.toDegrees(Math.acos(zRel / d_xz));
+        if (!Float.isFinite(phi)) phi = 0;
         if (xRel < 0 && zRel < 0) phi += (180 - phi) * 2;
         if (xRel < 0 && zRel > 0) phi = 360 - phi;
         phi = 360 - phi;
 
         // float d_yz = d; //(float)Math.sqrt(Math.pow(yRel, 2)+Math.pow(zRel, 2));
         float theta = (float) Math.toDegrees(-Math.asin(yRel / d));
-
+        System.out.println(phi);
+        System.out.println(theta);
         agentHost.sendCommand("setYaw " + phi);
         agentHost.sendCommand("setPitch " + theta);
     }

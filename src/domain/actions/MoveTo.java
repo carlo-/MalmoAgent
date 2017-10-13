@@ -21,7 +21,7 @@ public class MoveTo extends AbstractAction {
     private final float x;
     private final float distance;
     private final float powDistance;
-    private final Stack<Position> path;
+    private Stack<Position> path;
     private Position lastPos;
 
     public MoveTo(AgentHost agentHost, IsAt isAt) {
@@ -41,13 +41,14 @@ public class MoveTo extends AbstractAction {
             String item = GatherBlock.BLOCK_TO_ITEM.get(entity.name);
             this.effects.add(new Have(item, obs.numberOf(item) + 1));
         }
-        path = BFS(obs);
         lastPos = new Position(obs.XPos, obs.ZPos);
     }
 
 
     public void doAction(Observations observations) {
-        if(!path.empty()) {
+        if(path == null || path.isEmpty()){
+            path = BFS(observations);
+        }
             Position currentChild = path.pop();
             float xDifference = currentChild.mX - lastPos.mX;
             //float yDifference = y - observations.YPos;
@@ -64,7 +65,7 @@ public class MoveTo extends AbstractAction {
             }
 
             lastPos = currentChild;
-        }
+
     }
 
     @Override
@@ -123,6 +124,10 @@ public class MoveTo extends AbstractAction {
         @Override
         public int hashCode() {
             return (int) mX + 10000 * (int) mZ;
+        }
+
+        public String toString(){
+            return "x "+mX+" z "+mZ;
         }
 
         @Override

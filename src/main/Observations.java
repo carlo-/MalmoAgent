@@ -101,4 +101,5 @@ public class Observations {
         }
         return total;
     }
+
 }

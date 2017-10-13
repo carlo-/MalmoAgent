@@ -153,22 +153,17 @@ public class Planner {
         }
     }
 
-    private BlockAt findClosest(List<BlockAt> blocks, Observations obs) {
-        //return blocks.get(0);
-        float minD = Float.MAX_VALUE;
-        BlockAt closest = null;
-        for (BlockAt b : blocks) {
-            float d = b.distanceFrom(obs.XPos, obs.YPos, obs.ZPos);
-            if (d <= minD) {
-                closest = b;
-                minD = d;
-            }
-        }
-        return closest;
-
-    }
-
     private Action findCheapest(List<Action> actions) {
-        return actions.remove(0); //Whatever, doesn't matter for now
+        int cost = Integer.MAX_VALUE;
+        Action cheapestAction = null;
+        for (Action action : actions) {
+            if(cost > action.cost()){
+                cost = action.cost();
+                cheapestAction = action;
+            }
+
+        }
+        actions.remove(cheapestAction);
+        return cheapestAction;
     }
 }

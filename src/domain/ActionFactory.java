@@ -43,7 +43,7 @@ public class ActionFactory {
     private List<Action> createEntityMove(Have have) {
         Observations observations = ObservationFactory.getObservations(agentHost);
         return observations.Entities.stream()
-                .filter(entity -> have.getItem().equals(entity.name))
+                .filter(entity -> entity.name != null && have.getItem().equals(entity.name.name()))
                 .map(entity -> new MoveTo(agentHost, new IsAt((int) entity.x + 0.5f, (int) entity.y + 0.5f, (int) entity.z + 0.5f), entity))
                 .collect(Collectors.toList());
 

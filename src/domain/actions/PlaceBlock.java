@@ -11,6 +11,7 @@ import main.Observations;
 import java.util.Arrays;
 
 public class PlaceBlock extends AbstractAction {
+    private final static int COST = 5;
 
     private final BlockAt mBlockAt;
     public PlaceBlock(AgentHost agentHost, BlockAt blockAt) {
@@ -30,6 +31,11 @@ public class PlaceBlock extends AbstractAction {
                 new IsAt(x, y, z, 1),
                 new BlockAt(x, y, z, BlockType.air)
         );
+    }
+
+    public int cost(){
+        Observations obs = ObservationFactory.getObservations(agentHost);
+        return (int)(Math.abs(mBlockAt.getX()- obs.XPos) + Math.abs(mBlockAt.getZ() - obs.ZPos));
     }
 
     private Pair<BlockAt, LookingAt> findBestNearbyBlock(float x, float y, float z, Observations observations) {
@@ -74,4 +80,5 @@ public class PlaceBlock extends AbstractAction {
     public String toString() {
         return "PlaceBlock " + mBlockAt.getTypeOfBlockString() + " at position: x = " + mBlockAt.getX() + ", y = " + mBlockAt.getY() + ", z = " + mBlockAt.getZ();
     }
+
 }

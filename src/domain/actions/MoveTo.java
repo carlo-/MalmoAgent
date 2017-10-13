@@ -41,12 +41,18 @@ public class MoveTo extends AbstractAction {
             String item = GatherBlock.BLOCK_TO_ITEM.get(entity.name);
             this.effects.add(new Have(item, obs.numberOf(item) + 1));
         }
-        lastPos = new Position(obs.XPos, obs.ZPos);
+
     }
 
 
+    public int cost(){
+        Observations obs = ObservationFactory.getObservations(agentHost);
+        return (int)(Math.abs(x - obs.XPos) + Math.abs(z - obs.ZPos));
+    }
+
     public void doAction(Observations observations) {
         if(path == null || path.isEmpty()){
+            lastPos = new Position(observations.XPos, observations.ZPos);
             path = BFS(observations);
         }
             Position currentChild = path.pop();

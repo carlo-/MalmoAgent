@@ -15,6 +15,7 @@ import java.util.Map;
 public class GatherBlock extends AbstractAction {
     public final static Map<BlockType, String> BLOCK_TO_ITEM;
     public static final Map<String, BlockType> ITEM_TO_BLOCK;
+    private final static int COST = 10;
 
     static {
         Map<BlockType, String> temp = new HashMap<>();
@@ -28,7 +29,7 @@ public class GatherBlock extends AbstractAction {
         ITEM_TO_BLOCK = Collections.unmodifiableMap(temp1);
     }
 
-    private BlockAt block;
+    private final BlockAt block;
 
     public GatherBlock(AgentHost agentHost, BlockAt targetBlock) {
         super(agentHost);
@@ -76,5 +77,11 @@ public class GatherBlock extends AbstractAction {
     @Override
     public String toString() {
         return "Gathering blocktype: " + block.toString();
+    }
+
+    @Override
+    public int cost(){
+        Observations obs = ObservationFactory.getObservations(agentHost);
+        return COST+(int)(Math.abs(block.getX() - obs.XPos) + Math.abs(block.getZ() - obs.ZPos));
     }
 }

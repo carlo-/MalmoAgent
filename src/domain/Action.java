@@ -16,4 +16,6 @@ public interface Action {
     boolean preconditionsMet();
 
     boolean effectsCompleted();
+
+    int cost();
 }

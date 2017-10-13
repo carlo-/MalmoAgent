@@ -60,4 +60,8 @@ public abstract class AbstractAction implements Action {
     }
 
     protected abstract void doAction(Observations observations);
+
+    public int cost(){
+        return 0;
+    }
 }

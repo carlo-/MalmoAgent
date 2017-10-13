@@ -3,7 +3,6 @@ package domain;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.actions.*;
 import domain.fluents.*;
-import main.Entity;
 import main.Observations;
 
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ public class ActionFactory {
         Observations observations = ObservationFactory.getObservations(agentHost);
         return observations.Entities.stream()
                 .filter(entity -> entity.name != null && have.getItem().equals(entity.name.name()))
-                .map(entity -> new MoveTo(agentHost, new IsAt((int) entity.x + 0.5f, (int) entity.y + 0.5f, (int) entity.z + 0.5f), entity))
+                .map(entity -> new MoveTo(agentHost, new IsAt(((int) entity.x) + 0.5f, ((int) entity.y) + 0.5f, ((int) entity.z) + 0.5f), entity))
                 .collect(Collectors.toList());
 
 

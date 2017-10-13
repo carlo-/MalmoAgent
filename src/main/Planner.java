@@ -43,7 +43,13 @@ public class Planner {
                 if (action.preconditionsMet()) {
                     Action remove = plan.remove(0);
                     if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
-                        remove.perform();
+                        boolean perform = remove.perform();
+                        if(!perform){
+                            remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
+                            List<Action> actions = determinePlan(currentGoal); //Reevaluate if our preconditions are not met for some reason
+                            actions.addAll(plan);
+                            plan = actions;
+                        }
                     }
                 } else {
                     List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason

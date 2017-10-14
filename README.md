@@ -31,7 +31,13 @@ Refer to [this](https://github.com/Microsoft/malmo/blob/master/doc/install_macos
 ---
 ## Running the agent
 
-To run Malmo please follow [these](https://github.com/Microsoft/malmo) instructions.
+In order to run our example that is included as a runnable jar. Please start the Malmo minecraft instance as described above.
+Then run the included MalmoAgent.jar with this command:
+
+java -cp MalmoAgent.jar;. main.JavaAgent
+
+If you wish to compile and run the agent yourself, all of the sources files have to be linked, including the libraries and the .dlls.
+This can be done in an IDE, by specifying the working directory as the main MalmoAgent directory (where the DLLs are) and linking the libraries.
 
 ---
 ## Original project

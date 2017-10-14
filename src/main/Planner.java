@@ -36,7 +36,7 @@ public class Planner {
         this.factory = new ActionFactory(agentHost);
         planObservation = ObservationFactory.getObservations(agentHost);
         this.plan = determinePlan(currentGoal, planObservation).stream().filter(this::excludeActionsExcept).collect(Collectors.toList()); //Reduction, in order to sort more
-        Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
+        //Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
         System.out.println(plan);
     }
 

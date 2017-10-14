@@ -58,6 +58,7 @@ public class ActionFactory {
         if (Craft.CRAFTS.containsKey(item))
             return Arrays.asList(new Craft(agentHost, item));
         else {
+
             return observations.findBlockType(GatherBlock.ITEM_TO_BLOCK.get(nbItems.getItem()))
                     .stream()
                     .map(blockAt -> new GatherBlock(agentHost, blockAt))

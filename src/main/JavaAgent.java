@@ -41,7 +41,7 @@ public class JavaAgent {
     private final static String P2 = "_size";
     private final static String P3 = "_item";
     private static Planner planner;
-    private final static List<AtomicFluent> HOUSE_SHAPE = buildWalls(BlockType.planks, 0.5f,226f, 0.5f, 3.5f, 227f, 3.5f);
+    private final static List<AtomicFluent> HOUSE_SHAPE = buildWalls(BlockType.planks, 0.5f, 226f, 0.5f, 3.5f, 227f, 3.5f);
     private final static List<AtomicFluent> COMPOSITE_WALL;
 
     static {
@@ -61,7 +61,6 @@ public class JavaAgent {
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
 
-
         planner = createGoalAgent(agent_host);
         planner.execute();
 
@@ -70,13 +69,7 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        /*List<AtomicFluent> list = buildRectangularParallelepiped(BlockType.cobblestone, -3.5f, observations.YPos - 1, 0.5f,
-                0.5f, observations.YPos, 0.5f);
-        list.addAll(buildRectangularParallelepiped(BlockType.planks, 1.5f, observations.YPos - 1, 0.5f,
-                3.5f, observations.YPos, 0.5f));
-        System.out.println(list.toString());*/
-        return new Planner(COMPOSITE_WALL,
-                agent_host);
+        return new Planner(COMPOSITE_WALL, agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -273,18 +266,18 @@ public class JavaAgent {
         checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
 
         List<AtomicFluent> out = buildRectangularParallelepiped(
-                type,fromX, fromY, fromZ, toX, toY, fromZ);
+                type, fromX, fromY, fromZ, toX, toY, fromZ);
 
         out.addAll(buildRectangularParallelepiped(
-                type,fromX, fromY, toZ, toX, toY, toZ));
-
-
-        out.addAll(buildRectangularParallelepiped(
-                type,toX, fromY, fromZ+1, toX, toY, toZ-1));
+                type, fromX, fromY, toZ, toX, toY, toZ));
 
 
         out.addAll(buildRectangularParallelepiped(
-                type,fromX, fromY, fromZ+2, fromX, toY, toZ-1));
+                type, toX, fromY, fromZ + 1, toX, toY, toZ - 1));
+
+
+        out.addAll(buildRectangularParallelepiped(
+                type, fromX, fromY, fromZ + 2, fromX, toY, toZ - 1));
 
         return out;
     }

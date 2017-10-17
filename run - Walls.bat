@@ -1,0 +1,1 @@
+java -cp MalmoAgent_Walls.jar;. main.JavaAgent > walls.txt

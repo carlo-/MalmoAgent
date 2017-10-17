@@ -1,0 +1,1 @@
+java -cp MalmoAgent.jar;. main.JavaAgent > run.txt

@@ -41,6 +41,15 @@ public class JavaAgent {
     private final static String P2 = "_size";
     private final static String P3 = "_item";
     private static Planner planner;
+    private final static List<AtomicFluent> HOUSE_SHAPE = buildWalls(BlockType.planks, 0.5f,226f, 0.5f, 3.5f, 227f, 3.5f);
+    private final static List<AtomicFluent> COMPOSITE_WALL;
+
+    static {
+        COMPOSITE_WALL = buildRectangularParallelepiped(BlockType.cobblestone, 0.5f, 226, 0.5f,
+                0.5f, 227, 0.5f);
+        COMPOSITE_WALL.addAll(buildRectangularParallelepiped(BlockType.planks, 1.5f, 226, 0.5f,
+                1.5f, 227, 0.5f));
+    }
 
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
@@ -61,13 +70,12 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        List<AtomicFluent> list = buildRectangularParallelepiped(BlockType.cobblestone, -3.5f, observations.YPos - 1, 0.5f,
+        /*List<AtomicFluent> list = buildRectangularParallelepiped(BlockType.cobblestone, -3.5f, observations.YPos - 1, 0.5f,
                 0.5f, observations.YPos, 0.5f);
         list.addAll(buildRectangularParallelepiped(BlockType.planks, 1.5f, observations.YPos - 1, 0.5f,
                 3.5f, observations.YPos, 0.5f));
-        System.out.println(list.toString());
-        return new Planner(buildWalls(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                5.5f, observations.YPos, 4.5f),
+        System.out.println(list.toString());*/
+        return new Planner(COMPOSITE_WALL,
                 agent_host);
     }
 

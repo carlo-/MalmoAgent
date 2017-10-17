@@ -14,6 +14,7 @@ import domain.fluents.IsAt;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class Planner {
     private void createNewPlan(List<AtomicFluent> currentGoal, AgentHost agentHost) {
         planObservation = ObservationFactory.getObservations(agentHost);
         this.plan = determinePlan(currentGoal, planObservation).stream().filter(this::excludeActionsExcept).collect(Collectors.toList()); //Reduction, in order to sort more
-        //Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
+        Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
         System.out.println(plan);
     }
 
@@ -47,7 +48,6 @@ public class Planner {
         WorldState worldState = agentHost.getWorldState();
 
         while (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)) && worldState.getIsMissionRunning())) {
-
             while (plan.size() > 0) {
                 try {
                     Action action = plan.get(0);
@@ -76,11 +76,7 @@ public class Planner {
                 }
             }
             if (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
-                currentGoal = currentGoal.stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
-                List<Action> actions = determinePlan(currentGoal, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
-
-                actions.addAll(plan);
-                plan = actions;
+                createNewPlan(currentGoal, agentHost);
             }
 
         }

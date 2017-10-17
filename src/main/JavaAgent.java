@@ -61,8 +61,12 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                5.5f, observations.YPos - 1, 0.5f),
+        List<AtomicFluent> list = buildRectangularParallelepiped(BlockType.cobblestone, 0.5f, observations.YPos - 1, 0.5f,
+                0.5f, observations.YPos - 1, 0.5f);
+        list.addAll(buildRectangularParallelepiped(BlockType.planks, 1.5f, observations.YPos - 1, 0.5f,
+                1.5f, observations.YPos - 1, 0.5f));
+        System.out.println(list.toString());
+        return new Planner(list,
                 agent_host);
     }
 
@@ -99,7 +103,8 @@ public class JavaAgent {
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();
-        my_mission.drawSphere(20, 226, 20, 2, "stone");
+        //my_mission.drawSphere(20, 226, 20, 2, "stone");
+        my_mission.drawCuboid(20, 227, 20, 22, 228, 22, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
         drawTree(my_mission, -16, 23);

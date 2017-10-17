@@ -41,6 +41,15 @@ public class JavaAgent {
     private final static String P2 = "_size";
     private final static String P3 = "_item";
     private static Planner planner;
+    private final static List<AtomicFluent> HOUSE_SHAPE = buildWalls(BlockType.planks, 0.5f, 226f, 0.5f, 3.5f, 227f, 3.5f);
+    private final static List<AtomicFluent> COMPOSITE_WALL;
+
+    static {
+        COMPOSITE_WALL = buildRectangularParallelepiped(BlockType.cobblestone, 0.5f, 226, 0.5f,
+                0.5f, 227, 0.5f);
+        COMPOSITE_WALL.addAll(buildRectangularParallelepiped(BlockType.planks, 1.5f, 226, 0.5f,
+                1.5f, 227, 0.5f));
+    }
 
     static {
         System.loadLibrary("MalmoJava"); // attempts to load MalmoJava.dll (on Windows) or libMalmoJava.so (on Linux)
@@ -52,7 +61,6 @@ public class JavaAgent {
         MissionRecordSpec my_mission_record = createMissionRecords();
         WorldState world_state = startMission(agent_host, my_mission, my_mission_record);
 
-
         planner = createGoalAgent(agent_host);
         planner.execute();
 
@@ -61,14 +69,10 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
-        /*
-        return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                8.5f, observations.YPos, 0.5f),
-                agent_host);
-        */
         return new Planner(buildWalls(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
                 3.5f, observations.YPos, 3.5f),
                 agent_host);
+        // return new Planner(COMPOSITE_WALL, agent_host);
     }
 
     private static AgentHost createAgentHost(String[] argv) {
@@ -104,7 +108,8 @@ public class JavaAgent {
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();
-        my_mission.drawSphere(20, 226, 20, 2, "stone");
+        //my_mission.drawSphere(20, 226, 20, 2, "stone");
+        my_mission.drawCuboid(20, 227, 20, 22, 228, 22, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
         drawTree(my_mission, -16, 23);

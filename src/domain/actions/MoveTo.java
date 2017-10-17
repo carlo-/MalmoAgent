@@ -54,10 +54,11 @@ public class MoveTo extends AbstractAction {
     }
 
     public void doAction(Observations observations) {
-        if (path == null || path.isEmpty()) {
+        if (path == null/* || path.isEmpty()*/) {
             lastPos = new Position(observations.XPos, observations.ZPos);
             path = BFS(observations);
         }
+        if(path.isEmpty())return;
         Position currentChild = path.pop();
         float xDifference = currentChild.mX - lastPos.mX;
         //float yDifference = y - observations.YPos;

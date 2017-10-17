@@ -57,6 +57,9 @@ public abstract class AbstractAction implements Action {
             }
         }
 
+        // Called to handle any final code before considering the action as completed
+        finalizeAction();
+
         return effectsCompleted();
     }
 
@@ -65,4 +68,7 @@ public abstract class AbstractAction implements Action {
     public int cost() {
         return 0;
     }
+
+    // Called just before the completion of the action
+    public void finalizeAction() {}
 }

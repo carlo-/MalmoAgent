@@ -24,6 +24,7 @@ public class MoveTo extends AbstractAction {
     private final float x;
     private final float distance;
     private final float powDistance;
+    private final boolean exact;
     private Stack<Position> path;
     private Position lastPos;
 
@@ -37,6 +38,7 @@ public class MoveTo extends AbstractAction {
         this.y = isAt.getY();
         this.z = isAt.getZ();
         this.distance = isAt.getDistance();
+        this.exact = isAt.isExact();
         powDistance = distance * distance;
         this.effects.add(isAt);
         Observations obs = ObservationFactory.getObservations(agentHost);
@@ -106,7 +108,14 @@ public class MoveTo extends AbstractAction {
 
     public boolean checkPosGoal(Position current, Observations obs) {
         //return (Math.pow(current.mZ - z, 2) + Math.pow(current.mX - x, 2) <= powDistance);
-        return (Math.abs(current.mZ - z) + Math.abs(current.mX - x) <= distance);
+        //return (Math.abs(current.mZ - z) + Math.abs(current.mX - x) <= distance);
+
+        float d = (Math.abs(current.mZ - z) + Math.abs(current.mX - x));
+        if (exact) {
+            return d == distance;
+        } else {
+            return d <= distance;
+        }
     }
 
     public void addChild(float x, float z, Observations obs, Map<Position, Position> map, Queue<Position> nextPos, Position currentPosition) {
@@ -120,7 +129,9 @@ public class MoveTo extends AbstractAction {
     }
 
     public boolean isFree(float x, float z, Observations obs) {
-        return obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) && obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air);
+        return obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) &&
+                obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) &&
+                !obs.blockAt(x, obs.YPos - 2, z).getTypeOfBlock().equals(BlockType.air); // Can't walk over a hole!
     }
 
     public class Position {

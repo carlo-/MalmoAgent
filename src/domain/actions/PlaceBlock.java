@@ -14,6 +14,7 @@ public class PlaceBlock extends AbstractAction {
     private final static int COST = 5;
 
     private final BlockAt mBlockAt;
+    private boolean needsToJump = false;
 
     public PlaceBlock(AgentHost agentHost, BlockAt blockAt) {
         super(agentHost);
@@ -29,12 +30,19 @@ public class PlaceBlock extends AbstractAction {
         effects.add(have);
         Pair<BlockAt, LookingAt> bestNearby = findBestNearbyBlock(x, y, z, observations);
 
+        LookingAt lookingAt = bestNearby.getValue();
+        if (y > observations.YPos) {
+            needsToJump = true;
+            // Look down instead of up (because we'll jump)
+            lookingAt = new LookingAt(lookingAt.getX(), lookingAt.getY()-1.5f, lookingAt.getZ());
+        }
+
         this.preconditions = Arrays.asList(
                 new Have(typeOfBlockString, 1),
                 new HaveSelected(typeOfBlockString),
-                bestNearby.getKey(), bestNearby.getValue(),
-                //  new HaveLineOfSight(bestNearby.getX(), bestNearby.getY(), bestNearby.getZ()),
-                new IsAt(x, y, z, 1),
+                bestNearby.getKey(),
+                lookingAt,
+                new IsAt(x, y, z, 1, true), // Distance must be exact in this case (not less or equal)
                 new BlockAt(x, y, z, BlockType.air)
         );
     }
@@ -73,19 +81,43 @@ public class PlaceBlock extends AbstractAction {
 
     @Override
     public void doAction(Observations observations) {
-        agentHost.sendCommand("use 1");
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        agentHost.sendCommand("use 0");
 
+        if (needsToJump) {
+            // We jump and keep trying to place
+            agentHost.sendCommand("jump 1");
+            agentHost.sendCommand("use 1");
+
+        } else {
+
+            agentHost.sendCommand("jump 0"); // Probably unnecessary, should be handled correctly by finalizeAction()
+            agentHost.sendCommand("use 1");
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            agentHost.sendCommand("use 0");
+        }
+    }
+
+    @Override
+    public void finalizeAction() {
+
+        if (needsToJump) {
+            // We were jumping, so we need to stop
+            agentHost.sendCommand("use 0");
+            agentHost.sendCommand("jump 0");
+            try {
+                // Time required to fall down (overestimate just to be sure)
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public String toString() {
         return "PlaceBlock " + mBlockAt.getTypeOfBlockString() + " at position: x = " + mBlockAt.getX() + ", y = " + mBlockAt.getY() + ", z = " + mBlockAt.getZ();
     }
-
 }

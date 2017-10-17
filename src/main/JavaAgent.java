@@ -36,7 +36,7 @@ import java.util.List;
 public class JavaAgent {
 
     public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, -1, -50, 50, 3, 50);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -1, -5, 5, 5, 5);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -2, -5, 5, 5, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
     private final static String P3 = "_item";
@@ -67,7 +67,7 @@ public class JavaAgent {
                 agent_host);
         */
         return new Planner(buildWalls(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                5.5f, observations.YPos, 4.5f),
+                3.5f, observations.YPos, 3.5f),
                 agent_host);
     }
 
@@ -263,19 +263,29 @@ public class JavaAgent {
     public static List<AtomicFluent> buildWalls(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
         checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
 
+        // Build first long wall
         List<AtomicFluent> out = buildRectangularParallelepiped(
                 type,fromX, fromY, fromZ, toX, toY, fromZ);
 
+        /*
+        // Build second long wall
         out.addAll(buildRectangularParallelepiped(
                 type,fromX, fromY, toZ, toX, toY, toZ));
+        */
 
-
+        /*
+        // Build small wall
         out.addAll(buildRectangularParallelepiped(
                 type,toX, fromY, fromZ+1, toX, toY, toZ-1));
 
-
+        // Build small wall with door
         out.addAll(buildRectangularParallelepiped(
                 type,fromX, fromY, fromZ+2, fromX, toY, toZ-1));
+        */
+
+        // Build roof (partial atm for debugging)
+        out.addAll(buildRectangularParallelepiped(
+                BlockType.cobblestone,fromX, toY+1, fromZ, toX, toY+1, fromZ+1));
 
         return out;
     }

@@ -28,6 +28,9 @@ public class ActionFactory {
             BlockAt blockAt = (BlockAt) fluent;
             if (BlockType.air.equals(blockAt.getTypeOfBlock()) && observations.blockAt(blockAt.getX(), blockAt.getY(), blockAt.getZ()).getTypeOfBlock().equals(BlockType.air)) {
                 possibleActions.add(new GatherBlock(agentHost, blockAt));
+            } else if (BlockType.Any.equals(blockAt.getTypeOfBlock())) {
+                // Handles weird case, ask Nicolas!
+                possibleActions.add(new PlaceBlock(agentHost, new BlockAt(blockAt.getX(), blockAt.getY(), blockAt.getZ(), BlockType.planks)));
             } else {
                 possibleActions.add(new PlaceBlock(agentHost, blockAt));
             }

@@ -14,7 +14,6 @@ import domain.fluents.IsAt;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +33,10 @@ public class Planner {
         this.currentGoal = currentGoal;
         this.agentHost = agentHost;
         this.factory = new ActionFactory(agentHost);
+        createNewPlan(currentGoal, agentHost);
+    }
+
+    private void createNewPlan(List<AtomicFluent> currentGoal, AgentHost agentHost) {
         planObservation = ObservationFactory.getObservations(agentHost);
         this.plan = determinePlan(currentGoal, planObservation).stream().filter(this::excludeActionsExcept).collect(Collectors.toList()); //Reduction, in order to sort more
         //Collections.sort(plan, (o2, o1) -> o1.cost() - o2.cost());
@@ -42,26 +45,35 @@ public class Planner {
 
     public void execute() {
         WorldState worldState = agentHost.getWorldState();
+
         while (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)) && worldState.getIsMissionRunning())) {
+
             while (plan.size() > 0) {
-                Action action = plan.get(0);
-                if (action.preconditionsMet()) {
-                    Action remove = plan.remove(0);
-                    if (!remove.effectsCompleted() || remove.getEffects().size() == 0) {
-                        boolean perform = remove.perform();
-                        if (!perform) {
-                            List<AtomicFluent> fluents = remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
-                            List<Action> actions = determinePlan(fluents, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
+                try {
+                    Action action = plan.get(0);
+                    if ((!action.effectsCompleted() || action.getEffects().size() == 0)) {
+                        if (action.preconditionsMet()) {
+                            Action remove = plan.remove(0);
+                            boolean perform = remove.perform();
+                            if (!perform) {
+                                List<AtomicFluent> fluents = remove.getEffects().stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
+                                List<Action> actions = determinePlan(fluents, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
+                                actions.addAll(plan);
+                                plan = actions;
+                            }
+                        } else {
+                            List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
                             actions.addAll(plan);
                             plan = actions;
                         }
+                        System.out.println(plan);
+                    } else {
+                        plan.remove(0);
                     }
-                } else {
-                    List<Action> actions = satisfyConditions(action, ObservationFactory.getObservations(agentHost)); //Reevaluate if our preconditions are not met for some reason
-                    actions.addAll(plan);
-                    plan = actions;
+                } catch (IllegalStateException ex) {
+                    System.out.println("Reevaluating plan");
+                    createNewPlan(currentGoal, agentHost);
                 }
-                System.out.println(plan);
             }
             if (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
                 currentGoal = currentGoal.stream().filter(pred -> !pred.test(ObservationFactory.getObservations(agentHost))).collect(Collectors.toList());
@@ -70,12 +82,17 @@ public class Planner {
                 actions.addAll(plan);
                 plan = actions;
             }
+
         }
+
         System.out.println("Done executing");
     }
 
     public List<Action> determinePlan(List<AtomicFluent> goal, Observations observations) {
-        return goal.stream().map(fluent -> evaluate(fluent, observations)).flatMap(Collection::stream).collect(Collectors.toList());
+        return goal.stream().filter(fluent -> !fluent.test(observations))
+                .map(fluent -> evaluate(fluent, observations))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     private List<Action> evaluate(AtomicFluent fluent, Observations observations) {

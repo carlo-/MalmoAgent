@@ -62,7 +62,7 @@ public class JavaAgent {
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
         return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                5.5f, observations.YPos - 1, 0.5f),
+                8.5f, observations.YPos, 0.5f),
                 agent_host);
     }
 

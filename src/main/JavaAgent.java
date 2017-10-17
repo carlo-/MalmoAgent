@@ -108,8 +108,8 @@ public class JavaAgent {
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();
-        //my_mission.drawSphere(20, 226, 20, 2, "stone");
-        my_mission.drawCuboid(20, 227, 20, 22, 228, 22, "stone");
+        my_mission.drawSphere(20, 226, 20, 2, "stone");
+        //my_mission.drawCuboid(20, 227, 20, 22, 228, 22, "stone");
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
         drawTree(my_mission, -16, 23);

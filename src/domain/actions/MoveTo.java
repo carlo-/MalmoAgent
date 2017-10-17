@@ -105,7 +105,8 @@ public class MoveTo extends AbstractAction {
     }
 
     public boolean checkPosGoal(Position current, Observations obs) {
-        return (Math.pow(current.mZ - z, 2) + Math.pow(current.mX - x, 2) <= powDistance);
+        //return (Math.pow(current.mZ - z, 2) + Math.pow(current.mX - x, 2) <= powDistance);
+        return (Math.abs(current.mZ - z) + Math.abs(current.mX - x) <= distance);
     }
 
     public void addChild(float x, float z, Observations obs, Map<Position, Position> map, Queue<Position> nextPos, Position currentPosition) {

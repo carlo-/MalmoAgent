@@ -61,8 +61,13 @@ public class JavaAgent {
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
+        /*
         return new Planner(buildRectangularParallelepiped(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
                 8.5f, observations.YPos, 0.5f),
+                agent_host);
+        */
+        return new Planner(buildWalls(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
+                5.5f, observations.YPos, 4.5f),
                 agent_host);
     }
 
@@ -252,6 +257,26 @@ public class JavaAgent {
                 }
             }
         }
+        return out;
+    }
+
+    public static List<AtomicFluent> buildWalls(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+        checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
+
+        List<AtomicFluent> out = buildRectangularParallelepiped(
+                type,fromX, fromY, fromZ, toX, toY, fromZ);
+
+        out.addAll(buildRectangularParallelepiped(
+                type,fromX, fromY, toZ, toX, toY, toZ));
+
+
+        out.addAll(buildRectangularParallelepiped(
+                type,toX, fromY, fromZ+1, toX, toY, toZ-1));
+
+
+        out.addAll(buildRectangularParallelepiped(
+                type,fromX, fromY, fromZ+2, fromX, toY, toZ-1));
+
         return out;
     }
 

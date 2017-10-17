@@ -26,9 +26,12 @@ public class IsAt implements AtomicFluent {
 
     @Override
     public boolean test(Observations observations) {
+        /*
         return Math.abs(x - observations.XPos) <= distance
            //     && Math.abs(y - observations.YPos) <= distance
                 && Math.abs(z - observations.ZPos) <= distance;
+        */
+        return (Math.abs(observations.ZPos - z) + Math.abs(observations.XPos - x) <= distance);
     }
 
     public float getX() {

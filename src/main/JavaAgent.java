@@ -210,7 +210,7 @@ public class JavaAgent {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                 "    <Mission xmlns=\"http://ProjectMalmo.microsoft.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
                 "        <About>\n" +
-                "            <Summary>Let's build a wall</Summary>\n" +
+                "            <Summary>Let's build a house</Summary>\n" +
                 "        </About>\n" +
                 "\n" +
                 "        <ServerSection>\n" +

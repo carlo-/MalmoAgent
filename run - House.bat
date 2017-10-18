@@ -1,0 +1,1 @@
+java -cp MalmoAgent_House.jar;. main.JavaAgent > House.txt

@@ -26,6 +26,7 @@ public class MoveTo extends AbstractAction {
     private final float distance;
     private final float powDistance;
     private final boolean exact;
+    private final boolean airAbove;
     private Stack<Position> path;
     private Position lastPos;
 
@@ -40,6 +41,7 @@ public class MoveTo extends AbstractAction {
         this.z = isAt.getZ();
         this.distance = isAt.getDistance();
         this.exact = isAt.isExact();
+        this.airAbove = isAt.airAbove;
         powDistance = distance * distance;
         this.effects.add(isAt);
 
@@ -118,6 +120,13 @@ public class MoveTo extends AbstractAction {
     public boolean checkPosGoal(Position current, Observations obs) {
         //return (Math.pow(current.mZ - z, 2) + Math.pow(current.mX - x, 2) <= powDistance);
         //return (Math.abs(current.mZ - z) + Math.abs(current.mX - x) <= distance);
+
+        if (airAbove) {
+            BlockAt b = obs.blockAt(current.mX, obs.YPos+1, current.mZ);
+            if (b != null && !b.getTypeOfBlock().equals(BlockType.air)) {
+                return false;
+            }
+        }
 
         float d = (Math.abs(current.mZ - z) + Math.abs(current.mX - x));
         if (exact) {

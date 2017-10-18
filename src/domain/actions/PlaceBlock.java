@@ -48,7 +48,7 @@ public class PlaceBlock extends AbstractAction {
                 new HaveSelected(typeOfBlockString),
                 bestNearby.getKey(),
                 lookingAt,
-                new IsAt(x, y, z, placeDistance, true), // Distance must be exact in this case (not less or equal)
+                new IsAt(x, y, z, placeDistance, true, needsToJump), // Distance must be exact in this case (not less or equal)
                 new BlockAt(x, y, z, BlockType.air)
         );
     }

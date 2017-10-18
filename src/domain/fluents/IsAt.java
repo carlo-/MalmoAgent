@@ -13,21 +13,23 @@ public class IsAt implements AtomicFluent {
     private final float y;
     private final float distance;
     private final boolean exact;
+    public final boolean airAbove;
 
-    public IsAt(float x, float y, float z, float distance, boolean exact) {
+    public IsAt(float x, float y, float z, float distance, boolean exact, boolean airAbove) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.distance = distance;
         this.exact = exact;
+        this.airAbove = airAbove;
     }
 
     public IsAt(float x, float y, float z, float distance) {
-        this(x, y, z, distance, false);
+        this(x, y, z, distance, false, false);
     }
 
     public IsAt(float x, float y, float z) {
-        this(x, y, z, 0.0f, false);
+        this(x, y, z, 0.0f, false, false);
     }
 
     @Override

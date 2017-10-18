@@ -25,6 +25,7 @@ package main;// ----------------------------------------------------------------
 //                                               java -cp MalmoJavaJar.jar;main.JavaAgent.jar -Djava.library.path=. main.JavaAgent (on Windows)
 
 import com.microsoft.msr.malmo.*;
+import domain.Action;
 import domain.AtomicFluent;
 import domain.BlockType;
 import domain.fluents.BlockAt;
@@ -65,9 +66,21 @@ public class JavaAgent {
         planner.execute();
 
         Observations observations = ObservationFactory.getObservations(agent_host);
-        planner = new Planner(buildRoof(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                3.5f, observations.YPos, 4.5f), agent_host);
+
+        List<AtomicFluent> acts = buildRoof(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
+                3.5f, observations.YPos, 3.5f);
+
+        acts.removeIf(pred -> ((BlockAt)pred).distanceFrom(1.5f,228f,1.5f) == 0);
+
+        planner = new Planner(acts, agent_host);
         planner.execute();
+
+        acts = new ArrayList<>();
+        acts.add(new BlockAt(1.5f, 228f, 1.5f, BlockType.planks));
+
+        planner = new Planner(acts, agent_host);
+        planner.execute();
+
 
         System.out.println("Mission has stopped.");
     }

@@ -30,11 +30,17 @@ public class PlaceBlock extends AbstractAction {
         effects.add(have);
         Pair<BlockAt, LookingAt> bestNearby = findBestNearbyBlock(x, y, z, observations);
 
+        float placeDistance = 1;
         LookingAt lookingAt = bestNearby.getValue();
-        if (y > observations.YPos) {
+
+        if (bestNearby.getKey().getY() == observations.YPos) {
             needsToJump = true;
             // Look down instead of up (because we'll jump)
             lookingAt = new LookingAt(lookingAt.getX(), lookingAt.getY()-1.5f, lookingAt.getZ());
+
+        } else if (bestNearby.getKey().getY() > observations.YPos) {
+            // We don't need to jump, but we need to be exactly below the block we want to place
+            placeDistance = 0;
         }
 
         this.preconditions = Arrays.asList(
@@ -42,7 +48,7 @@ public class PlaceBlock extends AbstractAction {
                 new HaveSelected(typeOfBlockString),
                 bestNearby.getKey(),
                 lookingAt,
-                new IsAt(x, y, z, 1, true), // Distance must be exact in this case (not less or equal)
+                new IsAt(x, y, z, placeDistance, true), // Distance must be exact in this case (not less or equal)
                 new BlockAt(x, y, z, BlockType.air)
         );
     }
@@ -109,7 +115,8 @@ public class PlaceBlock extends AbstractAction {
             agentHost.sendCommand("jump 0");
             try {
                 // Time required to fall down (overestimate just to be sure)
-                Thread.sleep(500);
+                // If this is too small, the planner will throw an IllegalStateException!
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

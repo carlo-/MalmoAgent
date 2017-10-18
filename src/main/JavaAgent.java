@@ -35,8 +35,8 @@ import java.util.List;
 
 public class JavaAgent {
 
-    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, -1, -50, 50, 3, 50);
-    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -2, -5, 5, 5, 5);
+    public static final ObservationGrid CELL_PLANE = new ObservationGrid(-50, -2, -50, 50, 2, 50);
+    public static final ObservationGrid CELL_BOX = new ObservationGrid(-5, -2, -5, 5, 2, 5);
     private final static String P1 = "InventorySlot_";
     private final static String P2 = "_size";
     private final static String P3 = "_item";
@@ -64,13 +64,18 @@ public class JavaAgent {
         planner = createGoalAgent(agent_host);
         planner.execute();
 
+        Observations observations = ObservationFactory.getObservations(agent_host);
+        planner = new Planner(buildRoof(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
+                3.5f, observations.YPos, 4.5f), agent_host);
+        planner.execute();
+
         System.out.println("Mission has stopped.");
     }
 
     private static Planner createGoalAgent(AgentHost agent_host) throws InterruptedException {
         Observations observations = ObservationFactory.getObservations(agent_host);
         return new Planner(buildWalls(BlockType.planks, 0.5f, observations.YPos - 1, 0.5f,
-                3.5f, observations.YPos, 3.5f),
+                3.5f, observations.YPos, 4.5f),
                 agent_host);
         // return new Planner(COMPOSITE_WALL, agent_host);
     }
@@ -108,10 +113,14 @@ public class JavaAgent {
         my_mission.allowAllDiscreteMovementCommands();
         my_mission.allowAllAbsoluteMovementCommands();
         my_mission.allowAllInventoryCommands();
-        my_mission.drawSphere(20, 226, 20, 2, "stone");
-        //my_mission.drawCuboid(20, 227, 20, 22, 228, 22, "stone");
+        //my_mission.drawSphere(0, 227, 20, 2, "stone");
+        //my_mission.drawSphere(10, 227, 20, 2, "stone");
+        my_mission.drawCuboid(0, 227, 20, 7, 228, 20, "stone");
+        //drawStoneSource(my_mission);
         my_mission.observeFullInventory();
         drawTree(my_mission, -15, 20);
+        drawTree(my_mission, -16, 18);
+        drawTree(my_mission, -13, 18);
         drawTree(my_mission, -16, 23);
         drawTree(my_mission, -13, 21);
         drawTree(my_mission, -12, 25);
@@ -121,6 +130,10 @@ public class JavaAgent {
 
     private static void drawTree(MissionSpec my_mission, int x, int z) {
         my_mission.drawLine(x, 227, z, x, 228, z, "log");
+    }
+
+    private static void drawStoneSource(MissionSpec my_mission) {
+        my_mission.drawLine(0, 227, 10, 10, 227, 12, "stone");
     }
 
     private static MissionRecordSpec createMissionRecords() {
@@ -269,30 +282,32 @@ public class JavaAgent {
         checkArgs(fromX, fromY, fromZ, toX, toY, toZ);
 
         // Build first long wall
-        List<AtomicFluent> out = buildRectangularParallelepiped(
-                type,fromX, fromY, fromZ, toX, toY, fromZ);
+        List<AtomicFluent> out = buildRectangularParallelepiped(BlockType.cobblestone,fromX, fromY, fromZ, toX, fromY, fromZ);
+        out.addAll(buildRectangularParallelepiped(BlockType.planks,fromX, fromY+1, fromZ, toX, toY+1, fromZ));
 
-        /*
         // Build second long wall
-        out.addAll(buildRectangularParallelepiped(
-                type,fromX, fromY, toZ, toX, toY, toZ));
-        */
+        out.addAll(buildRectangularParallelepiped(BlockType.cobblestone,fromX, fromY, toZ, toX, fromY, toZ));
+        out.addAll(buildRectangularParallelepiped(BlockType.planks,fromX, fromY+1, toZ, toX, toY+1, toZ));
 
-        /*
         // Build small wall
-        out.addAll(buildRectangularParallelepiped(
-                type,toX, fromY, fromZ+1, toX, toY, toZ-1));
+        out.addAll(buildRectangularParallelepiped(BlockType.cobblestone,toX, fromY, fromZ+1, toX, fromY, toZ-1));
+        out.addAll(buildRectangularParallelepiped(BlockType.planks,toX, fromY+1, fromZ+1, toX, toY+1, toZ-1));
 
         // Build small wall with door
-        out.addAll(buildRectangularParallelepiped(
-                type,fromX, fromY, fromZ+2, fromX, toY, toZ-1));
-        */
+        out.addAll(buildRectangularParallelepiped(BlockType.cobblestone,fromX, fromY, fromZ+2, fromX, fromY, toZ-1));
+        out.addAll(buildRectangularParallelepiped(BlockType.planks,fromX, fromY+1, fromZ+2, fromX, toY+1, toZ-1));
 
+
+        /*
         // Build roof (partial atm for debugging)
         out.addAll(buildRectangularParallelepiped(
                 BlockType.cobblestone,fromX, toY+1, fromZ, toX, toY+1, fromZ+1));
+         */
 
         return out;
     }
 
+    public static List<AtomicFluent> buildRoof(BlockType type, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+        return buildRectangularParallelepiped(type,fromX, toY+1, fromZ, toX, toY+1, toZ);
+    }
 }

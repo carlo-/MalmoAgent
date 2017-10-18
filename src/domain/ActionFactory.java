@@ -64,6 +64,7 @@ public class ActionFactory {
 
             return observations.findBlockType(GatherBlock.ITEM_TO_BLOCK.get(nbItems.getItem()))
                     .stream()
+                    .filter(blockAt -> blockAt.getY() >= 226f) // Must be above ground level, TODO: define GL as a constant somewhere
                     .map(blockAt -> new GatherBlock(agentHost, blockAt))
                     .collect(Collectors.toList());
         }

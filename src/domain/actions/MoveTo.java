@@ -3,6 +3,7 @@ package domain.actions;
 import com.microsoft.msr.malmo.AgentHost;
 import domain.AbstractAction;
 import domain.BlockType;
+import domain.fluents.BlockAt;
 import main.ObservationFactory;
 import domain.fluents.Have;
 import domain.fluents.IsAt;
@@ -41,12 +42,15 @@ public class MoveTo extends AbstractAction {
         this.exact = isAt.isExact();
         powDistance = distance * distance;
         this.effects.add(isAt);
+
+        /*
+        // FIXME: Enable this back if not using the AutoPickup mod!
         Observations obs = ObservationFactory.getObservations(agentHost);
         if (entity != null) {
             String item = GatherBlock.BLOCK_TO_ITEM.get(entity.name);
             this.effects.add(new Have(item, obs.numberOf(item) + 1));
         }
-
+        */
     }
 
 
@@ -82,7 +86,12 @@ public class MoveTo extends AbstractAction {
 
     @Override
     public String toString() {
-        return "MoveTo position : x = " + x + ", y = " + y + ", z = " + z + " within distance of " + distance;
+        String str = "MoveTo position : x = " + x + ", y = " + y + ", z = " + z;
+        if (exact) {
+            return str + " at exact distance of " + distance;
+        } else {
+            return str + " within distance of " + distance;
+        }
     }
 
     private Stack<Position> BFS(Observations obs) {
@@ -91,7 +100,7 @@ public class MoveTo extends AbstractAction {
         map.put(currentPosition, null);
         Queue<Position> nextPositions = new ConcurrentLinkedQueue<>();
 
-        while (!checkPosGoal(currentPosition, obs)) {
+        while (currentPosition != null && !checkPosGoal(currentPosition, obs)) {
             addChild(currentPosition.mX + 1, currentPosition.mZ, obs, map, nextPositions, currentPosition);
             addChild(currentPosition.mX - 1, currentPosition.mZ, obs, map, nextPositions, currentPosition);
             addChild(currentPosition.mX, currentPosition.mZ + 1, obs, map, nextPositions, currentPosition);
@@ -129,9 +138,11 @@ public class MoveTo extends AbstractAction {
     }
 
     public boolean isFree(float x, float z, Observations obs) {
-        return obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) &&
-                obs.blockAt(x, obs.YPos - 1, z).getTypeOfBlock().equals(BlockType.air) &&
-                !obs.blockAt(x, obs.YPos - 2, z).getTypeOfBlock().equals(BlockType.air); // Can't walk over a hole!
+        BlockAt b1 = obs.blockAt(x, obs.YPos - 1, z);
+        BlockAt b2 = obs.blockAt(x, obs.YPos - 2, z);
+        return b1 != null && b2 != null && // Can't walk outside of the observable area
+                b1.getTypeOfBlock().equals(BlockType.air) && // Can't walk through solid blocks
+                !b2.getTypeOfBlock().equals(BlockType.air); // Can't walk over a hole!
     }
 
     public class Position {

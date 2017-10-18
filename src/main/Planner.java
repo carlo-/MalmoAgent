@@ -67,6 +67,11 @@ public class Planner {
                             plan = actions;
                         }
                         System.out.println(plan);
+                        /*
+                        if (!plan.isEmpty()) {
+                            System.err.println(plan.get(0));
+                        }
+                        */
                     } else {
                         plan.remove(0);
                     }
@@ -78,7 +83,6 @@ public class Planner {
             if (!currentGoal.stream().allMatch(pred -> pred.test(ObservationFactory.getObservations(agentHost)))) {
                 createNewPlan(currentGoal, agentHost);
             }
-
         }
 
         System.out.println("Done executing");

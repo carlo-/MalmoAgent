@@ -1,8 +1,8 @@
 # MalmoAgent
 
-This group work is based on Microsoft's Project Malmo: an Artificial Intelligence platform for AI training and research. In order to run it, one needs to unpack project Malmo and also some dependent binaries. It might seem somewhat complex at first hand but I can assure that that is not the case and if done correctly, it should be up and running in no time!
+In this work, we exploit the open-source framework [Malmo](https://github.com/carlo-/MalmoAgent#original-project) to build an Artificial Intelligence connected to the popular computer game [Minecraft](https://minecraft.net). We explore planning methods with hierarchical actions to control the main character and achieve predefined goals.
 
-An updated version of this README file can be found at [this link](https://github.com/carlo-/MalmoAgent).
+Please refer to the [project report](https://github.com/carlo-/MalmoAgent/blob/master/Report.pdf) for further details.
 
 ---
 ## Installation
@@ -18,10 +18,11 @@ Set-ExecutionPolicy -Scope CurrentUser Unrestricted
 path:\Malmo-0.30.0-Windows-64bit\scripts
 .\malmo_install.ps1
 ```
+
 Refer to [this](https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.security/set-executionpolicy#example-4-set-the-scope-for-an-execution-policy) guide for details.
 
 ### macOS
-3. Run the script `install_macosx.sh`
+3. Run the script `scripts/install_macosx.sh`
 
 Refer to [this](https://github.com/Microsoft/malmo/blob/master/doc/install_macosx.md) guide for details.
 
@@ -31,13 +32,11 @@ Refer to [this](https://github.com/Microsoft/malmo/blob/master/doc/install_macos
 ---
 ## Running the agent
 
-In order to run our example that is included as a runnable jar. Please start the Malmo minecraft instance as described above.
-Then run the included MalmoAgent.jar with this command:
+In order to run the agent, first start a Minecraft instance and wait for it to load completely, then run the included MalmoAgent.jar with this command:
 
-java -cp MalmoAgent.jar;. main.JavaAgent
+`java -cp MalmoAgent.jar;. main.JavaAgent`
 
-If you wish to compile and run the agent yourself, all of the sources files have to be linked, including the libraries and the .dlls.
-This can be done in an IDE, by specifying the working directory as the main MalmoAgent directory (where the DLLs are) and linking the libraries.
+If you wish to compile and run the agent yourself, all of the sources files are included in this repository, including the libraries.
 
 ---
 ## Original project
@@ -45,4 +44,4 @@ Johnson M., Hofmann K., Hutton T., Bignell D. (2016) [_The Malmo Platform for Ar
 
 ---
 ## License
-This work is released under the MIT license. See `LICENSE` for more information.
+This work is released under the MIT license. See `LICENSE` for more information. Notice that some dependencies are bundled with this project, but are under terms of separate licenses.

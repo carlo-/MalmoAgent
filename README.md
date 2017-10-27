@@ -4,8 +4,11 @@ In this work, we exploit the open-source framework [Malmo](#original-project) to
 
 Please refer to the [project report](https://github.com/carlo-/MalmoAgent/blob/master/Report.pdf) for further details.
 
-![Final Result](https://i.imgur.com/wjP93Yl.png)
-<center>Complex structure built by our agent</center>
+<p align="center">
+  <img alt="Final Result" src="https://i.imgur.com/wjP93Yl.png" width="auto" height="600">
+  <br/>
+  Complex structure built by our agent
+</p>
 
 ---
 ## Installation

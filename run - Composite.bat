@@ -1,1 +1,0 @@
-java -cp MalmoAgent_Composite.jar;. main.JavaAgent > composite.txt

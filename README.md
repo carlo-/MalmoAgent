@@ -42,7 +42,7 @@ In order to run the agent, first start a Minecraft instance and wait for it to l
 
 `java -cp MalmoAgent.jar;. main.JavaAgent`
 
-If you wish to compile the project yourself, all of the sources files are contained in this repository, including the libraries.
+If you wish to compile the project yourself, all of the source files are contained in this repository, including the libraries.
 
 ---
 ## Original project

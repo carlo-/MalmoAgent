@@ -1,8 +1,11 @@
 # MalmoAgent
 
-In this work, we exploit the open-source framework [Malmo](https://github.com/carlo-/MalmoAgent#original-project) to build an Artificial Intelligence connected to the popular computer game [Minecraft](https://minecraft.net). We explore planning methods with hierarchical actions to control the main character and achieve predefined goals.
+In this work, we exploit the open-source framework [Malmo](#original-project) to build an Artificial Intelligence connected to the popular computer game [Minecraft](https://minecraft.net). We explore planning methods with hierarchical actions to control the main character and achieve predefined goals.
 
 Please refer to the [project report](https://github.com/carlo-/MalmoAgent/blob/master/Report.pdf) for further details.
+
+![Final Result](https://i.imgur.com/wjP93Yl.png)
+<center>Complex structure built by our agent</center>
 
 ---
 ## Installation
@@ -36,7 +39,7 @@ In order to run the agent, first start a Minecraft instance and wait for it to l
 
 `java -cp MalmoAgent.jar;. main.JavaAgent`
 
-If you wish to compile and run the agent yourself, all of the sources files are included in this repository, including the libraries.
+If you wish to compile the project yourself, all of the sources files are contained in this repository, including the libraries.
 
 ---
 ## Original project
